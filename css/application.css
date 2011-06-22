@@ -1,0 +1,130 @@
+/* line 1 */
+ul {
+  list-style: none;
+  text-indent: 1em;
+  margin: 10px;
+}
+/* line 6 */
+ul li {
+  margin: 10px;
+  padding-left: 5px;
+}
+
+/* line 11 */
+dl {
+  text-indent: 1em;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+/* line 16 */
+dl dd {
+  margin-left: 5px;
+  padding-left: 30px;
+}
+
+/* line 21 */
+html {
+  text-align: center;
+}
+
+/* line 25 */
+body {
+  font-family: georgia, tahoma, serif;
+  font-size: 100%;
+  line-height: 1.636em;
+  color: white;
+  text-align: center;
+  background: #101418;
+}
+
+/* line 33 */
+#title {
+  background: #101418 url(../images/banner-silverbump.png) repeat-x;
+}
+
+/* line 37 */
+#container {
+  position: relative;
+  width: 1280px;
+  margin: 0 auto;
+  background: url(../images/bg-clean.jpg) no-repeat;
+  z-index: 0;
+  font-size: 1.125em;
+  text-align: left;
+  top: 0;
+  left: 0;
+}
+
+/* line 49 */
+#resume {
+  position: relative;
+  width: 300px;
+  float: right;
+  padding: 20px;
+  margin-right: 80px;
+  background: green;
+  z-index: 20;
+  border: 10px solid white;
+}
+/* line 59 */
+#resume a {
+  text-decoration: none;
+  color: white;
+}
+/* line 63 */
+#resume a:hover {
+  text-decoration: none;
+  color: grey;
+  background: white;
+}
+/* line 68 */
+#resume dd {
+  font-family: monospace;
+}
+
+/* line 71 */
+#mugshot {
+  background: white;
+  margin: 20px 48px 20px 48px;
+  border: 5px solid white;
+  text-align: center;
+  padding: 10px;
+}
+
+/* line 79 */
+.white_box {
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  position: relative;
+  left: 200px;
+  top: 230px;
+  width: 800px;
+  padding: 100px 200px 50px 60px;
+  background: white;
+  color: black;
+  z-index: 15;
+  opacity: 0.8;
+  -moz-opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+/* line 93 */
+#bio {
+  width: 550px;
+}
+/* line 95 */
+#bio p:first-child:first-letter {
+  font-family: "Comic Sans MS", cursive;
+  font-weight: bold;
+  font-size: 700%;
+}
+/* line 100 */
+#bio #skills {
+  font-weight: bold;
+  list-style: none;
+  margin: 60px 60px 60px 120px;
+}
+/* line 105 */
+#bio #skills ul {
+  font-weight: normal;
+  font-size: smaller;
+}

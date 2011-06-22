@@ -1,0 +1,48 @@
+/* line 1 */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 6 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 11 */
+fieldset, img {
+  border: 0;
+}
+
+/* line 15 */
+address, caption, cite, code, dfn, em, strong, th, var {
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* line 20 */
+ol, ul {
+  list-style: none;
+}
+
+/* line 24 */
+caption, th {
+  text-align: left;
+}
+
+/* line 28 */
+h1, h2, h3, h4, h5, h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* line 34 */
+q:before, q:after {
+  content: "";
+}
+
+/* line 38 */
+abbr, acronym {
+  border: 0;
+}
