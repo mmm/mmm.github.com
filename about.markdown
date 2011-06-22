@@ -3,6 +3,6 @@ layout: default
 title: About
 ---
 
-# Mark Mims
+# About Me
 
 blahblahblah about me...
