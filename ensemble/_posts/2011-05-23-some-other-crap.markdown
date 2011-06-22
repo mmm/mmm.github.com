@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Some Other Random Crap
 ---
 
