@@ -9,7 +9,7 @@ body {
   color: #222;
   font-family: 'Times New Roman', 'Times', serif;
   line-height: 1.4em;
-  margin: 20px auto 18px 25%;
+  margin: 20px auto 18px 15%;
 }
 
 a:link {
@@ -55,7 +55,7 @@ h1 {
 
 h2 {
   font-size: 24px;
-  line-height: 22px;
+  line-height: 28px;
   margin-bottom: 18px;
 }
 
