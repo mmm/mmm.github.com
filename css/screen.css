@@ -109,6 +109,9 @@ body {
   filter: alpha(opacity=80);
 }
 
+h1 { background: #240319; color: #CCD6ED; padding: 0.5em; }
+h1 a, h1 a:visited, h1 a:active { color: #CCD6ED; outline: 0; -moz-outline: 0; }
+h1 a:hover { color: #CCD6ED; }
 h1, h2, h3, #footer {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: bolder;
@@ -154,6 +157,11 @@ h3 {
   font-size: smaller;
 }
 
+.post { margin-bottom: 4em; }
+.post:last-child { margin-bottom: 0; }
+.post .meta { text-align: right; color: #666; }
+
+/*
 .post {
   border-bottom: 1px solid #222;
   margin-bottom: 20px;
@@ -169,6 +177,7 @@ h3 {
   font-style: italic;
   text-align: right;
 }
+*/
 
 blockquote {
   border-left: 1px solid #222;
@@ -189,3 +198,6 @@ code {
   min-width: 30em;
   width: 720px;
 }
+.pagination { padding: 1em; background: #FFC145; text-align: center; }
+.pagination a, .pagination a:visited, .pagination a:active { color: #000; font-size: 1.1em; text-decoration: underline; }
+
