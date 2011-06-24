@@ -29,7 +29,7 @@ html {
 
 /* line 25 */
 body {
-  font-family: georgia, tahoma, serif;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 100%;
   line-height: 1.636em;
   color: white;
@@ -58,7 +58,7 @@ body {
 /* line 49 */
 #resume {
   position: relative;
-  width: 200px;
+  width: 240px;
   float: right;
   padding: 20px;
   margin-right: 80px;
@@ -79,7 +79,7 @@ body {
 }
 /* line 68 */
 #resume dd {
-  font-family: monospace;
+  font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
   margin-left: 2px;
   padding-left: 10px;
 }
@@ -95,7 +95,6 @@ body {
 
 /* line 79 */
 .white_box {
-  font-family: "Trebuchet MS", Verdana, sans-serif;
   position: relative;
   left: 100px;
   top: 60px;
@@ -113,7 +112,6 @@ h1 { background: #240319; color: #ffffff; padding: 0.5em; }
 h1 a, h1 a:visited, h1 a:active { color: #ffffff; outline: 0; -moz-outline: 0; }
 h1 a:hover { color: #240319; background: white; }
 h1, h2, h3, #footer {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: bolder;
   letter-spacing: -1px;
 }
@@ -141,7 +139,6 @@ h3 {
 }
 /* line 95 */
 #bio p:first-child:first-letter {
-  font-family: "Comic Sans MS", cursive;
   font-weight: bold;
   font-size: 700%;
 }
