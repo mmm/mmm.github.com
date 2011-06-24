@@ -170,3 +170,22 @@ h3 {
   text-align: right;
 }
 
+blockquote {
+  border-left: 1px solid #222;
+  line-height: 18px;
+  font-size: 11pt;
+  font-style: italic;
+  margin: 20px;
+  padding-left: 10px;
+}
+
+code {
+  font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+  font-size: 12pt;
+}
+
+#wrapper {
+  max-width: 760px;
+  min-width: 30em;
+  width: 720px;
+}
