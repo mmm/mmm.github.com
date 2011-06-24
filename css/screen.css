@@ -1,3 +1,7 @@
+a, a:visited, a:hover, a:active {
+  text-decoration: none;
+}
+
 /* line 1 */
 ul {
   list-style: none;
@@ -68,12 +72,10 @@ body {
 }
 /* line 59 */
 #resume a {
-  text-decoration: none;
   color: white;
 }
 /* line 63 */
 #resume a:hover {
-  text-decoration: none;
   color: grey;
   background: white;
 }
@@ -202,6 +204,6 @@ code {
   text-align: center; 
   color: white;
 }
-.pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; text-decoration: underline; }
-.pagination a:hover { background: white; color: #000; font-size: 1.1em; text-decoration: underline; }
+.pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; }
+.pagination a:hover { background: white; color: #000; font-size: 1.1em; }
 
