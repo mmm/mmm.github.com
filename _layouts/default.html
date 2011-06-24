@@ -1,44 +1,133 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
   <head>
-    <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta content="en-us" http-equiv="Content-Language" />
-    <meta content="My Blog" name="description" />
-    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
-    <link rel="alternate" type="application/atom+xml" title="Mark Mims - Atom" href="/atom.xml" />
+    <meta content='Mark Mims (www.agiledynamics.com)' name='author' />
+    <link href='favicon.ico' rel='icon' type='image/ico' />
+    <link href='favicon.ico' rel='shortcut icon' type='image/ico' />
+    <link href="/css/normalize.css" media="all" rel="stylesheet" type="text/css"/><link href="/css/screen.css" media="all" rel="stylesheet" type="text/css"/>
     <link href='http://pip.verisignlabs.com/server' rel='openid.server' />
     <link href='http://mmm.pip.verisignlabs.com/' rel='openid.delegate' />
     <title>Mark Mims, Ph.D. &mdash; {{ page.title }}</title>
     {% include analytics.html %}
   </head>
   <body>
-    <header>
-      <h1 id="title">
-        Snippets, Thoughts, and Links
-      </h1>
-      <h2 id="subtitle">
-        ...chaotic bits of
-        <a href="http://markmims.com/" title="About">my</a>
-        distributed hybrid associative memory
-      </h2>
-    </header>
-    <div id="wrapper">
-      {{ content }}
-      <footer id="footer">
-        <a href="/" title="Home">Home</a> &bull;
-        <a href="/about.html" title="About me">About</a> &bull;
-        <a href="/archive.html" title="Older Posts">Archive</a> &bull;
-        <form action="http://www.google.com/cse" id="cse-search-box">
-          <div>
-            <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
-            <input type="hidden" name="ie" value="UTF-8" />
-            <input type="text" name="q" size="40" />
-            <input type="submit" name="sa" value="Search" />
-          </div>
-        </form>
-      </footer>
+    <div id='title'>
+      <img src='images/title-blog.png' />
     </div>
+    <div id='container'>
+      <div id='resume'>
+        <dl>
+          <dt>
+            Email (and GTalk):
+          </dt>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dt>
+            Voice:
+          </dt>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+          <dd>
+            <a href="skype:markmmims">skype:markmmims</a>
+          </dd>
+          <dt>
+            Resume:
+          </dt>
+          <dd>
+            <a href="res.html" title="Resume for Mark Mims">html</a>
+          </dd>
+          <dd>
+            <a href="MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+          </dd>
+          <dd>
+            <a href="MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>
+          </dd>
+          <dt>
+            Public Keys:
+          </dt>
+          <dd>
+            <a href="mmm.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">?</a>
+            )
+          </dd>
+          <dd>
+            <a href="markmims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">?</a>
+            )
+          </dd>
+          <dt>
+            Misc:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://utexas.facebook.com/profile.php?id=532511774">Facebook</a>
+          </dd>
+          <dt>
+            Nav:
+          </dt>
+          <dd>
+            <a href="/" title="Home">Home</a>
+          </dd>
+          <dd>
+            <a href="/about.html" title="About me">About</a>
+          </dd>
+          <dd>
+            <a href="/archive.html" title="Older Posts">Archive</a>
+          </dd>
+          <dt>
+            Search:
+          </dt>
+          <dd>
+            <form action="http://www.google.com/cse" id="cse-search-box">
+              <div>
+                <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
+                <input type="hidden" name="ie" value="UTF-8" />
+                <input type="text" name="q" size="12" />
+                <input type="submit" name="sa" value="Go!" />
+              </div>
+            </form>
+          </dd>
+        </dl>
+      </div>
+      <div class='white_box'>
+        <div id="wrapper">
+          {{ content }}
+          <footer id="footer">
+          <a href="/" title="Home">Home</a> &bull;
+          <a href="/about.html" title="About me">About</a> &bull;
+          <a href="/archive.html" title="Older Posts">Archive</a>
+          <form action="http://www.google.com/cse" id="cse-search-box">
+            <div>
+              <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
+              <input type="hidden" name="ie" value="UTF-8" />
+              <input type="text" name="q" size="40" />
+              <input type="submit" name="sa" value="Search" />
+            </div>
+          </form>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
   </body>
 </html>
