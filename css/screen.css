@@ -60,7 +60,7 @@ body {
 }
 
 /* line 49 */
-#resume {
+#sidebar {
   position: relative;
   width: 240px;
   float: right;
@@ -71,16 +71,16 @@ body {
   border: 10px solid white;
 }
 /* line 59 */
-#resume a {
+#sidebar a {
   color: white;
 }
 /* line 63 */
-#resume a:hover {
+#sidebar a:hover {
   color: grey;
   background: white;
 }
 /* line 68 */
-#resume dd {
+#sidebar dd {
   font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
   margin-left: 2px;
   padding-left: 10px;
