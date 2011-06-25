@@ -10,7 +10,7 @@
     <title>Mark Mims, Ph.D. &mdash; {{ page.title }}</title>
     {% include analytics.html %}
   </head>
-  <body>
+  <body onload="document.googlesearch.q.focus();">
     <div id='title'>
       <a href="/"><img src='/images/title-blog.png' /></a>
     </div>
@@ -86,37 +86,28 @@
           <dd>
             <a href="/archive.html" title="Older Posts">Archive</a>
           </dd>
-          <dt>
-            Search:
-          </dt>
-          <dd>
-            <form action="http://www.google.com/cse" id="cse-search-box">
-              <div>
-                <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
-                <input type="hidden" name="ie" value="UTF-8" />
-                <input type="text" name="q" size="12" />
-                <input type="submit" name="sa" value="Go!" />
-              </div>
-            </form>
-          </dd>
         </dl>
       </div>
       <div class='white_box'>
         <div id="wrapper">
-          {{ content }}
-          <footer id="footer">
-          <a href="/" title="Home">Home</a> &bull;
-          <a href="/about.html" title="About me">About</a> &bull;
-          <a href="/archive.html" title="Older Posts">Archive</a>
-          <form action="http://www.google.com/cse" id="cse-search-box">
-            <div>
+
+          <form action="http://www.google.com/cse" id="cse-search-box" name="googlesearch">
+            <div class="search" id="search">
               <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
               <input type="hidden" name="ie" value="UTF-8" />
               <input type="text" name="q" size="40" />
               <input type="submit" name="sa" value="Search" />
             </div>
           </form>
+
+          {{ content }}
+
+          <footer id="footer">
+            <a href="/" title="Home">Home</a> &bull;
+            <a href="/about.html" title="About me">About</a> &bull;
+            <a href="/archive.html" title="Older Posts">Archive</a>
           </footer>
+          
         </div>
       </div>
     </div>

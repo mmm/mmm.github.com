@@ -117,6 +117,13 @@ h1, h2, h3, #footer {
   font-weight: bolder;
   letter-spacing: -1px;
 }
+#footer a, #footer a:visited, #footer a:active {
+  color: #101418;
+}
+#footer a:hover {
+  color: white;
+  background: #101418;
+}
 
 h1 {
   font-size: 30px;
@@ -206,4 +213,13 @@ code {
 }
 .pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; }
 .pagination a:hover { background: white; color: #000; font-size: 1.1em; }
+
+#search { 
+  padding: 0 1em 1em 1em; 
+  /* background: #C0D848;  */
+  /* margin-bottom: 2em;  */
+  height: 30px; 
+  line-height: 30px; 
+  vertical-align: middle; 
+}
 
