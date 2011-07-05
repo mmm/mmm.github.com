@@ -110,6 +110,12 @@ body {
   filter: alpha(opacity=80);
 }
 
+.white_box p {
+  line-height: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 h1 { background: #240319; color: #ffffff; padding: 0.5em; }
 h1 a, h1 a:visited, h1 a:active { color: #ffffff; outline: 0; -moz-outline: 0; }
 h1 a:hover { color: #240319; background: white; }
@@ -166,6 +172,23 @@ h3 {
 .post { margin-bottom: 4em; }
 .post:last-child { margin-bottom: 0; }
 .post .meta { text-align: right; color: #666; }
+
+.post pre {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #DDDDDD;
+    border-color: #CCCCCC #CCCCCC #FFFFFF;
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 14px;
+    line-height: 21px;
+    padding: 20px;
+    overflow: auto;
+}
 
 /*
 .post {
