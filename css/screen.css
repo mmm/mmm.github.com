@@ -86,6 +86,26 @@ body {
   padding-left: 10px;
 }
 
+#sidebar #name {
+  text-align: center;
+  margin: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid white;
+}
+#sidebar #description {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+#sidebar .nav {
+  padding: 0;
+  font-weight: bolder;
+  /* letter-spacing: -1px; */
+}
+#sidebar li {
+  margin-left: 2px;
+  padding-left: 10px;
+}
+
 /* line 71 */
 #mugshot {
   background: white;
