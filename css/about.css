@@ -107,9 +107,15 @@ body {
   filter: alpha(opacity=80);
 }
 
+
 /* line 93 */
 #bio {
   width: 550px;
+}
+#bio p {
+  line-height: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 /* line 95 */
 #bio p:first-child:first-letter {
@@ -117,6 +123,7 @@ body {
   font-weight: bold;
   font-size: 700%;
 }
+
 /* line 100 */
 #bio #skills {
   font-weight: bold;

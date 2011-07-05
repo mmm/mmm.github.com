@@ -115,6 +115,11 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+#bio p {
+  line-height: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
 h1 { background: #240319; color: #ffffff; padding: 0.5em; }
 h1 a, h1 a:visited, h1 a:active { color: #ffffff; outline: 0; -moz-outline: 0; }
