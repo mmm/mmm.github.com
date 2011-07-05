@@ -1,50 +1,159 @@
-/* elements */
-* {
-  margin: 0;
-  padding: 0;
+a, a:visited, a:hover, a:active {
+  text-decoration: none;
 }
 
+/* line 1 */
+ul {
+  list-style: none;
+  text-indent: 1em;
+  margin: 10px;
+}
+/* line 6 */
+ul li {
+  margin: 10px;
+  padding-left: 5px;
+}
+
+/* line 11 */
+dl {
+  text-indent: 1em;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+/* line 16 */
+dl dd {
+  margin-left: 5px;
+  padding-left: 30px;
+}
+
+/* line 21 */
+html {
+  text-align: center;
+}
+
+/* line 25 */
 body {
-  background-color: #edf1f3;
-  color: #222;
-  font-family: 'Times New Roman', 'Times', serif;
-  line-height: 1.4em;
-  margin: 20px auto 18px 15%;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  line-height: 1.636em;
+  color: white;
+  text-align: center;
+  background: #101418;
 }
 
-a:link {
-  color: #336699;
-  text-decoration: none;
-}
-a:visited {
-  color: #660000;
-  text-decoration: none;
-}
-a:hover {
-  color: #336699;
-  text-decoration: underline;
+/* line 33 */
+#title {
+  background: #101418 url(../images/banner-silverbump.png) repeat-x;
 }
 
-a img { border-width: 0; }
+/* line 37 */
+#container {
+  position: relative;
+  width: 1280px;
+  margin: 0 auto;
+  background: url(../images/bg-clean.jpg) no-repeat;
+  z-index: 0;
+  font-size: 1.125em;
+  text-align: left;
+  top: 0;
+  left: 0;
+}
 
-blockquote {
-  border-left: 1px solid #222;
-  line-height: 18px;
-  font-size: 11pt;
-  font-style: italic;
-  margin: 20px;
+/* line 49 */
+#sidebar {
+  position: relative;
+  width: 240px;
+  float: right;
+  padding: 20px;
+  margin-right: 80px;
+  background: green;
+  z-index: 20;
+  border: 10px solid white;
+}
+/* line 59 */
+#sidebar a {
+  color: white;
+}
+/* line 63 */
+#sidebar a:hover {
+  color: grey;
+  background: white;
+}
+/* line 68 */
+#sidebar dd {
+  font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+  margin-left: 2px;
   padding-left: 10px;
 }
 
-code {
-  font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
-  font-size: 12pt;
+#sidebar #name {
+  text-align: center;
+  margin: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid white;
+}
+#sidebar #description {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+#sidebar .nav {
+  padding: 0;
+  font-weight: bolder;
+  /* letter-spacing: -1px; */
+}
+#sidebar li {
+  margin-left: 2px;
+  padding-left: 10px;
 }
 
+/* line 71 */
+#mugshot {
+  background: white;
+  margin: 20px 18px 20px 18px;
+  border: 5px solid white;
+  text-align: center;
+  padding: 10px;
+}
+
+/* line 79 */
+.white_box {
+  position: relative;
+  left: 100px;
+  top: 100px;
+  width: 760px;
+  padding: 50px 200px 50px 60px;
+  background: white;
+  color: black;
+  z-index: 15;
+  opacity: 0.8;
+  -moz-opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.white_box p {
+  line-height: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#bio p {
+  line-height: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+h1 { background: #240319; color: #ffffff; padding: 0.5em; }
+h1 a, h1 a:visited, h1 a:active { color: #ffffff; outline: 0; -moz-outline: 0; }
+h1 a:hover { color: #240319; background: white; }
 h1, h2, h3, #footer {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   font-weight: bolder;
   letter-spacing: -1px;
+}
+#footer a, #footer a:visited, #footer a:active {
+  color: #101418;
+}
+#footer a:hover {
+  color: white;
+  background: #101418;
 }
 
 h1 {
@@ -64,30 +173,49 @@ h3 {
   line-height: 22px;
 }
 
-li { margin-bottom: 4px; }
-
-p, ul, ol { margin-bottom: 18px; }
-
-ul, ol {
-  margin-left: 2em;
+/* line 93 */
+#bio {
+  width: 550px;
+}
+/* line 95 */
+#bio p:first-child:first-letter {
+  font-weight: bold;
+  font-size: 700%;
+}
+/* line 100 */
+#bio #skills {
+  font-weight: bold;
+  list-style: none;
+  margin: 60px 60px 60px 120px;
+}
+/* line 105 */
+#bio #skills ul {
+  font-weight: normal;
+  font-size: smaller;
 }
 
-ul { list-style-type: square; }
+.post { margin-bottom: 4em; }
+.post:last-child { margin-bottom: 0; }
+.post .meta { text-align: right; color: #666; }
 
-/* html5 */
-header, footer, nav, article { display: block; }
-
-/* classes */
-.book-cover {
-  float: left;
-  margin-right: 10px;
+.post pre {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #DDDDDD;
+    border-color: #CCCCCC #CCCCCC #FFFFFF;
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 14px;
+    line-height: 21px;
+    padding: 20px;
+    overflow: auto;
 }
 
-.fusiontext a, .fusiontext a:hover, .fusiontext a:visited {
-  color: #222;
-  text-decoration: none;
-}
-
+/*
 .post {
   border-bottom: 1px solid #222;
   margin-bottom: 20px;
@@ -103,44 +231,43 @@ header, footer, nav, article { display: block; }
   font-style: italic;
   text-align: right;
 }
+*/
 
-/* ids */
-#cse-search-box {
-  margin-top: 10px;
+blockquote {
+  border-left: 1px solid #222;
+  line-height: 18px;
+  font-size: 11pt;
+  font-style: italic;
+  margin: 20px;
+  padding-left: 10px;
 }
 
-#footer {
-  font-size: 14pt;
-}
-
-#fusionad {
-  float: right;
-  margin: 75px 200px 0 10px;
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  font-size: 10pt;
-  text-align: center;
-  width: 150px;
-}
-
-#intro {
-  color: #666;
-  font-size: 22pt;
-  margin-bottom: 24pt;
-  margin-top: 24pt;
-}
-
-#subtitle, #title { color: #333; }
-
-#subtitle {
-  font-size: 24pt;
-}
-
-#title {
-  font-size: 32pt;
+code {
+  font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+  font-size: 12pt;
 }
 
 #wrapper {
-  max-width: 40em;
+  max-width: 760px;
   min-width: 30em;
-  width: 32em;
+  width: 720px;
 }
+.pagination { 
+  padding: 1em; 
+  /* background: #FFC145;  */
+  background: #101418;
+  text-align: center; 
+  color: white;
+}
+.pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; }
+.pagination a:hover { background: white; color: #000; font-size: 1.1em; }
+
+#search { 
+  padding: 0 1em 1em 1em; 
+  /* background: #C0D848;  */
+  /* margin-bottom: 2em;  */
+  height: 30px; 
+  line-height: 30px; 
+  vertical-align: middle; 
+}
+

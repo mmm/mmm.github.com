@@ -1,45 +1,74 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
   <head>
-    <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta content="en-us" http-equiv="Content-Language" />
-    <meta content="My Blog" name="description" />
-    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="/css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
-    <link rel="alternate" type="application/atom+xml" title="Mark Mims - Atom" href="/atom.xml" />
+    <meta content='Mark Mims (www.agiledynamics.com)' name='author' />
+    <link href='/favicon.ico' rel='icon' type='image/ico' />
+    <link href='/favicon.ico' rel='shortcut icon' type='image/ico' />
+    <link href="/css/normalize.css" media="all" rel="stylesheet" type="text/css"/><link href="/css/screen.css" media="all" rel="stylesheet" type="text/css"/>
     <link href='http://pip.verisignlabs.com/server' rel='openid.server' />
     <link href='http://mmm.pip.verisignlabs.com/' rel='openid.delegate' />
     <title>Mark Mims, Ph.D. &mdash; {{ page.title }}</title>
     {% include analytics.html %}
   </head>
-  <body>
-    <header>
-      <h1 id="title">
-        Snippets, Thoughts, and Links
-      </h1>
-      <h2 id="subtitle">
-        ...chaotic bits of
-        <a href="http://markmims.com/" title="About">my</a>
-        distributed hybrid associative memory
-      </h2>
-    </header>
-    <div id="wrapper">
-      {{ content }}
-      <footer id="footer">
-        <a href="http://markmims.com/" title="Home">Home</a> &bull;
-        <a href="/" title="Blog">Blog</a> &bull;
-        <a href="http://markmims.com/" title="About me">About</a> &bull;
-        <a href="/archive.html" title="Older Posts">Archive</a> &bull;
-        <form action="http://www.google.com/cse" id="cse-search-box">
-          <div>
-            <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
-            <input type="hidden" name="ie" value="UTF-8" />
-            <input type="text" name="q" size="40" />
-            <input type="submit" name="sa" value="Search" />
-          </div>
-        </form>
-      </footer>
+  <body onload="document.googlesearch.q.focus();">
+    <div id='title'>
+      <a href="/"><img src='/images/title-blog.png' /></a>
     </div>
+    <div id='container'>
+      <div id='sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/mug.jpg"/>
+        </div>
+        <div id="name">
+          <a href="/about.html" title="About">Mark M. Mims, Ph.D.</a>
+        </div>
+        <ul class="nav">
+          <li>
+            <a href="http://markmims.com/" title="Home">Home</a>
+          </li>
+          <li>
+            <a href="/" title="Blog">Blog</a>
+          </li>
+          <li>
+            <a href="http://markmims.com/" title="About">About</a>
+          </li>
+          <li>
+            <a href="/archive.html" title="Older Posts">Archive</a>
+          </li>
+        </ul>
+      </div>
+      <div class='white_box'>
+        <div id="wrapper">
+
+          <form action="http://www.google.com/cse" id="cse-search-box" name="googlesearch">
+            <div class="search" id="search">
+              <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
+              <input type="hidden" name="ie" value="UTF-8" />
+              <input type="text" name="q" size="40" />
+              <input type="submit" name="sa" value="Search" />
+            </div>
+          </form>
+
+          {{ content }}
+
+          <footer id="footer">
+            <a href="http://markmims.com/" title="Home">Home</a> &bull;
+            <a href="/" title="Blog">Blog</a> &bull;
+            <a href="http://markmims.com/" title="About me">About</a> &bull;
+            <a href="/archive.html" title="Older Posts">Archive</a>
+          </footer>
+          
+        </div>
+      </div>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
   </body>
 </html>
