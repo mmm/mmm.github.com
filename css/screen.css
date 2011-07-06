@@ -262,7 +262,7 @@ code {
 .pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; }
 .pagination a:hover { background: white; color: #000; font-size: 1.1em; }
 
-#search { 
+.search { 
   padding: 0 1em 1em 1em; 
   /* background: #C0D848;  */
   /* margin-bottom: 2em;  */
@@ -271,3 +271,7 @@ code {
   vertical-align: middle; 
 }
 
+
+.gsc-control-cse {
+  background: white;
+}
