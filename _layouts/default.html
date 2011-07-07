@@ -9,7 +9,6 @@
     <link href='http://mmm.pip.verisignlabs.com/' rel='openid.delegate' />
     <title>Mark Mims, Ph.D. &mdash; {{ page.title }}</title>
     {% include analytics.html %}
-    {% include google_search.html %}
   </head>
   <body onload="document.search.q.focus();">
     <div id='title'>
@@ -41,12 +40,14 @@
       <div class='white_box'>
         <div id="wrapper">
 
-          <div class="search" id="cse">
-            <input type="hidden" name="cx" value="000652178004161548235:gnplrkdmhbu" />
-            <input type="hidden" name="ie" value="UTF-8" />
-            <input type="text" name="q" size="40" />
-            <input type="submit" name="sa" value="Search" />
-          </div>
+          <form action="http://www.google.com/cse" id="cse-search-box">
+            <div class="search" id="cse">
+              <input type="hidden" name="cx" value="002681610689672365669:0etao32ylly" />
+              <input type="hidden" name="ie" value="UTF-8" />
+              <input type="text" name="q" size="40" />
+              <input type="submit" name="sa" value="Search" />
+            </div>
+          </form>
 
           {{ content }}
 
