@@ -5,7 +5,7 @@ tags: ['howto']
 ---
 
 
-From [Michael Noll](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/)
+From [Michael Noll's hadoop on ubuntu post](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/)
 
     mkdir /var/lib/hadoop
     chown mmm.mmm /var/lib/hadoop

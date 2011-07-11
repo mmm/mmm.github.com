@@ -5,7 +5,7 @@ tags: ['howto']
 ---
 
 
-From `http://ubuntuforums.org/showthread.php?t=1213325`
+From [here](http://ubuntuforums.org/showthread.php?t=1213325)
 
     #!/usr/bin/perl
     my $cmd = q[dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver',member='SessionIdleChanged'"];
@@ -22,7 +22,7 @@ From `http://ubuntuforums.org/showthread.php?t=1213325`
 
 ---
 
-From `http://www.linuxquestions.org/questions/fedora-35/start-and-stop-script-with-screensaver-728498/`
+From [here](http://www.linuxquestions.org/questions/fedora-35/start-and-stop-script-with-screensaver-728498/)
 
 
     #!/usr/bin/perl
@@ -89,7 +89,7 @@ and
 ---
 
 
-from `http://ubuntuforums.org/showthread.php?t=1537241`
+from [here](http://ubuntuforums.org/showthread.php?t=1537241)
 
     #!/bin/sh
     gnome-screensaver-command --lock
@@ -98,7 +98,7 @@ from `http://ubuntuforums.org/showthread.php?t=1537241`
     exit
 
 
-also some stuff in `http://ubuntuforums.org/showthread.php?t=1358946`
+also some stuff in [here](http://ubuntuforums.org/showthread.php?t=1358946)
 
 Try to run gnome-screensave in no-daemon and debug mode to see what's going on...
 according to `https://bugs.launchpad.net/ubuntu/+source/gnome-power-manager/+bug/193192`
@@ -106,7 +106,7 @@ according to `https://bugs.launchpad.net/ubuntu/+source/gnome-power-manager/+bug
 
 ---
 
-Some inhibit stuff from `http://program-nix.blogspot.com/2010/08/python-inhibiting-gnome-screensaver.html`
+Some inhibit stuff from [here](http://program-nix.blogspot.com/2010/08/python-inhibiting-gnome-screensaver.html)
 
     #!/usr/bin/python
     import subprocess
@@ -126,7 +126,7 @@ Some inhibit stuff from `http://program-nix.blogspot.com/2010/08/python-inhibiti
 
 ---
 
-or from `https://bbs.archlinux.org/viewtopic.php?pid=321620`
+or from [here](https://bbs.archlinux.org/viewtopic.php?pid=321620)
 
     dbus-send --session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=20000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Inhibit string:"MPlayer" string:"Watching video"
 
