@@ -1,0 +1,170 @@
+---
+layout: post
+title: lvm cheats and notes
+tags: ['howto']
+---
+
+from http://www.redhatlinux.info/2010/11/lvm-logical-volume-manager.html
+
+LVM (LOGICAL VOLUME MANAGER)
+1. TO CREATE LVM
+
+    1.fdisk /dev/sda   ->create 3 partitions + label to 8e
+    2.partprobe
+    3.fdisk -l
+    4.pvcreate /dev/sda8 /dev/sda9
+    5.pvdisplay /dev/sda8
+    6.pvdisplay /dev/sda9
+    7.vgcreate vg0 /dev/sda8 /dev/sda9
+    8.vgdisplay 
+    9.lvcreate -L +200M -n /dev/vg0/home1
+    10.lvdisplay /dev/vg0/home1
+    11.lvcreate -L +300M -n /dev/vg0/var1
+    12.lvdisplay /dev/vg0/var1 
+    13.mkfs.ext3 /dev/vg0/var1
+    14 mkfs.ext3 /dev/vg0/home1 
+    15.mkdir /home1
+    16.mkdir /var1
+    17.mount /dev/vg0/home1 /home1
+    18.mount /dev/vg0/var1 /var1
+    19.cp /etc/a* /home1
+    20.cp /etc/b* /var1
+    21.vim /etc/fstab 
+    22.mount -a
+
+TO EXTEND LVM
+
+    1.lvdisplay /dev/vg0/home1
+    2.lvextend -L +200M /dev/vg0/home1
+    3.ls /home1
+    4.resize2fs /dev/vg0/home1
+    5.ls /home1
+
+TO REDUCE LVM
+
+    1. lvdisplay 
+    2. umount /var1
+    3. e2fsck -f /dev/vg0/var1
+    4. resize2fs /dev/vg0/var1 100M
+    5. lvreduce -L -100M -n /dev/vg0/var1
+    6. mount /dev/vg0/var1 /var1
+    7. df -h 
+
+LVM SNAPSHOT
+
+    1.  lvcreate  -L 200M -s -n lv2 /dev/llc/lv1
+
+TO EXTEND PV
+    1.pvcreate /dev/sda10
+    2.pvdisplay
+  
+TO EXTEND VG
+    1.vgextend vg0 /dev/sda10
+    2.vgdisplay vg0
+
+TO REDUCE VG
+    1.vgreduce vg0 /dev/sda10
+    2.vgdisplay 
+
+TO REDUCE PV
+    1.pvremove /dev/sda10
+    2.pvdisplay 
+
+REMOVE LVM
+    1.lvdisplay 
+    2.umount /dev/vg0/home1 
+    3.umount /dev/vg0/var1
+    4.vim /etc/fstab 
+    5.lvremove /dev/vg0/home1 
+    6.lvremove /dev/vg0/var1 
+    7.lvdisplay 
+
+REMOVE VG
+    1.vgdisplay 
+    2.vgremove /dev/vg0
+    3.vgdisplay 
+
+REMOVE PV
+    1.pvdisplay 
+    2.pvremove /dev/sda9
+    3.pvremove /dev/sda8
+
+
+
+---
+
+from http://www.linux-mag.com/cache/7454/1.html
+
+
+    # fdisk -l /dev/sdb
+
+    Disk /dev/sdb: 500.1 GB, 500107862016 bytes
+    255 heads, 63 sectors/track, 60801 cylinders
+    Units = cylinders of 16065 * 512 = 8225280 bytes
+
+    Device Boot      Start         End      Blocks   Id  System
+    /dev/sdb1               1       30400   244187968+  8e  Linux LVM
+    /dev/sdb2           30401       60801   244196032+  8e  Linux LVM
+   
+
+    # pvcreate /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+    Physical volume "/dev/sdb1" successfully created
+    Physical volume "/dev/sdb2" successfully created
+    Physical volume "/dev/sdc1" successfully created
+    Physical volume "/dev/sdc2" successfully created
+
+
+    # pvdisplay
+
+
+    # vgcreate primary_vg /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+      Volume group "primary_vg" successfully created
+
+
+    # vgdisplay
+
+    # vgscan
+    Reading all physical volumes.  This may take a while...
+    Found volume group "primary_vg" using metadata type lvm2
+  
+    # lvcreate --name /dev/primary_vg/home_lv --size 450G
+      Logical volume "home_lv" created
+
+    # lvdisplay
+
+    # lvscan
+
+    # mkfs.ext3 /dev/primary_vg/home_lv
+
+
+    # lvcreate -L500M -s -n home_backup_080309 /dev/primary_vg/home_lv
+      Logical volume "home_backup_080309" created
+
+
+    # lvscan
+      ACTIVE   Original '/dev/primary_vg/home_lv' [450.00 GB] inherit
+        ACTIVE   Snapshot '/dev/primary_vg/home_backup_080309' [500.00 MB] inherit
+
+
+    # mkdir /mnt/backup/home_backup_080309
+    # mount /dev/primary_vg/home_lv/home_backup_080309 /mnt/backup/home_backup_080309
+    # mount
+    /dev/hda3 on / type ext3 (rw)
+    proc on /proc type proc (rw)
+    sysfs on /sys type sysfs (rw)
+    devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+    /dev/hda1 on /boot type ext2 (rw)
+    tmpfs on /dev/shm type tmpfs (rw)
+    none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)
+    sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)
+    /dev/mapper/primary_vg-home_lv on /home type ext3 (rw,data=ordered)
+    /dev/mapper/primary_vg-home_backup_080309 on /mnt/backup/home_backup_080309 type ext3 (rw)
+    
+    # ls -s /mnt/backup/home_backup_080309/
+    total 20
+    16 lost+found   4 user5
+    # ls -s /mnt/backup/home_backup_080309/user5
+    total 74080
+        4 linux-2.6.30  74076 linux-2.6.30.tar.gz
+
+
