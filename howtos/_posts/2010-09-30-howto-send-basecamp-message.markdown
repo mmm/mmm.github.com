@@ -4,7 +4,7 @@ title: send basecamp message
 tags: ['howto']
 ---
 
-don't remember where I got this from...
+This was cobbled together from other stuff... no longer have the links
 
     require 'net/https'
 
