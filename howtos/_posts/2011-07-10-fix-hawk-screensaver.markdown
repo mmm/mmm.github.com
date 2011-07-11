@@ -1,6 +1,6 @@
 ---
 layout: post
-title: fix-hawk-screensaver
+title: fix screensaver on hawk
 tags: ['howto']
 ---
 
