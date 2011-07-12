@@ -10,7 +10,7 @@ Thanks Michael Noll for the posts where I first learned how to do this stuff:
 - [Running Hadoop on Ubuntu Linux (Single-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/)
 - [Running Hadoop on Ubuntu Linux (Multi-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/)
 
-I'd like to show how to run his exact examples, but this time around I'll use 
+I'd like to run his exact examples, but this time around I'll use 
 [Ensemble](http://ensemble.ubuntu.com/) for hadoop deployment/management.
 
 ---
