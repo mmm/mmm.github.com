@@ -144,39 +144,12 @@ Next, you need to deploy the hadoop services:
 
 (the '.' is important)
 
-wait a minute or two for EC2 to comply, then
-when both services are in a `started` state, as in
-
-    $ ensemble status
-    2011-07-12 15:27:10,782 INFO Connecting to environment.
-    machines:
-      0: {dns-name: ec2-50-17-28-19.compute-1.amazonaws.com, instance-id: i-8bc034ea}
-      1: {dns-name: ec2-50-17-0-68.compute-1.amazonaws.com, instance-id: i-4fcf3b2e}
-      2: {dns-name: ec2-75-101-249-123.compute-1.amazonaws.com, instance-id: i-35cf3b54}
-    services:
-      hadoop-master:
-        formula: local:hadoop-master-1
-        relations: {}
-        units:
-          hadoop-master/0:
-            machine: 1
-            relations: {}
-            state: started
-      hadoop-slave:
-        formula: local:hadoop-slave-1
-        relations: {}
-        units:
-          hadoop-slave/0:
-            machine: 2
-            relations: {}
-            state: started
-    2011-07-12 15:27:13,992 INFO 'status' command finished successfully
-
-now relate them:
+now you simply relate the two services:
 
     ensemble add-relation hadoop-master hadoop-slave
 
-that's it.
+Relations are where the ensemble special sauce is,
+but more about that in another post.
 
 You can tell everything's happy when `ensemble status`
 gives you something like:
