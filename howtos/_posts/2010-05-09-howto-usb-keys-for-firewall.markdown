@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: use usb keys for openmicroserver firewalls
 tags: ["howto"]
 ---

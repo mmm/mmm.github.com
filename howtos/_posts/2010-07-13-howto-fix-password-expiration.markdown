@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: fix password expirations
 tags: ["howto"]
 ---

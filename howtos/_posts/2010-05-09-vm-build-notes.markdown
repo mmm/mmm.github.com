@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: VM buildout notes for dlb
 tags: ["howto"]
 ---

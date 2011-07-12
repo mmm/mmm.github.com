@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: filter filetypes from rsnapshot
 tags: ["howto"]
 ---

@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: setup encrypted fs
 tags: ["howto"]
 ---

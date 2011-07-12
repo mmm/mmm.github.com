@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: best format for external drive
 tags: ["howto"]
 ---

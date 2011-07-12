@@ -1,7 +1,7 @@
 ---
-layout:post
+layout: post
 title: add user in osx from the cli
-tags: ["howto"]
+tags: ['howto']
 ---
 
 totally fucking ridiculous!

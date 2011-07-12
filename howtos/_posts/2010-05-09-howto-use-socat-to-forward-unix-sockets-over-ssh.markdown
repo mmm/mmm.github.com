@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: use socat to forward unix sockets over ssh
 tags: ["howto"]
 ---

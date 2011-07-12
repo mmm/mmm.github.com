@@ -1,5 +1,5 @@
 ---
-layout:post
+layout: post
 title: lock a user to a screen session
 tags: ["howto"]
 ---
