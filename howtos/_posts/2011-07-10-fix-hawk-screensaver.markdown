@@ -1,6 +1,6 @@
 ---
 layout: post
-title: fix screensaver on hawk
+title: grrr... fix dpms on hawk
 tags: ['howto']
 ---
 

@@ -1,31 +1,34 @@
 ---
 layout: post
 title: Painless Hadoop / Ubuntu / EC2
-tags: ['ensemble']
+tags: ['ensemble','hadoop']
 ---
 
 
 Thanks Michael Noll for the posts where I first learned how to do this stuff:
 
-  - [Running Hadoop on Ubuntu Linux (Single-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/)
-  - [Running Hadoop on Ubuntu Linux (Multi-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/)
+- [Running Hadoop on Ubuntu Linux (Single-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/)
+- [Running Hadoop on Ubuntu Linux (Multi-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/)
 
-I'd like to show how to run his exact examples, but this time around I'll use Ensemble for hadoop deployment/management.
+I'd like to show how to run his exact examples, but this time around I'll use 
+[Ensemble](http://ensemble.ubuntu.com/) for hadoop deployment/management.
+
+---
 
 ## The Short Story
 
 ### Setup
 
-- install/configure ensemble client tools
+install/configure ensemble client tools
 
-- run hadoop services with ensemble
+run hadoop services with ensemble
 
     $ ensemble bootstrap
     $ ensemble deploy --repository . hadoop-master
     $ ensemble deploy --repository . hadoop-slave
     $ ensemble add-relation hadoop-master hadoop-slave
 
-- optionally add slaves to scale horizontally
+optionally add slaves to scale horizontally
 
     $ ensemble add-unit hadoop-slave
     $ ensemble add-unit hadoop-slave
@@ -39,7 +42,7 @@ versions of the setup.
 
 ### Data and Jobs
 
-- Load your data and jars
+Load your data and jars
 
     $ ensemble ssh hadoop-master/0
 
@@ -49,20 +52,23 @@ versions of the setup.
     hdfs$ cd /tmp/gutenberg
     hdfs$ wget http://url/to/simple/sample/data
 
-- copy the data into hdfs
-
+copy the data into hdfs
+ 
     hdfs$ hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
 
-- run mapreduce jobs against the dataset
+run mapreduce jobs against the dataset
 
     hdfs$ hadoop jar hadoop-examples.jar wordcount gutenberg gutenberg-output
 
 
+That's it!
+
 ---
 
-## Details
+Now, again with some more details...
 
-### Installing Ensemble
+
+## Installing Ensemble
 
 Install ensemble client tools from `ppa:ensemble` onto your local machine
 
@@ -88,10 +94,10 @@ It'll look something like:
 
 
 
-### Hadoop
+## Hadoop
 
 
-#### Grab the Ensemble Formulas
+### Grab the Ensemble Formulas
 
 Make a place for formulas to live
 
@@ -107,7 +113,7 @@ now grab the actual formulas we'll be using
 first with `apt-get install bzr`)
 
 
-#### Starting up the Hadoop Services
+### Start the Hadoop Services
 
 Spin up ensemble
 
@@ -145,7 +151,7 @@ gives you something like:
 
     [ es output with master/slave started and related ]
 
-#### Loading Data
+### Loading Data
 
 Log into the master node
 
@@ -166,7 +172,7 @@ and copy it into hdfs
     hdfs$ hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
 
 
-#### Running Jobs
+### Running Jobs
 
 Similar to above, but now do
 
@@ -186,7 +192,7 @@ or
 
     ensemble ssh hadoop-slave/2
 
-#### Horizontal Scaling
+### Horizontal Scaling
 
 To resize your cluster,
 
