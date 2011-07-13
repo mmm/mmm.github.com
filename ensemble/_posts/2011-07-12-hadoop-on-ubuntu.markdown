@@ -48,9 +48,9 @@ Load your data and jars
 
     ubuntu$ sudo -s -u hdfs
 
-    hdfs$ mkdir /tmp/gutenberg
-    hdfs$ cd /tmp/gutenberg
-    hdfs$ wget http://url/to/simple/sample/data
+    hdfs$ cd /tmp
+    hdfs$ wget http://markmims.com/files/gutenberg.tar.bz2
+    hdfs$ tar xjvf gutenberg.tar.bz2
 
 copy the data into hdfs
  
@@ -58,7 +58,7 @@ copy the data into hdfs
 
 run mapreduce jobs against the dataset
 
-    hdfs$ hadoop jar hadoop-examples.jar wordcount gutenberg gutenberg-output
+    hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount gutenberg gutenberg-output
 
 
 That's it!
@@ -194,9 +194,9 @@ and become the hdfs user
 
 pull the example data
 
-    hdfs$ mkdir /tmp/gutenberg
-    hdfs$ cd /tmp/gutenberg
-    hdfs$ wget http://path/to/my/data
+    hdfs$ cd /tmp
+    hdfs$ wget http://markmims.com/files/gutenberg.tar.bz2
+    hdfs$ tar xjvf gutenberg.tar.bz2
 
 and copy it into hdfs
 
@@ -207,7 +207,7 @@ and copy it into hdfs
 
 Similar to above, but now do
 
-    hdfs$ hadoop jar hadoop-examples.jar wordcount gutenberg gutenberg-output
+    hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount gutenberg gutenberg-output
 
 You can look at logs on the slaves by
 
