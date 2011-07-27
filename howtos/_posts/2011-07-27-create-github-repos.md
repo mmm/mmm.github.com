@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'git create' new github repos
+title: git-create new github repos
 tags: ["howto", "github", "api"]
 ---
 
