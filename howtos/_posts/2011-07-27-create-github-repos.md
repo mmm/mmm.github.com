@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Create new repos using the github api
-tags: ["howto","github","api"]
+tags: ["howto", "github", "api"]
 ---
 
 Ok, I'm too lazy to go through the web interface every time I want to add a new github repo.
