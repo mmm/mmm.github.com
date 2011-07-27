@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Create new repos using the github api
-tags: ["howto"]
+tags: ["howto","github","api"]
 ---
 
 Ok, I'm too lazy to go through the web interface every time I want to add a new github repo.
@@ -75,5 +75,5 @@ Notice that git even picks it up as a builtin so I can
 
     git create myrepo "my repo description"
 
-and shit just works.
+and it just works... hmmm monkeypatching git.
 
