@@ -7,6 +7,16 @@ tags: ["howto", "github", "api"]
 Ok, I'm too lazy to go through the web interface every time I want to add a new github repo.
 github api to the rescue...
 
+## The goal
+
+I want
+
+    git create myrepo "my repo description"
+
+to create a new github repo 'myrepo'.
+
+## manually
+
 Grab your API Token from your github account, "Account Settings" -- "Account Admin".
 
 Use curl
@@ -29,7 +39,10 @@ Github docs say you should send at least `name` but it will take any of these as
  - `homepage` => homepage url 
  - `public` => 1 for public, 0 for private
 
-so I'll use a script...
+
+## monkeypatch git
+
+I'll use a script...
 
     #!/usr/bin/ruby
 
@@ -75,5 +88,5 @@ Notice that git even picks it up as a builtin so I can
 
     git create myrepo "my repo description"
 
-and it just works... hmmm monkeypatching git.
+and it just works...
 
