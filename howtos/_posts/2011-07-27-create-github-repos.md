@@ -38,7 +38,7 @@ so I'll use a script...
     require 'rest-client'
 
     USER = "mmm"
-    TOKEN = "747241b1282480a88c0bd1241175c291"
+    TOKEN = "XXXXXXXX"
     URL = "https://github.com/api/v2/json/repos/create"
 
     def usage 
