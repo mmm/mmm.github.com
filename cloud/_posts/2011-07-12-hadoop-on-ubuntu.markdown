@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Painless Hadoop / Ubuntu / EC2"
-tags: ['ensemble', 'hadoop']
+tags: ['cloud', 'ensemble', 'hadoop']
 ---
 
 
