@@ -12,7 +12,7 @@ layout: nil
    <name>Mark Mims</name>
    <email>mark.mims@gmail.com</email>
  </author>
- {% for post in site.categories.ensemble limit:10 %}
+ {% for post in site.categories.cloud limit:10 %}
  <entry>
    <title>{{ post.title }}</title>
    <link href="http://al3x.net{{ post.url }}"/>
