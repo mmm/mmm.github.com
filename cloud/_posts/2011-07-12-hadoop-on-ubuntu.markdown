@@ -106,8 +106,8 @@ Make a place for formulas to live
 
 now grab the actual formulas we'll be using
 
-    bzr checkout lp:~negronjl/+junk/hadoop-master
-    bzr checkout lp:~negronjl/+junk/hadoop-slave
+    bzr checkout lp:principia/hadoop-master
+    bzr checkout lp:principia/hadoop-slave
 
 (If you don't have bazaar installed, you'll need to get that
 first with `apt-get install bzr`)
