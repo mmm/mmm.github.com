@@ -4,12 +4,12 @@ title: Presonus Firebox in Ubuntu
 tags: ['howto', 'audio']
 ---
 
-Just some notes for later.
+Just some notes to myself for later.
 
 I want a little better sounding audio on screencasts so I dusted off
 the firewire soundcard I got a few years ago for recording bass tracks.
 
-This model [link](link)
+This model [PreSonus Firebox 24-bit/96kHz](http://www.presonus.com/)
 worked great for me on audio production stuff several years
 ago, but at the time I could give jackd and friends a realtime kernel
 to have their way with.
@@ -18,8 +18,8 @@ Now, I don't really have the spare hardware to dedicate to a RT audio setup...
 gotta run several ubuntu server VMs for work and can't really hand the whole
 shebang over to jack every time I wanna record something.
 
-Here's my attempt to do it without realtime priorities... I'll let you know
-how it sounds.
+Here's my attempt to do it without realtime priorities...
+I'll track my progress here.
 
 ## The quick and the dirty...
 
@@ -40,8 +40,6 @@ start the jack daemon...
 
     $ jackd -r -dfirewire
 
-saw other posts referring to `-dfirebob` but `firewire` worked.
-
 Connect to jackd
 
     $ qjackctl 
@@ -52,6 +50,7 @@ Install something like `Ardour`
 
     # apt-get install ardour
 
-and wire stuff together with the qjackctl patchpanel.
+and wire stuff together with the qjackctl patchpanel,
+start `jackd` and go.
 
 I used to use a better jack patch panel in the past... have to find it.
