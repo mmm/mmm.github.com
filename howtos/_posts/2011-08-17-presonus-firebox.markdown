@@ -32,8 +32,8 @@ install jack
 when the installer asks to do realtime by default, I said no.
 
 Note that I installed `ffado-mixer-qt4 ffado-tools ffado-dbus-server`
-earlier trying to get this to work without jack, but gave up.  I don't
-know if these packages effect the current setup, but they're still
+earlier trying to get this to work with pulse, without jack... but gave up.
+I don't know if these packages effect the current setup, but they're still
 installed
 
 start the jack daemon... 
@@ -54,3 +54,10 @@ and wire stuff together with the qjackctl patchpanel,
 start `jackd` and go.
 
 I used to use a better jack patch panel in the past... have to find it.
+
+## resources
+
+    http://wiki.jon.geek.nz/index.php/Presonus_Firebox
+    http://ubuntuforums.org/showthread.php?t=835477
+    http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digital-Audio-Workstation
+
