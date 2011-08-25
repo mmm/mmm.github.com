@@ -120,7 +120,9 @@ Let's grab some code and get cranking...
 First, pull mediawiki as an example (or any formula you're
 currently working on that might need shared storage)
 
-    git clone http://github.com/mmm/ensemble-mediawiki -b nfsdemo mediawiki
+    $ mkdir ~/formulas
+    $ cd ~/formulas
+    $ bzr branch lp:~mark-mims/+junk/ensemble-mediawiki-nfsdemo mediawiki
 
 This gives us
 
@@ -144,7 +146,7 @@ mediawiki formula should now have nfs support in the trunk.
 
 Now, we can copy sample nfs client hooks from
 
-    http://github.com/mmm/ensemble-nfs-client/tree/master/hooks
+    http://bazaar.launchpad.net/~mark-mims/+junk/principia-nfs-client/files/head:/hooks/
 
 Grab `storage-relation-joined` and `storage-relation-changed`, 
 and save them as mediawiki hooks... I'd rename them to something
@@ -318,15 +320,14 @@ The time to do this though is after the `images` share is mounted,
 so putting it in the `nfs-imagestore-relation-changed` hook after
 the mount is a good place for it.
 
-    mediawiki_installed() {
-      [ -d "$mw_root/config" ]
-    }
-    enable_mediawiki_uploads() {
-      ensemble-log "updating mediawiki config"
-      sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
-      service apache2 status && service apache2 restart
-    }
-    mediawiki_installed && enable_mediawiki_uploads
+    
+    ensemble-log "updating mediawiki upload config"
+ 
+    cat > /etc/mediawiki/upload_settings.php <<'EOS'
+    $wgEnableUploads = true;
+    EOS
+ 
+    service apache2 status && service apache2 restart
 
 So we end up with
 
@@ -376,18 +377,16 @@ So we end up with
     # insure ownership
     chown -f $local_owner.$local_owner $local_mountpoint
 
-    mediawiki_installed() {
-      [ -d "$mw_root/config" ]
-    }
-    enable_mediawiki_uploads() {
-      ensemble-log "updating mediawiki config"
-      sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
-      service apache2 status && service apache2 restart
-    }
-    mediawiki_installed && enable_mediawiki_uploads
+    ensemble-log "updating mediawiki upload config"
+ 
+    cat > /etc/mediawiki/upload_settings.php <<'EOS'
+    $wgEnableUploads = true;
+    EOS
+ 
+    service apache2 status && service apache2 restart
 
 
-the same hook that's in `master` on `http://github.com/mmm/ensemble-mediawiki`.
+the same hook that's in `lp:~mark-mims/+junk/ensemble-mediawiki-nfs-imagestore`.
 
 
 ### Update formula metadata
@@ -482,8 +481,6 @@ The NFS *server* formula is pretty simple.
 
 It lives at
 [lp:principia/nfs](http://bazaar.launchpad.net/~ensemble-composers/principia/oneiric/nfs/trunk/files)
-(or
-[github.com/mmm/ensemble-nfs](http://github.com/mmm/ensemble-nfs)),
 and supports configuration options at deploy(or run)-time via
 
     $ ensemble deploy --repository . --config ./mydata.yaml nfs mydata
