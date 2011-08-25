@@ -10,12 +10,12 @@ layout: nil
  <id>http://blog.markmims.com/</id>
  <author>
    <name>Mark Mims</name>
-   <email>mark.mims@gmail.com</email>
+   <email>mark.mims@canonical.com</email>
  </author>
  {% for post in site.categories.cloud limit:10 %}
  <entry>
    <title>{{ post.title }}</title>
-   <link href="http://al3x.net{{ post.url }}"/>
+   <link href="http://blog.markmims.com{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
    <id>http://blog.markmims.com{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
