@@ -22,6 +22,9 @@ Well, how would this fit into a sexy new ensemble of services?
 
 In this post I'll walk through adapting a basic mediawiki
 formula to enable using nfs mounts for shared resource directories.
+The steps here should work pretty closely for a lot of different
+service formulas that might benefit from a NFS hooks.
+
 
 At the end of the day, an example stack might look something like 
 
