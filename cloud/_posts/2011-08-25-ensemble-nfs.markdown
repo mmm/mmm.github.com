@@ -496,7 +496,7 @@ where `mydata.yaml` looks like
       export_options: rw,sync,no_root_squash,no_all_squash
 
 
-### what's left?
+### What's left?
 
 This might not be an ideal NFS setup for your particular service.
 What are some other ways we can tweak this?
