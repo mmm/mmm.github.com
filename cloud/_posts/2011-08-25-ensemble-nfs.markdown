@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Core Infrastructure Part 1 - adding NFS to formulas"
+title: "Core Infrastructure Part 1 - Adding NFS to Ensemble Formulas"
 tags: ['cloud', 'ensemble']
 ---
 
