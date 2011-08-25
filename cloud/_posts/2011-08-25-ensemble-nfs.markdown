@@ -12,10 +12,10 @@ storage, logging, monitoring, messaging, etc...  and how they
 fit into the ensemble ecosystem.
 
 We'll start with NFS.  I'd consider that vanilla workhorse to be
-core infrastructure technology.  It's still pretty much everywhere you
-look.  Many friends keep ancient boxes around running other
-OSs (like solaris) as dedicated NFS fileserver appliances.
-Well, how does that fit into a sexy new ensemble of services?
+core infrastructure technology... it's still pretty much everywhere you
+look.  Many friends keep ancient boxes around as dedicated NFS 
+fileserver appliances that are usually in fairly critical roles.
+Well, how would this fit into a sexy new ensemble of services?
 
 
 ## The Goal
@@ -321,12 +321,12 @@ the mount is a good place for it.
     mediawiki_installed() {
       [ -d "$mw_root/config" ]
     }
-    update_upload_path() {
+    enable_mediawiki_uploads() {
       ensemble-log "updating mediawiki config"
       sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
       service apache2 status && service apache2 restart
     }
-    mediawiki_installed && update_upload_path
+    mediawiki_installed && enable_mediawiki_uploads
 
 So we end up with
 
@@ -379,12 +379,12 @@ So we end up with
     mediawiki_installed() {
       [ -d "$mw_root/config" ]
     }
-    update_upload_path() {
+    enable_mediawiki_uploads() {
       ensemble-log "updating mediawiki config"
       sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
       service apache2 status && service apache2 restart
     }
-    mediawiki_installed && update_upload_path
+    mediawiki_installed && enable_mediawiki_uploads
 
 
 the same hook that's in `master` on `http://github.com/mmm/ensemble-mediawiki`.
