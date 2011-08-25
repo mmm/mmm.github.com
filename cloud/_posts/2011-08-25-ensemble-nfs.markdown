@@ -118,16 +118,9 @@ same `images` directory.
 Let's grab some code and get cranking...
 
 First, pull mediawiki as an example (or any formula you're
-currently working on that might need shared storage).
-
-    bzr branch lp:~mark-mims/+junk/ensemble-mediawiki-nfsdemo mediawiki
-
-or 
+currently working on that might need shared storage)
 
     git clone http://github.com/mmm/ensemble-mediawiki -b nfsdemo mediawiki
-
-Note this is an 'nfsdemo' branch just for this demo... the real
-mediawiki formula now has nfs support in the trunk.
 
 This gives us
 
@@ -146,6 +139,8 @@ This gives us
 
 a bare mediawiki formula that we can use as a starting
 point to add our nfs client hooks.
+Note this is an 'nfsdemo' branch just for this demo... the real
+mediawiki formula should now have nfs support in the trunk.
 
 Now, we can copy sample nfs client hooks from
 
@@ -307,8 +302,8 @@ hook:
     chown -f $local_owner.$local_owner $local_mountpoint
 
 
-will run fine.  It'll mount the `images` share and everything
-will run as it was before.
+will run fine.  It'll mount the `images` share and mediawiki
+will run normally.
 
 
 ### Additional configuration
@@ -323,19 +318,83 @@ The time to do this though is after the `images` share is mounted,
 so putting it in the `nfs-imagestore-relation-changed` hook after
 the mount is a good place for it.
 
-    [mmm] mediawiki config snippet
+    mediawiki_installed() {
+      [ -d "$mw_root/config" ]
+    }
+    update_upload_path() {
+      ensemble-log "updating mediawiki config"
+      sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
+      service apache2 status && service apache2 restart
+    }
+    mediawiki_installed && update_upload_path
 
 So we end up with
 
-    [mmm] final `nfs-imagestore-relation-changed` file
+    #!/bin/bash
+    set -ue
 
-    [mmm] link to the current formula
+    remote_host=`relation-get hostname`
+    if [ -z "$remote_host" ] ; then
+        ensemble-log "remote host not set yet."
+        exit 0
+    fi
+    export_path=`relation-get mountpoint`
+    fstype=`relation-get fstype`
+
+    mw_root="/var/lib/mediawiki"
+    local_mountpoint="$mw_root/images"
+    local_owner="www-data"
+    mount_options=""
+
+    create_local_mountpoint() {
+      ensemble-log "creating local mountpoint"
+      umask 002
+      mkdir -p $local_mountpoint
+      # create owner if necessary?
+      chown -f $local_owner.$local_owner $local_mountpoint
+    }
+    [ -d $local_mountpoint ] || create_local_mountpoint 
+
+    share_already_mounted() {
+      `mount | grep -q $local_mountpoint`
+    }
+    mount_share() {
+      for try in {1..3}; do
+
+        ensemble-log "mounting nfs share"
+        [ ! -z $mount_options ] && options="-o ${mount_options}" || options=""
+        mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+          && break
+
+        ensemble-log "mount failed: $local_mountpoint"
+        sleep 10
+
+      done
+    }
+    share_already_mounted || mount_share 
+
+    # insure ownership
+    chown -f $local_owner.$local_owner $local_mountpoint
+
+    mediawiki_installed() {
+      [ -d "$mw_root/config" ]
+    }
+    update_upload_path() {
+      ensemble-log "updating mediawiki config"
+      sed -i 's/$wgEnableUploads.*/$wgEnableUploads = true;/' $mw_root/config/LocalSettings.php
+      service apache2 status && service apache2 restart
+    }
+    mediawiki_installed && update_upload_path
+
+
+the same hook that's in `master` on `http://github.com/mmm/ensemble-mediawiki`.
 
 
 ### Update formula metadata
 
 So we have hooks that should do what we'd like... 
-next we need to update the formula metadata so ensemble
+(I'll developing and debugging hooks in another post).
+Next we need to update the formula metadata so ensemble
 knows when to fire them.
 
 My `mediawiki/metadata.yaml` currently looks like
@@ -353,7 +412,7 @@ My `mediawiki/metadata.yaml` currently looks like
         interface: http
     ...
 
-let's add our nfs requirement (_requirement_'s a strong word... they're
+let's add our nfs requirement (_requirement_ is a strong word... they're
 all optional),
 
     ...
@@ -387,19 +446,60 @@ and using the right parameters when communicating with the nfs server
 service (using `relation-get` and `relation-set`) in our hooks.
 
 
+### Spin it up
+
+Let's deploy our new formula:
+
+    $ ensemble bootstrap
+    $ ensemble deploy --repository=~/formulas nfs myimages
+    $ ensemble deploy --repository=~/formulas mysql
+    $ ensemble deploy --repository=~/formulas mediawiki mywiki
+    $ ensemble add-relation mysql:db mywiki:db
+    $ ensemble add-relation myimages mywiki
+    $ ensemble expose mywiki
+
+### Spread it out
+
+Add a few more mediawiki instances...
+
+    $ for i in {1..10}; do
+    $ ensemble add-unit mywiki
+    $ done
+
+When everything's up, these should all share the same database
+and image store.
+
+In real life you'd probably want to start adding mysql slaves
+to this.  Of course, in real life you'll also add remote logging,
+monitoring, and other core infrastructure components too.
+Keep an eye out for subsequent posts in this series.
 
 
+### NFS server config
 
-Start from an example nfs client.
-You can get source for this from
-[launcpad](http://bazaar.launchpad.net/~mark-mims/+junk/nfs-client/files)
-or
-[github.com/mmm/ensemble-nfs](http://github.com/mmm/ensemble-nfs-client).
+Up until now we've only talked about the NFS client.
+The NFS *server* formula is pretty simple.
 
-copy over the nfs-imagestore-relation
+It lives at
+[lp:principia/nfs](http://bazaar.launchpad.net/~ensemble-composers/principia/oneiric/nfs/trunk/files)
+(or
+[github.com/mmm/ensemble-nfs](http://github.com/mmm/ensemble-nfs)),
+and supports configuration options at deploy(or run)-time via
+
+    $ ensemble deploy --repository . --config ./mydata.yaml nfs mydata
+
+where `mydata.yaml` looks like
+
+    mydata:
+      initial_daemon_count: 43
+      storage_root: /srv/mydata
+      export_options: rw,sync,no_root_squash,no_all_squash
 
 
 ### what's left?
+
+This might not be an ideal NFS setup for your particular service.
+What are some other ways we can tweak this?
 
 Currently, the nfs server creates a separate share for each named service
 that attaches to it.
@@ -416,23 +516,4 @@ A hadoop-master service named `job27` would work as expected.
 
 We might need to do this a little differently... providing different levels
 of sharing exports.
-
-
-## NFS Server
-
-The NFS server formula is pretty simple.
-
-You can get source for this from
-[lp:principia/nfs](http://bazaar.launchpad.net/~ensemble-composers/principia/oneiric/nfs/trunk/files)
-or
-[github.com/mmm/ensemble-nfs](http://github.com/mmm/ensemble-nfs).
-
-It supports configuration options on the server as
-
-
-
-
-
-
-Check out the `ensemble status` output for a 10-slave cluster [here](http://pastebin.com/FMF3TQEJ)
 
