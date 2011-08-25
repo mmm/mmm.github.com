@@ -511,9 +511,13 @@ share a different export.  The new export is created on the service when
 the first unit of a new service name joins... subsequent units of that named
 service are just connected to that new export.
 
-Of course, other services can be related to that same nfs service
-A hadoop-master service named `job27` would work as expected.
+Of course, this works for entirely separate services too.  Relating a 
+`hadoop-master` service named `job27` to that same nfs service would result in 
+the `job27` units sharing a new nfs export.
 
-We might need to do this a little differently... providing different levels
-of sharing exports.
-
+This behavior is a reasonable default, but there may be a need to do this a 
+little differently in your infrastructure.  You could change the nfs server
+formula to provide different levels of export sharing... either by some
+additional `config.yaml` entries or by extending the `mount` interface.
+An nfs client might request a unique export, for backups
+say, or a named export for sharing.
