@@ -33,12 +33,17 @@ html {
 
 /* line 25 */
 body {
+  -webkit-background-size: 100%;
+  background-attachment: fixed;
+  background-color: #101418;
+  background-image: url(../images/bg-clean.jpg);
+  background-position: 50% 50%;
+  background-size: 100%;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 100%;
   line-height: 1.636em;
   color: white;
   text-align: center;
-  background: #101418;
 }
 
 /* line 33 */
@@ -51,7 +56,6 @@ body {
   position: relative;
   width: 1280px;
   margin: 0 auto;
-  background: url(../images/bg-clean.jpg) no-repeat;
   z-index: 0;
   font-size: 1.125em;
   text-align: left;
@@ -61,6 +65,10 @@ body {
 
 /* line 49 */
 #sidebar {
+  -webkit-box-shadow: #FFFFFF 0 -1px 0px, #222222 0 0 10px;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: #FFFFFF 0 1px 0;
+  /* text-shadow: #FFFFFF 0 1px 0; */
   position: relative;
   width: 240px;
   float: right;
@@ -117,6 +125,10 @@ body {
 
 /* line 79 */
 .white_box {
+  -webkit-box-shadow: #FFFFFF 0 -1px 0px, #222222 0 0 10px;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: #FFFFFF 0 1px 0;
+  /* text-shadow: #FFFFFF 0 1px 0; */
   position: relative;
   left: 100px;
   top: 100px;
@@ -206,7 +218,7 @@ h3 {
     -moz-border-top-colors: none;
     background: none repeat scroll 0 0 #DDDDDD;
     border-color: #CCCCCC #CCCCCC #FFFFFF;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 5px 5px 5px 5px;
     border-style: solid;
     border-width: 1px;
     font-size: 14px;
@@ -215,6 +227,12 @@ h3 {
     overflow: auto;
 }
 
+.post h1 {
+  -webkit-box-shadow: #FFFFFF 0 -1px 0px, #222222 0 0 10px;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: #FFFFFF 0 1px 0;
+  /* text-shadow: #FFFFFF 0 1px 0; */
+}
 /*
 .post {
   border-bottom: 1px solid #222;
@@ -258,6 +276,10 @@ code {
   background: #101418;
   text-align: center; 
   color: white;
+  -webkit-box-shadow: #FFFFFF 0 -1px 0px, #222222 0 0 10px;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: #FFFFFF 0 1px 0;
+  /* text-shadow: #FFFFFF 0 1px 0; */
 }
 .pagination a, .pagination a:visited, .pagination a:active { color: white; font-size: 1.1em; }
 .pagination a:hover { background: white; color: #000; font-size: 1.1em; }
