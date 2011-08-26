@@ -1,0 +1,18 @@
+---
+layout:post
+title: $i
+tags: ["howto"]
+---
+
+mkdir /tmp/wrappingFortran
+cd /tmp/wrappingFortran
+
+mkdir tags
+mkdir branches
+mkdir trunk
+
+cd trunk
+cp stuff from wrappingFortran project... bin, src, .classpath, .project to trunk
+
+svn import . svn+ssh://dev.agiledynamics.com/usr/local/svnroot/agile/parsons/src/wrappingFortran -m'initial revision'
+

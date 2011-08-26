@@ -1,0 +1,75 @@
+---
+layout:post
+title: $i
+tags: ["howto"]
+---
+
+
+outside (korek-eth0)
+
+-----------
+
+korek
+  firewall
+  traffic shaper
+  snmpd
+  dhcpd
+  (log elsewhere)
+
+-----------
+dmz (korek-eth2)
+
+phantom
+  web (internal and external)
+  mrtg
+    korek-eth2
+    wrt160n
+  monitoring korek dhcpd
+  monitoring other snmp available on wrt160n
+  darkstat or nagios to remotely monitor korek (?)
+  (maybe add external harddrive(?))
+
+wrt160n (just wifi access point and wifi router(whatever that means))
+    wifi
+
+      laserjet
+      ganymede
+      chumby
+      filbur
+      virtual:
+        lakshmi
+      dustin:
+        laptop-1
+        laptop-2
+      tay:
+        laptop
+        iphone
+      ben:
+        flubber
+      phil:
+        laptop
+        iphone
+      guests:
+        work
+        anonymous
+  
+
+-----------
+inside (korek-eth1)
+
+hawk
+  logging for korek (?)
+linkstation
+  logging for korek (?)
+sauren
+  logging for korek (?)
+
+virtual:
+  wilma
+  sarah
+  roger
+  
+dustin:
+  laptop-1
+  laptop-2
+

@@ -1,0 +1,8 @@
+---
+layout:post
+title: $i
+tags: ["howto"]
+---
+
+20041101085200 - synched with kojiro
+
