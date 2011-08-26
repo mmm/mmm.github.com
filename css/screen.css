@@ -39,6 +39,7 @@ body {
   background-image: url(../images/bg-clean.jpg);
   background-position: 50% 50%;
   background-size: 100%;
+  background-repeat: no-repeat;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 100%;
   line-height: 1.636em;
