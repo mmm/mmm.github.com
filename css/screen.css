@@ -33,12 +33,17 @@ html {
 
 /* line 25 */
 body {
+  -webkit-background-size: 100%;
+  background-attachment: fixed;
+  background-color: #101418;
+  background-image: url(../images/bg-clean.jpg);
+  background-position: 50% 50%;
+  background-size: 100%;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   font-size: 100%;
   line-height: 1.636em;
   color: white;
   text-align: center;
-  background: #101418;
 }
 
 /* line 33 */
@@ -51,7 +56,7 @@ body {
   position: relative;
   width: 1280px;
   margin: 0 auto;
-  background: url(../images/bg-clean.jpg) no-repeat;
+  background: url(../images/overlay.jpg) no-repeat;
   z-index: 0;
   font-size: 1.125em;
   text-align: left;
