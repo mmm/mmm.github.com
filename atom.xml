@@ -4,10 +4,10 @@ layout: nil
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  <title>Mark Mims</title>
- <link href="http://blog.markmims.com/atom.xml" rel="self"/>
- <link href="http://blog.markmims.com/"/>
+ <link href="http://markmims.com/atom.xml" rel="self"/>
+ <link href="http://markmims.com/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
- <id>http://blog.markmims.com/</id>
+ <id>http://markmims.com/</id>
  <author>
    <name>Mark Mims</name>
    <email>mark.mims@gmail.com</email>
@@ -17,7 +17,7 @@ layout: nil
    <title>{{ post.title }}</title>
    <link href="http://al3x.net{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
-   <id>http://blog.markmims.com{{ post.id }}</id>
+   <id>http://markmims.com{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
    <author>
      <name>Mark Mims</name>
