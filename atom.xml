@@ -10,7 +10,7 @@ layout: nil
  <id>http://markmims.com/</id>
  <author>
    <name>Mark Mims</name>
-   <email>mark.mims@gmail.com</email>
+   <email>mark.mims@canonical.com</email>
  </author>
  {% for post in site.posts limit:10 %}
  <entry>
