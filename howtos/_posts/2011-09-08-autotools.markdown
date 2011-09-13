@@ -1,11 +1,11 @@
 ---
 layout: post
-title: PreSonus FireBox in Ubuntu
-tags: ['howto', 'audio']
+title: Stir that memory of autotools
+tags: ['howto', 'autotools']
 ---
 
 
-Ok, never going to forget these again!
+Ok, never going to forget these again, dammit!
 
     $ aclocal
     $ autoconf --force
