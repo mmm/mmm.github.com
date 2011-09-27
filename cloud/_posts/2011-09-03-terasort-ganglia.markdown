@@ -36,9 +36,9 @@ run the jobs
 
     $ juju ssh namenode/0
     ubuntu@<ec2-url> $ sudo -su hdfs
-    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=8000 1000000000 in_dir
+    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=1000 1000000000 in_dir
     hdfs@<ec2-url> $ hadoop job -history all in_dir
-    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar terasort -Dmapred.reduce.tasks=5300 in_dir out_dir
+    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar terasort -Dmapred.reduce.tasks=1000 in_dir out_dir
     hdfs@<ec2-url> $ hadoop job -history all in_dir
 
 While these are running, we can run
