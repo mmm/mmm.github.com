@@ -14,3 +14,7 @@ Ok, never going to forget these again, dammit!
     $ OS_ARCH=amd64 make
 
 
+or sometimes you can use
+
+    $ autoreconf --force --install
+
