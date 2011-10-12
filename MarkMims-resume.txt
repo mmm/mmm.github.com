@@ -4,7 +4,7 @@
 Contact Information:
 
 Mark M. Mims, Ph.D.
-Boulder, Colorado
+Austin/Boulder
 
 Email: mark.mims@gmail.com
 URL: http://www.markmims.com/
@@ -12,19 +12,34 @@ URL: http://www.markmims.com/
 
 Summary:
 
+    * Member of the Ubuntu Server Team
     * Software Developer (Rails, Ruby/C++/Java)
     * Design/Build Private & Hybrid Clouds
-    * Enterprise Integration Expert (Chief Architect for $30MM J2EE
-      project in the Energy Industry)
-    * 3D Modeling/Simulation/AI Expert
+    * Enterprise Integration (Chief Architect for $30MM J2EE project in
+      the Energy Industry)
+    * 3D Modeling/Simulation/AI
     * Ph.D. Physics
     
 
 Employment History:
 
+    Software Engineer - Ubuntu Server
+    Canonical Ltd. (Global)
+    2011-Present
+    
+    Part of the team working to build juju, a new suite of DevOps tools
+    for Ubuntu Server. Developing juju charms to orchestrate various
+    services throughout the enterprise. Designing / developing APIs and
+    tools surrounding the juju DevOps stack. Developing service stacks
+    for everything from Hadoop clusters to complex large-scale
+    infrastructures like Wikipedia. Integrate / test deployments on bare
+    metal as well as EC2, Eucalyptus, and OpenStack cloud
+    infrastructures.
+    
+    
     Cloud Architect
     Archethought (Austin, TX)
-    2010-Present
+    2010-2011
     
     Archethought is a consulting firm specializing in designing and
     building *private and hybrid clouds* for colleges and universities
@@ -48,7 +63,7 @@ Employment History:
     
     Chief Scientist
     Agile Dynamics (Austin, TX)
-    2005-Present
+    2005-2011
     
     Agile Dynamics is a consulting firm specializing in *data-driven
     decision making*, helping businesses adopt a more quantitative view
@@ -201,6 +216,26 @@ Employment History:
     hardware running Linux, Win95, NT-4.0, and an in-house real-time OS
     over DOS/4GW.
     
+    
+    Instructor
+    Dept. of Physics - UT Austin (Austin, TX)
+    1994-2000
+    
+    Physical Science I: Mechanics (AI, Instructor of Record)
+    
+    Lab for Engineering Physics I (TA)
+    
+    Lab for General Physics II (TA)
+    
+    
+    Lecturer
+    Austin Community College (Austin, TX)
+    1995-1996
+    
+    Intro to General Physics I
+    
+    Engineering Physics I
+    
 
 Education:
 
@@ -231,6 +266,9 @@ Education:
     
 
 Publications:
+
+    Clint Byrum, Mark Mims, Juan Negron. DevOps on Ubuntu Server.
+    O'Reilly. 2012(in progress).
 
     Luis J. Boya, Mark Byrd, Mark Mims, E. C. G. Sudarshan.
     "Geometry of n-state systems, pure and mixed". J. Phys.: Conf.
