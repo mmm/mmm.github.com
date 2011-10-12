@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Understanding Ensemble Relations
-tags: ['ensemble']
+title: Understanding juju Relations
+tags: ['juju']
 ---
 
 
@@ -18,7 +18,7 @@ reference zed shaw and that other dude on launchpad -vs- github
 dev -vs- ops
 
 Incidentally, thinking about services, not machines
-is what makes ensemble special.  It's precisely these
+is what makes juju special.  It's precisely these
 relations that enable this level of abstraction to
 actually work.
 
