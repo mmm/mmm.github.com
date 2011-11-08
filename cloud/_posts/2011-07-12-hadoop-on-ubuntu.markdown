@@ -8,7 +8,7 @@ tags: ['cloud', 'ensemble', 'hadoop']
     NOTE: This is outdated... 
 
 The internal project "ensemble" is now publicly known as "juju".
-Please see the repost [Painless Hadoop / Ubuntu / EC2](http://markmims.com/cloud/2011/11/07/hadoop-on-ubuntu.html)
+Please see the repost [Painless Hadoop / Ubuntu / EC2](http://markmims.com/cloud/2011/11/08/hadoop-on-ubuntu.html)
 of this article with new names and updates to the api.
 
     #########################################################
