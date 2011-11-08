@@ -4,6 +4,16 @@ title: "Painless Hadoop / Ubuntu / EC2"
 tags: ['cloud', 'ensemble', 'hadoop']
 ---
 
+    #########################################################
+    NOTE: This is outdated... 
+
+The internal project "ensemble" is now publicly known as "juju".
+Please see the repost [Painless Hadoop / Ubuntu / EC2](http://markmims.com/cloud/2011/11/07/hadoop-on-ubuntu.html)
+of this article with new names and updates to the api.
+
+    #########################################################
+
+---
 
 Thanks Michael Noll for the posts where I first learned how to do this stuff:
 
@@ -49,7 +59,7 @@ Load your data and jars
     ubuntu$ sudo -s -u hdfs
 
     hdfs$ cd /tmp
-    hdfs$ wget http://markmims.com/files/gutenberg.tar.bz2
+    hdfs$ wget http://files.markmims.com/gutenberg.tar.bz2
     hdfs$ tar xjvf gutenberg.tar.bz2
 
 copy the data into hdfs
