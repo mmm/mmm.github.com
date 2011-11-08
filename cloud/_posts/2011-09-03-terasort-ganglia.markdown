@@ -4,6 +4,16 @@ title: "Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia"
 tags: ['cloud', 'hadoop', 'ensemble']
 ---
 
+    #########################################################
+    NOTE: This is outdated... 
+
+The internal project "ensemble" is now publicly known as "juju".
+Please see the repost [Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia](http://markmims.com/cloud/2011/11/08/terasort-ganglia.html)
+of this article with new names and updates to the api.
+
+    #########################################################
+
+
 Here I'm using new features of
 [Ubuntu Server](http://www.ubuntu.com/business/server/overview) 
 (namely [Ubuntu Ensemble](http://ensemble.ubuntu.com))
