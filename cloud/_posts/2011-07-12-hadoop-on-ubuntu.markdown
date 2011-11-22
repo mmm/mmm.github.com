@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Painless Hadoop / Ubuntu / EC2"
-tags: ['cloud', 'ensemble', 'hadoop']
+tags: ['cloud', 'juju', 'hadoop']
 ---
 
     #########################################################
@@ -21,7 +21,8 @@ Thanks Michael Noll for the posts where I first learned how to do this stuff:
 - [Running Hadoop on Ubuntu Linux (Multi-Node Cluster)](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/)
 
 I'd like to run his exact examples, but this time around I'll use 
-[Ensemble](http://ensemble.ubuntu.com/) for hadoop deployment/management.
+[juju](http://juju.ubuntu.com/) for hadoop deployment/management on
+Ubuntu.
 
 ---
 
@@ -29,20 +30,21 @@ I'd like to run his exact examples, but this time around I'll use
 
 ### Setup
 
-install/configure ensemble client tools
+install/configure juju client tools
 
-run hadoop services with ensemble
+run hadoop services with juju
 
-    $ ensemble bootstrap
-    $ ensemble deploy --repository . hadoop-master
-    $ ensemble deploy --repository . hadoop-slave
-    $ ensemble add-relation hadoop-master hadoop-slave
+    $ juju bootstrap
+    $ juju deploy --repository "~/charms" local:hadoop-master namenode
+    $ juju deploy --repository "~/charms" local:hadoop-slave datanode
+    $ juju add-relation namenode datanode
+    $ juju expose namenode
 
 optionally add slaves to scale horizontally
 
-    $ ensemble add-unit hadoop-slave
-    $ ensemble add-unit hadoop-slave
-    $ ensemble add-unit hadoop-slave
+    $ juju add-unit datanode
+    $ juju add-unit datanode
+    $ juju add-unit datanode
 
 (you can add/remove these later too)
 
@@ -54,9 +56,9 @@ versions of the setup.
 
 Load your data and jars
 
-    $ ensemble ssh hadoop-master/0
+    $ juju ssh namenode/0
 
-    ubuntu$ sudo -s -u hdfs
+    ubuntu$ sudo -su hdfs
 
     hdfs$ cd /tmp
     hdfs$ wget http://files.markmims.com/gutenberg.tar.bz2
@@ -78,26 +80,25 @@ That's it!
 Now, again with some more details...
 
 
-## Installing Ensemble
+## Installing juju
 
-Install ensemble client tools from `ppa:ensemble` onto your local machine
+Install juju client tools from `ppa:juju/pkgs` onto your local machine
 
-    # sudo add-apt-repository ppa:ensemble
-    # sudo apt-get install ensemble
+    # sudo add-apt-repository ppa:juju/pkgs
+    # sudo apt-get update
+    # sudo apt-get install juju
 
 generate your environment settings with
 
-    $ ensemble
+    $ juju
 
-and then edit `~/.ensemble/environments.yaml` to use your EC2 keys.
+and then edit `~/.juju/environments.yaml` to use your EC2 keys.
 It'll look something like:
-
-    ensemble: environments
 
     environments:
       sample:
         type: ec2
-        control-bucket: ensemble-<hash>
+        control-bucket: juju-<hash>
         admin-secret: <hash>
         access-key: <your ec2 access key>
         secret-key: <your ec2 secret key>
@@ -107,17 +108,17 @@ It'll look something like:
 ## Hadoop
 
 
-### Grab the Ensemble Formulas
+### Grab the juju Formulas
 
 Make a place for formulas to live
 
-    mkdir ensemble
-    cd ensemble
+    mkdir -p ~/charms/oneiric
+    cd charms/oneiric
 
 now grab the actual formulas we'll be using
 
-    bzr checkout lp:principia/hadoop-master
-    bzr checkout lp:principia/hadoop-slave
+    bzr checkout lp:charm/hadoop-master
+    bzr checkout lp:charm/hadoop-slave
 
 (If you don't have bazaar installed, you'll need to get that
 first with `apt-get install bzr`)
@@ -125,18 +126,18 @@ first with `apt-get install bzr`)
 
 ### Start the Hadoop Services
 
-Spin up ensemble
+Spin up juju
 
-    ensemble bootstrap
+    juju bootstrap
 
 wait a minute or two for EC2 to comply.
 You're welcome to watch the water boil with
 
-    ensemble status
+    juju status
 
 which'll give you output like
 
-    $ ensemble status
+    $ juju status
     2011-07-12 15:20:54,978 INFO Connecting to environment.
     The authenticity of host 'ec2-50-17-28-19.compute-1.amazonaws.com (50.17.28.19)' can't be established.
     RSA key fingerprint is c5:21:62:f0:ac:bd:9c:0f:99:59:12:ec:4d:41:48:c8.
@@ -149,22 +150,20 @@ which'll give you output like
 
 Next, you need to deploy the hadoop services:
 
-    ensemble deploy --repository . hadoop-master
-    ensemble deploy --repository . hadoop-slave
-
-(the '.' is important)
+    juju deploy --repository "~/charms" hadoop-master namenode
+    juju deploy --repository "~/charms" hadoop-slave datanode
 
 now you simply relate the two services:
 
-    ensemble add-relation hadoop-master hadoop-slave
+    juju add-relation namenode datanode
 
-Relations are where the ensemble special sauce is,
+Relations are where the juju special sauce is,
 but more about that in another post.
 
-You can tell everything's happy when `ensemble status`
+You can tell everything's happy when `juju status`
 gives you something like:
 
-    $ ensemble status
+    $ juju status
     2011-07-12 15:29:20,331 INFO Connecting to environment.
     machines:
       0: {dns-name: ec2-50-17-28-19.compute-1.amazonaws.com, instance-id: i-8bc034ea}
@@ -196,7 +195,7 @@ gives you something like:
 
 Log into the master node
 
-    ensemble ssh hadoop-master/0
+    juju ssh namenode/0
 
 and become the hdfs user
 
@@ -221,36 +220,42 @@ Similar to above, but now do
 
 You can look at logs on the slaves by
 
-    ensemble ssh hadoop-slave/0
+    juju ssh datanode/0
     ubuntu$ tail /var/log/hadoop/hadoop-hadoop-datanode*.log
     ubuntu$ tail /var/log/hadoop/hadoop-hadoop-tasktracker*.log
 
 similarly for subsequent slave nodes
 
-    ensemble ssh hadoop-slave/1
+    juju ssh datanode/1
 
 or 
 
-    ensemble ssh hadoop-slave/2
+    juju ssh datanode/2
 
 ### Horizontal Scaling
 
 To resize your cluster,
 
-    ensemble add-unit hadoop-slave
+    juju add-unit datanode
 
 or even
 
-    ensemble add-unit hadoop-slave
-    ensemble add-unit hadoop-slave
-    ensemble add-unit hadoop-slave
-    ensemble add-unit hadoop-slave
+    for i in {1..10}; do
+      juju add-unit datanode
+    done
 
 That's it... really.
 
-Wait for `ensemble status` to show everything in a happy state and then run your jobs.
+Wait for `juju status` to show everything in a happy state and then run your jobs.
 
-I don't know yet how the hadoop ensemble formulas behave when nodes are added in the middle of a run.  I'll test and update.
+You can add nodes in the middle of a run without any problems.  Wanna write a script
+to watch your loads and add nodes as necessary?  no problem... just parse the json juju
+status output.  We're working on an API to make this process easier.
 
-Check out the `ensemble status` output for a 10-slave cluster [here](http://pastebin.com/FMF3TQEJ)
+Check out the `juju status` output for a 10-slave cluster [here](http://pastebin.com/FMF3TQEJ)
+
+
+### disclaimer
+
+I work on Ubuntu juju for Canonical.
 

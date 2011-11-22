@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Node.js and MongoDB on Ubuntu"
-tags: ['cloud', 'ensemble', 'node', 'mongo']
+tags: ['cloud', 'juju', 'node', 'mongo']
 ---
 
 
@@ -11,7 +11,7 @@ Figured I'd post details of the talk here.
 
 ## An example stack
 
-We'll use [Ensemble](http://ensemble.ubuntu.com/) to deploy a basic
+We'll use [juju](http://juju.ubuntu.com/) to deploy a basic
 [node.js](http://nodejs.org)
 app along with a couple of typical surrounding services..
 - [haproxy](http://haproxy.1wt.eu/) to catch inbound web traffic and route it to our node.js app cluster
@@ -22,32 +22,32 @@ of services.  I'll err on the side of too much detail over simplicity in this
 example, but I'll try to make it clear when there's a sidebar topic.
 
 At the end of the day, the deployment for our application
-would look like the usual ensemble deployment
+would look like the usual juju deployment
 
-    $ ensemble bootstrap
+    $ juju bootstrap
 
 (with a pregnant pause to allow EC2 to catch up)
 
-    $ ensemble deploy --repository ~/formulas mongodb
-    $ ensemble deploy --repository ~/formulas node-app myapp
-    $ ensemble add-relation mongodb myapp
+    $ juju deploy --repository ~/charms local:mongodb
+    $ juju deploy --repository ~/charms local:node-app myapp
+    $ juju add-relation mongodb myapp
 
-    $ ensemble deploy --repository ~/formulas haproxy
-    $ ensemble add-relation myapp haproxy
-    $ ensemble expose haproxy
+    $ juju deploy --repository ~/charms local:haproxy
+    $ juju add-relation myapp haproxy
+    $ juju expose haproxy
     
 (with another pregnant pause to allow EC2 to catch up)
 
 We can get the service URLs from
 
-    $ ensemble status
+    $ juju status
 
 and hit the head of the haproxy service to see the app in action.
 
 We can scale it out with
 
     $ for i in {1..4}; do
-    $   ensemble add-unit myapp
+    $   juju add-unit myapp
     $ done
 
 and we'll soon have a cluster of one haproxy node balancing
@@ -56,43 +56,43 @@ node in the backend.  Of course, we can scale mongo too,
 but that's another post.
 
 
-## Ensemble "Application" formulas
+## juju "Application" charms
 
-There are two types of ensemble formulas used in this example:
+There are two types of juju charms used in this example:
 
-"Canned Formulas", like the
-[haproxy formula](http://github.com/mmm/ensemble-haproxy)
+"Canned Charms", like the
+[haproxy charm](http://github.com/mmm/juju-haproxy)
 and the
-[mongodb formula](http://github.com/mmm/ensemble-mongodb),
-and "Application Formulas", like
-the [node.js app formula](http://github.com/mmm/ensemble-node-app).
+[mongodb charm](http://github.com/mmm/juju-mongodb),
+and "Application Charms", like
+the [node.js app charm](http://github.com/mmm/juju-node-app).
 
-Canned formulas can be used as-is right off the shelf.
+Canned charms can be used as-is right off the shelf.
 
-Application formulas are used to manage your custom application
-as an ensemble service.  We haven't nailed down the language on
-this, but these formulas create a contained environment,
+Application charms are used to manage your custom application
+as an juju service.  We haven't nailed down the language on
+this, but these charms create a contained environment,
 "framework", or "wrapper" around your custom application and
 help it to play nicely with other services.
 
 The 
-[node-app formula](http://github.com/mmm/ensemble-node-app)
+[node-app charm](http://github.com/mmm/juju-node-app)
 we use here
 is meant to be an example that you can fork/adapt and use
 to maintain custom components of your infrastructure.
 
-## The `node-app` formula
+## The `node-app` charm
 
-The `node-app` formula is the key feature we want to look at.
-It's a formula that will pull your app from revision control
-and configure/deploy/maintain it as a service within your
+The `node-app` charm is the key feature we want to look at.
+It's a charm that will pull your app from revision control
+and config/deploy/maintain it as a service within your
 infrastructure.
 
-Setup and clone this formula
+Setup and clone this charm
 
-    $ mkdir ~/formulas
-    $ cd ~/formulas
-    ~/formulas$ git clone http://github.com/mmm/ensemble-node-app node-app
+    $ mkdir ~/charms
+    $ cd ~/charms
+    ~/charms$ git clone http://github.com/charms/node-app
 
 and we'll walk through it.
 
@@ -100,6 +100,7 @@ and we'll walk through it.
     config.yaml
     copyright
     metadata.yaml
+    revision
     hooks/
       install
       mongodb-relation-changed
@@ -242,10 +243,10 @@ some example dependencies upon install.
 Now, there's no standard way to handle configuration in node
 apps, so it's quite likely your app's config looks a bit 
 different.  No problem, it's pretty straightforward to adapt
-this example formula to handle the way your app works...
+this example charm to handle the way your app works...
 and use your own config file paths, and config parameter names.
 
-End-of-sidebar... Back to the `node-app` formula.
+End-of-sidebar... Back to the `node-app` charm.
 
 ### Hooks
 
@@ -253,7 +254,7 @@ Let's go through the hooks as they would be executing during
 deployment and service relation.
 
 The `install` hook is kicked off upon deployment,
-reads its config from `config.yaml` and
+reads its config from `config.yaml` and then will
 
 - install `node`/`npm`
 - clone your node app from the repo specified in `app_repo`
@@ -262,7 +263,7 @@ reads its config from `config.yaml` and
 - create a startup service for your app
 - wait to startup once we're joined to a `mongodb` service
 
-`start` and `stop` are trivial in this formula because
+`start` and `stop` are trivial in this charm because
 we want to wait for mongo to join before we actually run
 the app.  If your app was simpler and didn't depend on
 a backing store, then you could use these hooks to
@@ -270,22 +271,22 @@ manage the service created during installation.
 
 ### MongoDB
 
-The key to every formula is in the relation hooks.
+The key to almost every charm is in the relation hooks.
 
 This particular app is written against mongodb
-so the app's formula has hooks that get fired when
+so the app's charm has hooks that get fired when
 the "app" service is related to the mongo service.
 
 This relation was defined when we did
 
-    $ ensemble add-relation mongodb myapp
+    $ juju add-relation mongodb myapp
 
 and the `relation-joined/changed` hooks
 get fired after the `install` and `start`
 hooks have successfully completed for both
 ends of the relationship.
 
-The `mongodb-relation-changed` hook in this formula
+The `mongodb-relation-changed` hook in this charm
 will read config from `config.yaml`
 
 - get relation info from the mongo service (i.e., hostname)
@@ -296,7 +297,7 @@ That's it really... our app is up and running at this
 point.
 
 Note that the example here depends on mongo,
-but ensemble makes it easy to relate to some other backend db.
+but juju makes it easy to relate to some other backend db.
 Just like we have `mongodb-relation-changed` hooks, we
 could just as easily have `cassandra-relation-changed` hooks
 that would look strikingly similar.  Of course, our app would
@@ -324,20 +325,20 @@ monitoring/logging/backups/etc that are
 pretty important for a production deployment
 in the cloud).
 
-The app formula has
+The app charm has
 hooks that get fired when
 the "app" service is related to the haproxy service.
 Just as above, this relation was defined when we did
 
-    $ ensemble add-relation haproxy myapp
+    $ juju add-relation haproxy myapp
 
 and the `relation-joined/changed` hooks
 get fired after the `install` and `start`
 hooks have successfully completed for both
 ends of the relationship.
 
-The `website-relation-changed` hook in this formula
-in its entirety
+The `website-relation-changed` hook in this charm
+in its entirety:
 
     #!/bin/sh
  
@@ -349,7 +350,7 @@ address and port our application uses to handle
 requests.
 
 We could of course configure our app to listen on port
-80, tell the formula to open port 80 in its firewall,
+80, tell the charm to open port 80 in its firewall,
 and then expose port 80 for our app service to the
 outside world.  That'd be fine if we never needed to
 scale or we were planning to load balance multiple
@@ -358,10 +359,10 @@ or something else external.
 
 Again, note that the example here uses haproxy, but
 we could easily swap that out with any other service
-that consumed the ensemble `http` interface.
+that consumed the juju `http` interface.
 
 
-### Formula configuration
+### Charm configuration
 
 Ok, so I lied a little up above when I said that the hooks
 read config info from `config.yaml`.  Yes, they do read config
@@ -371,21 +372,24 @@ in a number of different ways throughout the lifecycle of
 the service.
 
 You can pass in dynamic configuration during deployment or later
-at runtime
-also configure the formula via a `yaml` file passed to the
-(or a yaml file passed using `ensemble deploy --config`)
+at runtime using the cli
+
+    `juju set <service_name> <config_param>=<value>`
+
+or configure the charm at deployment time via a `yaml` file
+passed to the `juju deploy --config` command.
 
 
 ### Scaling tips
 
-Scaling with ensemble works really well.  The key
+Scaling with juju works really well.  The key
 to this lies in the boundaries between
 configuration for the service itself, versus configuration for
 the service _in the context of_ a relation with another service.
 
 When these two types of configuration are well isolated,
-scaling with ensemble just works.  I've caught myself several
-times working on just getting a service formula working, with
+scaling with juju just works.  I've caught myself several
+times working on just getting a service charm working, with
 no real thought to scalability, and being pleasantly surprised
 to find out that the service pretty much scales as written.
 
@@ -403,7 +407,7 @@ of relations are `started` then the relation hooks get called:
 on the relation parameters being set.  Once these are complete,
 the services are up, related, and running.
 
-Ok, now comes scaling.  `ensemble add-unit myapp` adds a new
+Ok, now comes scaling.  `juju add-unit myapp` adds a new
 `myapp` service node and goes through the whole cycle above.
 The "services" are already related, so the relation hooks are
 automatically fired as each new unit is `started`.

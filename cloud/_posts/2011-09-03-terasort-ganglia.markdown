@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia"
-tags: ['cloud', 'hadoop', 'ensemble']
+tags: ['cloud', 'hadoop', 'juju']
 ---
 
     #########################################################
@@ -16,7 +16,7 @@ of this article with new names and updates to the api.
 
 Here I'm using new features of
 [Ubuntu Server](http://www.ubuntu.com/business/server/overview) 
-(namely [Ubuntu Ensemble](http://ensemble.ubuntu.com))
+(namely [Ubuntu juju](http://juju.ubuntu.com))
 to easily deploy
 [Ganglia](http://ganglia.sourceforge.net)
 alongside
@@ -28,32 +28,32 @@ like
 
 ## Short Story
 
-Deploy hadoop and ganglia using ensemble:
+Deploy hadoop and ganglia using juju:
 
-    $ ensemble bootstrap
-    $ ensemble deploy --repository "~/formulas"  hadoop-master namenode
-    $ ensemble deploy --repository "~/formulas"  ganglia jobmonitor
-    $ ensemble deploy --repository "~/formulas"  hadoop-slave datacluster
-    $ ensemble add-relation namenode datacluster
-    $ ensemble add-relation jobmonitor datacluster
+    $ juju bootstrap
+    $ juju deploy --repository "~/charms"  hadoop-master namenode
+    $ juju deploy --repository "~/charms"  ganglia jobmonitor
+    $ juju deploy --repository "~/charms"  hadoop-slave datacluster
+    $ juju add-relation namenode datacluster
+    $ juju add-relation jobmonitor datacluster
     $ for i in {1..6}; do
-    $   ensemble add-unit datacluster
+    $   juju add-unit datacluster
     $ done
-    $ ensemble expose jobmonitor
+    $ juju expose jobmonitor
 
 When all is said and done (and EC2 has caught up),
 run the jobs
 
-    $ ensemble ssh namenode/0
+    $ juju ssh namenode/0
     ubuntu@<ec2-url> $ sudo -su hdfs
-    hdfs@<ec2-url> $ hadoop jar hadoop-*-examples.jar teragen 100000000 in_dir
+    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=1000 1000000000 in_dir
     hdfs@<ec2-url> $ hadoop job -history all in_dir
-    hdfs@<ec2-url> $ hadoop jar hadoop-*-examples.jar terasort in_dir out_dir
+    hdfs@<ec2-url> $ time hadoop jar hadoop-*-examples.jar terasort -Dmapred.reduce.tasks=1000 in_dir out_dir
     hdfs@<ec2-url> $ hadoop job -history all in_dir
 
 While these are running, we can run
 
-    $ ensemble status
+    $ juju status
 
 to get the URL for the jobmonitor ganglia web frontend
 
@@ -72,41 +72,41 @@ and a little later as the jobs run...
 </a>
 
 Of course, I'm just playing around with ganglia at the moment...
-For real performance, I'd change my ensemble config file
+For real performance, I'd change my juju config file
 to choose larger (and ephemeral) EC2 instances instead of
 the defaults.
 
 
 ## A Few Details...
 
-Let's grab the formulas necessary to reproduce this.
+Let's grab the charms necessary to reproduce this.
 
-First, let's install ensemble and set up a repo for formulas.
+First, let's install juju and set up a repo for charms.
 
-    $ sudo add-apt-repository ppa:ensemble/ppa
-    $ sudo apt-get install ensemble
+    $ sudo add-apt-repository ppa:juju/pkgs
+    $ sudo apt-get install juju
 
 Note that I'm describing all this using an Ubuntu laptop to run
-the ensemble cli because that's how I roll, but you can certainly
+the juju cli because that's how I roll, but you can certainly
 use a Mac to drive your Ubuntu services in the cloud.
-The Ensemble CLI is already available in ports, but I'm not sure
+The juju CLI is already available in ports, but I'm not sure
 the version.  Note to myself to add it to homebrew and do more
 testing with that setup.
 Windows should work too, but I don't have a clue.
 
-    ~$ mkdir ~/formulas
-    ~$ cd ~/formulas
-    ~/formulas$ git clone http://github.com/mmm/ensemble-ganglia ganglia
-    ~/formulas$ git clone http://github.com/mmm/ensemble-hadoop-master hadoop-master
-    ~/formulas$ git clone http://github.com/mmm/ensemble-hadoop-slave hadoop-slave
+    ~$ mkdir ~/charms
+    ~$ cd ~/charms
+    ~/charms$ git clone http://github.com/charms/ganglia
+    ~/charms$ git clone http://github.com/charms/hadoop-master
+    ~/charms$ git clone http://github.com/charms/hadoop-slave
 
 
 That's about all that's really necessary to get you up and
 benchmarking/monitoring.
 
-I'll do another post on how to adapt your own formulas to use monitoring
-and the `monitor` ensemble interface as part of the "Core Infrastructure"
-series I'm writing for formula developers.  Go over the process of
+I'll do another post on how to adapt your own charms to use monitoring
+and the `monitor` juju interface as part of the "Core Infrastructure"
+series I'm writing for charm developers.  Go over the process of
 what I had to do to get the `hadoop-slave` service talking to the
 `ganglia` service.
 
