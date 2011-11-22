@@ -14,15 +14,22 @@ on IRC.
 
 Details from [Jorge's post](http://tumblr.com/ZKG8NyCGhHZR):
 
-    We’re holding a Charm School on IRC.
+    We're holding a Charm School on IRC.
 
-    juju Charm School is a virtual event where a juju expert is available to answer questions about writing your own juju charms. The intended audience are people who deploy software and want to contribute charms to the wider devops community to make deploying in the public and private cloud easy.
+    juju Charm School is a virtual event where a juju expert
+    is available to answer questions about writing your own
+    juju charms. The intended audience are people who deploy
+    software and want to contribute charms to the wider devops
+    community to make deploying in the public and private
+    cloud easy.
 
     Attendees are more than welcome to:
 
     Ask questions about juju and charms
     Ask for help modifying existing scripts and make charms out of them
-    Ask for peer review on existing charms you might be working on.
-    Though not required, we recommend that you have |juju installed and configured if you want to get deep into the event.
+    Ask for peer review on existing charms you might be working on
+
+    Though not required, we recommend that you have juju installed
+    and configured if you want to get deep into the event.
 
 
