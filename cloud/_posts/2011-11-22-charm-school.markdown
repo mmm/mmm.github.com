@@ -5,8 +5,8 @@ tags: ['cloud', 'charmschool', 'juju']
 ---
 
 Wanna learn more about [juju](http://juju.ubuntu.com)?
-Drop by [Charm School](https://juju.ubuntu.com/CharmSchool/2December11)
-on IRC.
+
+Drop by [Charm School](https://juju.ubuntu.com/CharmSchool/2December11):
 
 <a href="https://juju.ubuntu.com/CharmSchool/2December11">
   <img src="/images/charmschool.png" width="220px" />
