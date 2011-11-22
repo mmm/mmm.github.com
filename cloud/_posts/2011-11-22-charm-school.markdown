@@ -9,7 +9,7 @@ Drop by [Charm School](https://juju.ubuntu.com/CharmSchool/2December11)
 on IRC.
 
 <a href="https://juju.ubuntu.com/CharmSchool/2December11">
-  <img src="/images/charmschool.png" width="720px" />
+  <img src="/images/charmschool.png" width="220px" />
 </a>
 
 Details from [Jorge's post](http://tumblr.com/ZKG8NyCGhHZR):
