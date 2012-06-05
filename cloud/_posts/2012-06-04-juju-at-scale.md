@@ -92,10 +92,14 @@ for running long-term environments in juju.
 
 As usual, juju will keep track of the state of our infrastructure going forward and
 we can make changes as necessary via juju commands.  To bootstrap and spin up the
-initial environment we'll just use shell scripts.  These scripts are really just
-hadoop versions of my standard juju demo scripts such as 
-[a simple rails stack](https://gist.github.com/2050525)
-or [an HA wiki stack](https://gist.github.com/1406018).
+initial environment we'll just use shell scripts.
+
+### Spinning up a cluster
+
+These scripts are really just
+hadoop versions of my standard juju demo scripts such as those used for 
+a simple [rails stack](https://gist.github.com/2050525)
+or an HA [wiki stack](https://gist.github.com/1406018).
 
 The hadoop scripts for EC2 will get a little more complex as we grow simply because
 we don't want AWS to think we're a DoS attack... we'll pace ourselves during spinup.
@@ -224,17 +228,43 @@ our limits to allow for 100+ nodes in one availability zone.
 
 ## 500 nodes
 
-Once we had permission to get that large, we initially just naively spun
+Once we had permission from Amazon to spin up 500 nodes on our account,
+we initially just naively spun
 up 500 instances... and quickly got throttled by ec2.
 (we're not using multiplicity in the ec2 api, nor are we using an autoscaling
 group)... we must look like a DoS attack.
 The order was eventually fulfilled, but long spin-up time overall.
 
-Ran the hadoop job no problems.
+deployment took 0226-0148 minutes
 
-Ran terasort at
+The job script used was
 
-and this engaged the entire cluster just fine.
+    #!/bin/bash
+
+    SIZE=10000000000
+    NUM_MAPS=1500
+    NUM_REDUCES=1500
+    IN_DIR=in_dir
+    OUT_DIR=out_dir
+
+    hadoop jar /usr/lib/hadoop/hadoop-examples*.jar teragen -Dmapred.map.tasks=${NUM_MAPS} ${SIZE} ${IN_DIR}
+
+    sleep 10
+
+    hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
+
+This engaged the entire cluster just fine... gave almost 200TB of HDFS
+storage
+
+<a href="/images/scale-500-50070.png">
+<img src="/images/scale-500-50070.png" width="720px" />
+</a>
+
+and ran terasort with no problems
+
+<a href="/images/scale-500-50030.png">
+<img src="/images/scale-500-50030.png" width="720px" />
+</a>
 
 
 ## 1000 nodes
@@ -243,6 +273,23 @@ batches of 99 w/2-minute waits between
 
 python to serialize yaml in zk... switched to json with considerable speedup.
 
+    SIZE=10000000000
+    NUM_MAPS=3000
+    NUM_REDUCES=3000
+
+This gave almost 350TB of HDFS storage
+
+<a href="/images/scale-1000-50070.png">
+<img src="/images/scale-1000-50070.png" width="720px" />
+</a>
+
+and eventually completed
+
+<a href="/images/scale-1000-50030.png">
+<img src="/images/scale-1000-50030.png" width="720px" />
+</a>
+
+
 ## 2000 nodes
 
 again, batches of 99 w/2-minute waits between
@@ -250,6 +297,20 @@ again, batches of 99 w/2-minute waits between
 removed more yaml from zk
 
 slow job run.. with our naive job config, we're considerably past the point of diminishing returns for chattiness in ec2.
+
+This gave almost 760TB of HDFS storage
+
+<a href="/images/scale-2000-50070.png">
+<img src="/images/scale-2000-50070.png" width="720px" />
+</a>
+
+and was running fine
+
+<a href="/images/scale-2000-50030.png">
+<img src="/images/scale-2000-50030.png" width="720px" />
+</a>
+
+but was stopped early b/c waiting would've just been wasteful.
 
 
 ## Lessons Learned
