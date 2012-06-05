@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Scaling Juju: a 2000-node cluster in EC2"
+title: "Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju"
 tags: ['cloud', 'hadoop', 'juju']
 ---
  
@@ -79,8 +79,7 @@ ask AWS to bump up your limits.
 We started scale testing from a fresh branch of juju trunk... what gets deployed to
 the PPA nightly... this freed us up to experiment with live changes to add instrumentation,
 profiling information, and randomly mess with code as necessary.  This also locks in 
-the branch of juju that the scale testing environment uses.  Also a best practice
-for running long-term environments in juju.
+the branch of juju that the scale testing environment uses.
 
 As usual, juju will keep track of the state of our infrastructure going forward and
 we can make changes as necessary via juju commands.  To bootstrap and spin up the
@@ -392,7 +391,7 @@ Profiling showed that juju was spending a _lot_ of time
 serializing stuff into zookeeper nodes using yaml.  It
 looks like python's yaml implementation is python, and
 not just wrapping libyaml.  We tested a smaller run replacing
-the internal yaml serialization with json.. (using libjson)
+the internal yaml serialization with json.. 
 Wham!  two orders of magnitude faster.  No particular surprise.
 
 
@@ -409,11 +408,11 @@ based on where developers think the bottlenecks might be.
 
 Things to do to juju as a result of these tests:
 
-    - streamline our usage of multiplicity
-      - remove from client
-      - use multiplicity in EC2 api calls
+    - streamline our implementation of '-n' options
+      - the client should pass the multiplicity to the provisioning agent
+      - the provisioning agent should pass the multiplicity to the EC2 api
     - don't use yaml to marshall data in and out of zookeeper
-    - replace security groups with per-instance firewalls
+    - replace per-instance security groups with per-instance firewalls
 
 
 ## What's Next?
