@@ -229,6 +229,12 @@ h3 {
     overflow: auto;
 }
 
+.post ul {
+  list-style: circle;
+  text-indent: .1em;
+  margin: 20px;
+}
+
 .post h1 {
   -webkit-box-shadow: #FFFFFF 0 -1px 0px, #222222 0 0 10px;
   border-radius: 5px 5px 5px 5px;

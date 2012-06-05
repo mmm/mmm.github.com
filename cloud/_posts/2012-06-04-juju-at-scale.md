@@ -13,14 +13,14 @@ was get the go-ahead to spend more time/effort/money scale-testing Juju.
 
 ## The Plan
 
-    - pick a service that scales
-    - spin up a cluster of units for this service
-    - try to run it in a way that actively engages all units of the cluster
-    - repeat:
-      - instrument
-      - profile
-      - optimize
-      - grow
+- pick a service that scales
+- spin up a cluster of units for this service
+- try to run it in a way that actively engages all units of the cluster
+- repeat:
+  - instrument
+  - profile
+  - optimize
+  - grow
 
 [James](https://plus.google.com/u/0/109495998940814132432/posts),
 [Kapil](https://plus.google.com/u/0/108276830347560657704/posts),
@@ -408,11 +408,11 @@ based on where developers think the bottlenecks might be.
 
 Things to do to juju as a result of these tests:
 
-    - streamline our implementation of '-n' options
-      - the client should pass the multiplicity to the provisioning agent
-      - the provisioning agent should pass the multiplicity to the EC2 api
-    - don't use yaml to marshall data in and out of zookeeper
-    - replace per-instance security groups with per-instance firewalls
+- streamline our implementation of '-n' options
+  - the client should pass the multiplicity to the provisioning agent
+  - the provisioning agent should pass the multiplicity to the EC2 api
+- don't use yaml to marshall data in and out of zookeeper
+- replace per-instance security groups with per-instance firewalls
 
 
 ## What's Next?
@@ -421,23 +421,23 @@ So that's a big enough bite for one round of scale testing.
 
 Next up:
 
-    - land a few of the changes outlined above into trunk.
-      Then, spin up another round of scale tests to look at the numbers.
-    - more providers (other clouds as well as a MaaS lab too)
-    - regular scale testing?
-      - can this coincide with upstream scale testing for projects like hadoop?
-    - test scaling for various services?  What does this look like for other stacks
-      of services?
+- land a few of the changes outlined above into trunk.
+  Then, spin up another round of scale tests to look at the numbers.
+- more providers (other clouds as well as a MaaS lab too)
+- regular scale testing?
+  - can this coincide with upstream scale testing for projects like hadoop?
+- test scaling for various services?  What does this look like for other stacks
+  of services?
 
 
 ## Wishlist
 
-    - find some better test jobs!  benchmarks are boring... perhaps we can use
-      this compute time to mine educational data or cure cancer or something?
+- find some better test jobs!  benchmarks are boring... perhaps we can use
+  this compute time to mine educational data or cure cancer or something?
 
-    - perhaps push juju topology information further into zk leaf nodes?
-      Are there transactional features in more recent versions of zk that we can use?
+- perhaps push juju topology information further into zk leaf nodes?
+  Are there transactional features in more recent versions of zk that we can use?
 
-    - use spot instances on ec2.  This is harder because you've gotta incorporate price monitoring.
+- use spot instances on ec2.  This is harder because you've gotta incorporate price monitoring.
 
 
