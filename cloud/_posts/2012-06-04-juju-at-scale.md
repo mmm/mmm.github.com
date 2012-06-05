@@ -216,7 +216,58 @@ which we expand on a bit to get:
     main $*
     exit 0
 
-and which we adjust manually for each cluster size.
+and which we adjust the sizes manually for each cluster.
+
+
+### Configuring Hadoop
+
+Note that we're specifying constraints to tell juju to use an m1.large for the
+hadoop master and m1.mediums for the slaves.
+
+    juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
+
+and pass config files to specify different heap sizes
+
+    juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
+
+where `hadoop-master.yaml` looks like
+
+    # m1.large
+    hadoop-master:
+      heap: 2048
+      dfs.block.size: 134217728
+      dfs.namenode.handler.count: 20
+      mapred.reduce.parallel.copies: 50
+      mapred.child.java.opts: -Xmx512m
+      mapred.job.tracker.handler.count: 60
+    #  fs.inmemory.size.mb: 200
+      io.sort.factor: 100
+      io.sort.mb: 200
+      io.file.buffer.size: 131072
+      tasktracker.http.threads: 50
+      hadoop.dir.base: /mnt/hadoop
+
+and
+
+    juju deploy ... --config "hadoop-slave.yaml" ... hadoop-slave
+
+where `hadoop-slave.yaml` looks like
+
+    # m1.medium
+    hadoop-slave:
+      heap: 1024
+      dfs.block.size: 134217728
+      dfs.namenode.handler.count: 20
+      mapred.reduce.parallel.copies: 50
+      mapred.child.java.opts: -Xmx512m
+      mapred.job.tracker.handler.count: 60
+    #  fs.inmemory.size.mb: 200
+      io.sort.factor: 100
+      io.sort.mb: 200
+      io.file.buffer.size: 131072
+      tasktracker.http.threads: 50
+      hadoop.dir.base: /mnt/hadoop
+
 
 
 ## 40 nodes and 100 nodes
@@ -235,7 +286,7 @@ up 500 instances... and quickly got throttled by ec2.
 group)... we must look like a DoS attack.
 The order was eventually fulfilled, but long spin-up time overall.
 
-deployment took 0226-0148 minutes
+Deployment took about an hour and 15 minutes.
 
 The job script used was
 
@@ -253,7 +304,7 @@ The job script used was
 
     hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
 
-This engaged the entire cluster just fine... gave almost 200TB of HDFS
+which engaged the entire cluster just fine, gave almost 200TB of HDFS
 storage
 
 <a href="/images/scale-500-50070.png">
@@ -269,15 +320,17 @@ and ran terasort with no problems
 
 ## 1000 nodes
 
-batches of 99 w/2-minute waits between
+To get around the api throttling, we start up
+batches of 99 slaves at a time with a 2-minute wait
+between each batch.
 
-python to serialize yaml in zk... switched to json with considerable speedup.
+The job was run with
 
     SIZE=10000000000
     NUM_MAPS=3000
     NUM_REDUCES=3000
 
-This gave almost 350TB of HDFS storage
+which gave almost 350TB of HDFS storage
 
 <a href="/images/scale-1000-50070.png">
 <img src="/images/scale-1000-50070.png" width="720px" />
@@ -288,6 +341,11 @@ and eventually completed
 <a href="/images/scale-1000-50030.png">
 <img src="/images/scale-1000-50030.png" width="720px" />
 </a>
+
+
+
+python to serialize yaml in zk... switched to json with considerable speedup.
+
 
 
 ## 2000 nodes
