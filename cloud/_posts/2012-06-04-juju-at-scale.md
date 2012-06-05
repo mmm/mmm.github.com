@@ -253,8 +253,8 @@ and ran terasort with no problems
 
 Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:
 
-    - don't expand `juju deploy -n <num_units>` and `juju add-unit -n <num_units>` in the client, do it in the provisioning agent
-    - don't expand these into multiple api calls to EC2
+    - pass the '-n' options directly to the provisioning agent... don't expand `juju deploy -n <num_units>` and `juju add-unit -n <num_units>` in the client
+    - pass these along all the way to the ec2 api... don't expand these into multiple api calls
 
 We'll add those to the list of things to do.
 
