@@ -115,108 +115,38 @@ hdfs and mapreduce cluster are:
     juju add-relation hadoop-master:namenode hadoop-slavecluster:datanode
     juju add-relation hadoop-master:jobtracker hadoop-slavecluster:tasktracker
 
-which we expand on a bit to get:
+which we expand on a bit to start with a base startup script of:
 
     #!/bin/bash
 
-    juju_env=${1:-"-escale"}
     juju_root="/home/ubuntu/scale"
-    juju_repo="$juju_root/charms"
+    juju_env=${1:-"-escale"}
 
-    [ -f $juju_root/etv/scale-environment ] && . $juju_root/etc/scale-environment && echo "using juju found at `which juju`"
+    ###
 
-    ############################################
+    echo "deploying stack"
 
-    timestamp() {
-      date +"%G-%m-%d-%H%M%S"
-    }
+    juju bootstrap $juju_env
 
-    deploy_monitor() {
-      local monitor_name=$1
-      juju deploy $juju_env --repository $juju_repo local:ganglia $monitor_name
-      juju expose $juju_env $monitor_name
-    }
-
-    current_load() {
-      juju ssh $juju_env 0 "ps -ef | grep juju.agents.provision | grep -v grep | awk '{ print \$2 }' | xargs top -b -n1 -p | grep python | awk '{ print \$9 }'"
-    }
-
-    wait_for_load_to_clear() {
-      local target_load=90
-
-      #local i=0
-      #while (( $(current_load) <= $target_load )) && [ -z "$timeout" ]; do
-      #  sleep 120
-      #done
-    }
-
-    add_units_when_load_clears() {
-      local num_units=$1
-      local service_name=$2
-
-      echo "waiting for load to clear"
-      #if load_is_below 90; then
-      #fi
-      #wait_for_load_to_clear 90
-
-      echo "sleeping"
-      sleep 120
-
-      echo "adding another $num_units units at $(timestamp)"
-      juju add-unit $juju_env -n $num_units $service_name
-    }
-
-    deploy_slaves() {
+    deploy_cluster() {
       local cluster_name=$1
-      local slave_config="$juju_root/etc/hadoop-slave.yaml"
-      local slave_size="instance-type=m1.medium"
-      local slaves_at_a_time=99
-      #local num_slave_batches=10
 
-      juju deploy $juju_env --repository $juju_repo --constraints $slave_size --config $slave_config -n $slaves_at_a_time local:hadoop ${cluster_name}-slave
-      echo "deployed $slaves_at_a_time slaves"
+      juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.large" --config "$juju_root/etc/hadoop-master.yaml" local:hadoop ${cluster_name}-master
+
+      juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.medium" --config "$juju_root/etc/hadoop-slave.yaml" -n 37 local:hadoop ${cluster_name}-slave
 
       juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
       juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
 
-      for i in {1..9}; do
-        add_units_when_load_clears $slaves_at_a_time ${cluster_name}-slave
-        echo "deployed $slaves_at_a_time slaves at $(timestamp)"
-      done
-    }
-
-    deploy_cluster() {
-      local cluster_name=$1
-      local monitor_name=$2
-      local master_config="$juju_root/etc/hadoop-master.yaml"
-      local master_size="instance-type=m1.large"
-
-      juju deploy $juju_env --repository $juju_repo --constraints $master_size --config $master_config local:hadoop ${cluster_name}-master
-
-      deploy_slaves ${cluster_name}
-
       juju expose $juju_env ${cluster_name}-master
 
-      [ -z "$monitor_name" ] || juju add-relation $juju_env ${cluster_name}-slave $monitor_name
     }
 
-    main() {
-      echo "deploying stack at $(timestamp)"
+    deploy_cluster hadoop
 
-      juju bootstrap $juju_env --constraints="instance-type=m1.xlarge"
+    echo "done"
 
-      #deploy_monitor monitor
-
-      sleep 120
-      #deploy_cluster hadoop monitor
-      deploy_cluster hadoop
-
-      echo "done at $(timestamp)"
-    }
-    main $*
-    exit 0
-
-and which we adjust the sizes manually for each cluster.
+and then manually adjust for cluster size.
 
 
 ### Configuring Hadoop
@@ -317,12 +247,84 @@ and ran terasort with no problems
 <img src="/images/scale-500-50030.png" width="720px" />
 </a>
 
+Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:
+
+  - don't expand `juju deploy -n <num_units>` and `juju add-unit -n <num_units>` in the client, do it in the provisioning agent
+  - don't expand these into multiple api calls to EC2
+
 
 ## 1000 nodes
 
 To get around the api throttling, we start up
 batches of 99 slaves at a time with a 2-minute wait
-between each batch.
+between each batch
+
+    #!/bin/bash
+
+    juju_env=${1:-"-escale"}
+    juju_root="/home/ubuntu/scale"
+    juju_repo="$juju_root/charms"
+
+    ############################################
+
+    timestamp() {
+      date +"%G-%m-%d-%H%M%S"
+    }
+
+    add_more_units() {
+      local num_units=$1
+      local service_name=$2
+
+      echo "sleeping"
+      sleep 120
+
+      echo "adding another $num_units units at $(timestamp)"
+      juju add-unit $juju_env -n $num_units $service_name
+    }
+
+    deploy_slaves() {
+      local cluster_name=$1
+      local slave_config="$juju_root/etc/hadoop-slave.yaml"
+      local slave_size="instance-type=m1.medium"
+      local slaves_at_a_time=99
+      #local num_slave_batches=10
+
+      juju deploy $juju_env --repository $juju_repo --constraints $slave_size --config $slave_config -n $slaves_at_a_time local:hadoop ${cluster_name}-slave
+      echo "deployed $slaves_at_a_time slaves"
+
+      juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+      juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+      for i in {1..9}; do
+        add_more_units $slaves_at_a_time ${cluster_name}-slave
+        echo "deployed $slaves_at_a_time slaves at $(timestamp)"
+      done
+    }
+
+    deploy_cluster() {
+      local cluster_name=$1
+      local master_config="$juju_root/etc/hadoop-master.yaml"
+      local master_size="instance-type=m1.large"
+
+      juju deploy $juju_env --repository $juju_repo --constraints $master_size --config $master_config local:hadoop ${cluster_name}-master
+
+      deploy_slaves ${cluster_name}
+
+      juju expose $juju_env ${cluster_name}-master
+    }
+
+    main() {
+      echo "deploying stack at $(timestamp)"
+
+      juju bootstrap $juju_env --constraints="instance-type=m1.xlarge"
+
+      sleep 120
+      deploy_cluster hadoop
+
+      echo "done at $(timestamp)"
+    }
+    main $*
+    exit 0
 
 The job was run with
 
@@ -342,15 +344,13 @@ and eventually completed
 <img src="/images/scale-1000-50030.png" width="720px" />
 </a>
 
-
-
-python to serialize yaml in zk... switched to json with considerable speedup.
-
-
+Juju spun things up in about 2 and a half hours.
 
 ## 2000 nodes
 
-again, batches of 99 w/2-minute waits between
+Again, to get around the api throttling, we start up
+batches of 99 slaves at a time with a 2-minute wait
+between each batch
 
 removed more yaml from zk
 
@@ -369,6 +369,15 @@ and was running fine
 </a>
 
 but was stopped early b/c waiting would've just been wasteful.
+
+Juju spun this up in just over seven hours total.  Profiling showed that juju was serializing
+some stuff into zookeeper nodes using yaml, and python's yaml library was written in python
+instead of using a native libyaml.  We switched that serialization over to json for the next run
+and it sped it up.. ahem... quite a bit.
+
+python to serialize yaml in zk... switched to json with considerable speedup.
+
+
 
 
 ## Lessons Learned
