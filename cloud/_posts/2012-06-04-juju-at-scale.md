@@ -1,44 +1,36 @@
 ---
 layout: post
-title: "Scaling Juju: manage a 2000-node cluster in EC2"
+title: "Scaling Juju: a 2000-node cluster in EC2"
 tags: ['cloud', 'hadoop', 'juju']
 ---
  
-  -Lately we've been fleshing out our testing frameworks for Juju and Juju Charms.  There's
-  -lots of great stuff going on here, so I figured it's time to start shouting out about it.
+Lately we've been fleshing out our testing frameworks for Juju and Juju Charms.  There's
+lots of great stuff going on here, so I figured it's time to start posting about it.
    
-   -First off, the coolest thing we did during last month's Ubuntu Developer Summit (UDS)
-   -was get the go-ahead to spend more time/effort/money scale-testing Juju.
-
-
-
-
-When it comes to big data, there is no small. You need to go big or go home, after all a tool isn't useful if it doesn't scale to meet your needs. When it comes to tools like Hadoop jobs, we're talking in the hundreds and thousands, not a few dozen.
-
-So recently we've been putting juju through scaling paces to see how we can manage these sorts of workloads. We decided to fire up 2,000 hadoop nodes in Amazon's ec2  Web Service to see how that would look. So Mark Mims set out to make this happen as an example on how you can deploy Hadoop on AWS with Ubuntu Server. Mark has extensive experience with big data, so he put this expertise to work with James Page, Ben Howard, and Kapil Thangavelu lending their support and recommendations. 
-
-Go big or go home, indeed! So how did we do? 
-
-Initial deployment
-
-As we're on a public cloud we typically want to scale up gradually, so this is the approach we took. It'd be a shame to spend money on 2,000 instances and then find out you have a simple problem. Also when you are doing things like this you will need to work with your AWS representative ahead of time and they will work with you on getting you the capacity you need.  And we know that juju makes scaling Hadoop straight forward, so we started off with 40 instances.
-
-
-
-
-
-
+First off, the coolest thing we did during last month's Ubuntu Developer Summit (UDS)
+was get the go-ahead to spend more time/effort/money scale-testing Juju.
 
 
 ## The Plan
 
-- spin up and manage a cluster of this service in such a way that engages all nodes in the cluster
-  - instrument
-  - profile
-  - optimize
-  - grow
+    - pick a service that scales
+    - spin up a cluster of units for this service
+    - try to run it in a way that actively engages all units of the cluster
+    - repeat:
+      - instrument
+      - profile
+      - optimize
+      - grow
 
-We started with 40 nodes and iterated up 100, 500, 1000 and 2000.  Here're the notes on the process.
+[James](https://plus.google.com/u/0/109495998940814132432/posts),
+[Kapil](https://plus.google.com/u/0/108276830347560657704/posts),
+[Juan](https://plus.google.com/102506066601287922723/posts),
+[Ben](https://plus.google.com/u/0/100536568598074282388/posts),
+and I sat down over the course of
+a couple of nights at UDS to take a crack at it.
+We chose Hadoop.
+We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
+Here're my notes on the process.
 
 ## Hadoop
 
@@ -78,8 +70,8 @@ Amazon can do all sorts of stuff internally to show hadoop lots of love.
 We chose not to use EMR because we're interested in testing how juju performs
 with _generic_ Ubuntu Server images, not EMR... at least for now.
 
-Note that stock EC2 accounts limit you to 20 instances.  To grow beyond that, you have to
-call AWS to get your limits bumped up.
+Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
+ask AWS to bump up your limits.
 
 
 ## Juju
@@ -92,14 +84,14 @@ for running long-term environments in juju.
 
 As usual, juju will keep track of the state of our infrastructure going forward and
 we can make changes as necessary via juju commands.  To bootstrap and spin up the
-initial environment we'll just use shell scripts.
+initial environment we'll just use shell scripts wrapping juju commands.
 
 ### Spinning up a cluster
 
 These scripts are really just
 hadoop versions of my standard juju demo scripts such as those used for 
 a simple [rails stack](https://gist.github.com/2050525)
-or an HA [wiki stack](https://gist.github.com/1406018).
+or a more realistic HA [wiki stack](https://gist.github.com/1406018).
 
 The hadoop scripts for EC2 will get a little more complex as we grow simply because
 we don't want AWS to think we're a DoS attack... we'll pace ourselves during spinup.
@@ -115,7 +107,7 @@ hdfs and mapreduce cluster are:
     juju add-relation hadoop-master:namenode hadoop-slavecluster:datanode
     juju add-relation hadoop-master:jobtracker hadoop-slavecluster:tasktracker
 
-which we expand on a bit to start with a base startup script of:
+which we expand on a bit to start with a base startup script that looks like:
 
     #!/bin/bash
 
@@ -146,17 +138,22 @@ which we expand on a bit to start with a base startup script of:
 
     echo "done"
 
-and then manually adjust for cluster size.
+and then manually adjust this for cluster size.
 
 
 ### Configuring Hadoop
 
-Note that we're specifying constraints to tell juju to use an m1.large for the
-hadoop master and m1.mediums for the slaves.
+Note that we're specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We'd like an m1.large for the
+hadoop master
 
     juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
 
-and pass config files to specify different heap sizes
+and m1.mediums for the slaves
+
+    juju deploy ... --constraints "instance-type=m1.medium" ... hadoop-slave
+
+Note that we'll also pass config files to specify different heap sizes for the different memory footprints
 
     juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
 
@@ -199,6 +196,13 @@ where `hadoop-slave.yaml` looks like
       hadoop.dir.base: /mnt/hadoop
 
 
+Note also that we also have our juju environment configured to use
+instance-store images... juju defaults to ebs-rooted images, but that's
+not a great idea with hdfs.  You specify this by adding a `default-image-id`
+into your `~/.juju/environments.yaml` file.
+This gave each of our instances an extra ~400G local drive
+on `/mnt`... hence the `hadoop.dir.base` of `/mnt/hadoop`
+in the config above.
 
 ## 40 nodes and 100 nodes
 
@@ -212,11 +216,14 @@ our account limits to allow for 100+ nodes.
 Once we had permission from Amazon to spin up 500 nodes on our account,
 we initially just naively spun
 up 500 instances... and quickly got throttled.
-No particular surprise, we're not using multiplicity in the ec2 api,
-nor are we using an autoscaling group... we must look like a DoS attack.
+
+No particular surprise, we're not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group... we must look like a DoS attack.
+
 The order was eventually fulfilled, and juju waited around for it.
 Everything ran as expected, it just took about an hour and 15 minutes
-to spin up the stack with HDFS storage of almost 200TB
+to spin up the stack.  This gave us a nice little cluster with HDFS
+storage of almost 200TB
 
 <a href="/images/scale-500-50070.png">
 <img src="/images/scale-500-50070.png" width="720px" />
@@ -238,7 +245,7 @@ The hadoop terasort job was run from the following script
 
     hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
 
-which engaged the entire cluster just fine, 
+which, with a replfactor of 3, engaged the entire cluster just fine, 
 and ran terasort with no problems
 
 <a href="/images/scale-500-50030.png">
@@ -247,11 +254,14 @@ and ran terasort with no problems
 
 Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:
 
-  - don't expand `juju deploy -n <num_units>` and `juju add-unit -n <num_units>` in the client, do it in the provisioning agent
-  - don't expand these into multiple api calls to EC2
+    - don't expand `juju deploy -n <num_units>` and `juju add-unit -n <num_units>` in the client, do it in the provisioning agent
+    - don't expand these into multiple api calls to EC2
 
+We'll add those to the list of things to do.
 
 ## 1000 nodes
+
+Onward, upward!
 
 To get around the api throttling, we start up
 batches of 99 slaves at a time with a 2-minute wait
@@ -324,31 +334,31 @@ between each batch
     main $*
     exit 0
 
-We experimented with doing the spinup in some more clever way
-(I blame lack of coffee at the time)... 
+We experimented with more clever ways of doing the spinup
+(too little coffee at this point of the night)...
 but the real fix is to get juju to take
 advantage of multiplicity in api calls.
 Until then, timed batches work just fine.
 
 Juju spun the cluster up in about 2 and a half hours.
-It had almost 350TB of HDFS storage
+It had about 380TB of HDFS storage
 
 <a href="/images/scale-1000-50070.png">
 <img src="/images/scale-1000-50070.png" width="720px" />
 </a>
 
-The terasort job run from the script above with
+The terasort job that was run from the script above with
 
     SIZE=10000000000
     NUM_MAPS=3000
     NUM_REDUCES=3000
 
-eventually completed
 
 <a href="/images/scale-1000-50030.png">
 <img src="/images/scale-1000-50030.png" width="720px" />
 </a>
 
+eventually completed.
 
 ## 2000 nodes
 
@@ -390,7 +400,6 @@ Wham!  two orders of magnitude faster.  No particular surprise.
 
 Ok, so at the end of the day, what did we learn here?
 
-First off, I'm really proud of the juju team.
 What we did here is the way developing for performance at scale
 should be done... start with a naive, flexible approach
 and then spend time and effort obtaining real profiling
@@ -400,38 +409,36 @@ based on where developers think the bottlenecks might be.
 
 Things to do to juju as a result of these tests:
 
-- streamline our usage of multiplicity
-  - remove from client
-  - use multiplicity in EC2 api calls
-- don't use yaml to marshall data in and out of zookeeper
-- replace security groups with per-instance firewalls
+    - streamline our usage of multiplicity
+      - remove from client
+      - use multiplicity in EC2 api calls
+    - don't use yaml to marshall data in and out of zookeeper
+    - replace security groups with per-instance firewalls
 
 
 ## What's Next?
 
 So that's a big enough bite for one round of scale testing.
+
 Next up:
 
-- land a few of the changes outlined above into trunk.
-  Then, spin up another round of scale tests to look at the numbers.
-
-- more providers (other clouds as well as a MaaS lab too)
-
-- regular scale testing?
-  - can this coincide with upstream scale testing for projects like hadoop?
-
-- test scaling for various services?  What does this look like for other stacks
-  of services?
+    - land a few of the changes outlined above into trunk.
+      Then, spin up another round of scale tests to look at the numbers.
+    - more providers (other clouds as well as a MaaS lab too)
+    - regular scale testing?
+      - can this coincide with upstream scale testing for projects like hadoop?
+    - test scaling for various services?  What does this look like for other stacks
+      of services?
 
 
 ## Wishlist
 
-- find some better test jobs!  benchmarks are boring... perhaps we can use
-  this compute time to do something interesting for educational data mining?
+    - find some better test jobs!  benchmarks are boring... perhaps we can use
+      this compute time to mine educational data or cure cancer or something?
 
-- perhaps push juju topology information further into zk leaf nodes?
-  Are there transactional features in more recent versions of zk that we can use?
+    - perhaps push juju topology information further into zk leaf nodes?
+      Are there transactional features in more recent versions of zk that we can use?
 
-- use spot instances on ec2.  This is harder because you've gotta incorporate price monitoring.
+    - use spot instances on ec2.  This is harder because you've gotta incorporate price monitoring.
 
 
