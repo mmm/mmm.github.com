@@ -4,9 +4,9 @@ title: "Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju"
 tags: ['cloud', 'hadoop', 'juju']
 ---
 
-<small>
+<p class="meta">
 Written by Mark Mims and James Page
-</small>
+</p>
  
 Lately we've been fleshing out our testing frameworks for Juju and Juju Charms.  There's
 lots of great stuff going on here, so we figured it's time to start posting about it.
