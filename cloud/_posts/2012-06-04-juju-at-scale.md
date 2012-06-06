@@ -3,9 +3,13 @@ layout: post
 title: "Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju"
 tags: ['cloud', 'hadoop', 'juju']
 ---
+
+<small>
+Written by Mark Mims and James Page
+</small>
  
 Lately we've been fleshing out our testing frameworks for Juju and Juju Charms.  There's
-lots of great stuff going on here, so I figured it's time to start posting about it.
+lots of great stuff going on here, so we figured it's time to start posting about it.
    
 First off, the coolest thing we did during last month's Ubuntu Developer Summit (UDS)
 was get the go-ahead to spend more time/effort/money scale-testing Juju.
@@ -26,11 +30,12 @@ was get the go-ahead to spend more time/effort/money scale-testing Juju.
 [Kapil](https://plus.google.com/u/0/108276830347560657704/posts),
 [Juan](https://plus.google.com/102506066601287922723/posts),
 [Ben](https://plus.google.com/u/0/100536568598074282388/posts),
-and I sat down over the course of
+and [Mark](http://markmims.com/about)
+sat down over the course of
 a couple of nights at UDS to take a crack at it.
 We chose Hadoop.
 We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
-Here're my notes on the process.
+Here're some notes on the process.
 
 ## Hadoop
 
@@ -53,7 +58,7 @@ mix of i/o -vs- cpu load).
 
 ## EC2
 
-Surprisingly enough, I don't really have that many servers just lying around... so EC2 to the rescue.
+Surprisingly enough, we don't really have that many servers just lying around... so EC2 to the rescue.
 
 Disclaimer... we're testing our infrastructure tools here, not benchmarking hadoop in EC2.
 Some folks advocate running hadoop in a cloudy virtualized environment... while some
@@ -88,7 +93,7 @@ initial environment we'll just use shell scripts wrapping juju commands.
 ### Spinning up a cluster
 
 These scripts are really just
-hadoop versions of my standard juju demo scripts such as those used for 
+hadoop versions of some standard juju demo scripts such as those used for 
 a simple [rails stack](https://gist.github.com/2050525)
 or a more realistic HA [wiki stack](https://gist.github.com/1406018).
 
