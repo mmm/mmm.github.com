@@ -268,7 +268,7 @@ Education:
 Publications:
 
     Clint Byrum, Mark Mims, Juan Negron. DevOps on Ubuntu Server.
-    O'Reilly. 2012(in progress).
+    2012(in progress).
 
     Luis J. Boya, Mark Byrd, Mark Mims, E. C. G. Sudarshan.
     "Geometry of n-state systems, pure and mixed". J. Phys.: Conf.
