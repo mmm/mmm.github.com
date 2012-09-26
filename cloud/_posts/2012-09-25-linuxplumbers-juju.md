@@ -5,8 +5,7 @@ tags: ['cloud', 'production', 'juju']
 ---
 
 <p class="meta">
-Written by [Mark Mims](http://markmims.com) and
-[Chris Johnston](http://www.chrisjohnston.org/)
+Written by Mark Mims and Chris Johnston
 </p>
 
 Hey, so last month we ran scheduling for the 
