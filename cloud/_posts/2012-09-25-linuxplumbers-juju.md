@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "LinuxPlumbers and Juju"
+title: "Running the LinuxPlumbers Conference Schedule with Juju"
 tags: ['cloud', 'production', 'juju']
 ---
 
 <p class="meta">
-Written by Mark Mims and Chris Johnston
+Written by [Mark Mims](http:/markmims.com) and
+[Chris Johnston](http://www.chrisjohnston.org/)
 </p>
 
 Hey, so last month we ran scheduling for the 
@@ -27,20 +28,20 @@ So [summit](https://launchpad.net/summit) is this great django app built for
 scheduling conferences.  It's evolved over time to handle
 [UDS](uds.ubuntu.com)-level traffic and is currently maintained by a
 [Summit Hackers](https://launchpad.net/~summit-hackers) team that includes
-[Chris Johnston](www.google.com) and [Michael Hall](www.google.com).
+Chris Johnston and [Michael Hall](http://mhall119.com/).
 
 Chris contacted me to help him use juju to manage summit for this year's
-Plumbers conference.  At the time we started this, the oneiric version of juju
+Plumbers conference.  At the time we started this, the 11.10 version of juju
 wasn't exactly blessed for production environments, but we decided it'd be a
 great opportunity to work things out.
 
-We forked [Michael Nelson](www.google.com)'s excellent
+We forked [Michael Nelson](https://twitter.com/michaelanelson)'s excellent
 [django charm](lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk)
 to create a
 [summit-charm](https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk)
 and freely specialized it for summit.
 
-Note that we're updating this charm for precise
+Note that we're updating this charm for 12.04
 [here](https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk), but
 this will probably go away in the near future and we'll just use a generic django charm.  It
 turns out we didn't do too much here that won't apply to django apps in
@@ -51,11 +52,15 @@ general, but more on that another time.
 
 A typical summit stack's got postgresql, the django app itself, and a memcached server.
 
-[ picture ]
+<a href="/images/django-stack.png">
+<img src="/images/django-stack.png" width="198px" />
+</a>
 
 We additionally talked about putting this all behind some sort of a head like haproxy.
 
-[ picture ]
+<a href="/images/bigger-django-stack.png">
+<img src="/images/bigger-django-stack.png" width="334px" />
+</a>
 
 This'd let the app scale horizontally as well as give us a stable point to
 attach an elastic-ip.  We decided to _not_ do this at the time b/c we could
@@ -101,7 +106,9 @@ All of this has subsequently landed, so we'd have more options today.
 We had multiple people to manage the production summit environment.  What's the
 best way to do that?  It turns out juju supports this pretty well right out of
 the box.  There's an environment config for the set of ssh public keys to
-inject into everything in the environment as it starts up.
+inject into everything in the environment as it starts up... you can read more
+about that 
+[here](http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju).
 
 Note that this is only useful to configure at the beginning of the stack.  Once
 you're up, adding keys is problematic.  I don't even recommend trying b/c of
@@ -124,7 +131,7 @@ recommend it because it works so well.
 ### it's chilly in here
 
 Yeah, so during development you break things.  There were a couple of times
-using oneiric juju that changes to juju core prevented a client from talking to
+using 11.10 juju that changes to juju core prevented a client from talking to
 an existing stack.  Aargh!  This wasn't going to fly for production use.
 
 The juju team has subsequently done a _bunch_ to prevent this from happening,
@@ -253,7 +260,7 @@ What would I do differently next time?  Well, I've got a list :).
 - use s3fs or equivalent subordinate charm to manage backups instead of just
   sshing them off the box
 - better monitoring... we've gotten a great set of monitoring charms
-  recently... thanks [Clint](www.google.com)!
+  recently... thanks [Clint](http://fewbar.com/)!
 - log aggregation would've been a little bit of overkill for this app, but next
   time might warrant it.  We've been developing some great tools for this for
   our automated testing frameworks
