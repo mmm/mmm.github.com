@@ -5,7 +5,7 @@ tags: ['cloud', 'production', 'juju']
 ---
 
 <p class="meta">
-Written by [Mark Mims](http:/markmims.com) and
+Written by [Mark Mims](http://markmims.com) and
 [Chris Johnston](http://www.chrisjohnston.org/)
 </p>
 
@@ -28,24 +28,13 @@ So [summit](https://launchpad.net/summit) is this great django app built for
 scheduling conferences.  It's evolved over time to handle
 [UDS](uds.ubuntu.com)-level traffic and is currently maintained by a
 [Summit Hackers](https://launchpad.net/~summit-hackers) team that includes
-Chris Johnston and [Michael Hall](http://mhall119.com/).
+[Chris Johnston](http://www.chrisjohnston.org/)
+and [Michael Hall](http://mhall119.com/).
 
 Chris contacted me to help him use juju to manage summit for this year's
 Plumbers conference.  At the time we started this, the 11.10 version of juju
 wasn't exactly blessed for production environments, but we decided it'd be a
 great opportunity to work things out.
-
-We forked [Michael Nelson](https://twitter.com/michaelanelson)'s excellent
-[django charm](lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk)
-to create a
-[summit-charm](https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk)
-and freely specialized it for summit.
-
-Note that we're updating this charm for 12.04
-[here](https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk), but
-this will probably go away in the near future and we'll just use a generic django charm.  It
-turns out we didn't do too much here that won't apply to django apps in
-general, but more on that another time.
 
 
 ## The Stack
@@ -70,13 +59,38 @@ provided we slam select snippets of the site into memcached.
 This turned out to be true load-wise, but it really would've been a whole lot
 easier to have a nice constant haproxy node out there to tack the elastic-ip
 to.
-
 During development (charm, app, and theme) you want the freedom to destroy
 a service and respawn it without having to use external tools to go around and
 attach public IP addresses to the right places.  That's a pain.  Also, if
 there's a sensitive part of this infrastructure in production, it wouldn't be
 postgresql, memcached, or haproxy... the app itself would be the most likely
 point of instability, so it was a mistake to attach the elastic-ip there.
+
+
+## The Environment
+
+### choice of cloud
+
+We chose to use ec2 to host the summit stack... mostly a matter of
+convenience.  The juju openstack-native provider wasn't completed when we spun
+up the production environment for linuxplumbers and we didn't have access to a
+stable private ubuntu cloud running the openstack-ec2-api at the time.
+All of this has subsequently landed, so we'd have more options today.
+
+
+### the charms
+
+We forked [Michael Nelson](https://twitter.com/michaelanelson)'s excellent
+[django charm](lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk)
+to create a
+[summit-charm](https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk)
+and freely specialized it for summit.
+
+Note that we're updating this charm for 12.04
+[here](https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk), but
+this will probably go away in the near future and we'll just use a generic django charm.  It
+turns out we didn't do too much here that won't apply to django apps in
+general, but more on that another time.
 
 There was nothing special about our tuning of postgresql or memcached.  We just
 used the services provided by the canned charms.  We actually used a "local"
@@ -89,17 +103,6 @@ They're not the charms you're likely to be making changes to or
 tweaking outside of their exposed config parameters.  I know _jack_ about postgresql, so I'll defer to the experts in this regard.
 The summit charm I might want to manage locally
 
-## The Environment
-
-### choice of cloud
-
-We chose to use ec2 to host the summit stack... mostly a matter of
-convenience.  The juju openstack-native provider wasn't completed when we spun
-up the production environment for linuxplumbers and we didn't have access to a
-stable private ubuntu cloud running the openstack-ec2-api at the time.
-All of this has subsequently landed, so we'd have more options today.
-
-### the charms
 
 ### control environment
 
@@ -236,11 +239,15 @@ and a tested recovery plan.
 The plan we practiced was...
   - bootstrap a new environment (using spare credentials if necessary)
   - spin up the summit stack
-  - ssh to `postgresql/0` and drop the db  (Note: bug in postgresql charm... it
+  - ssh to the new `postgresql/0` and drop the db  (Note: this is a bug in postgresql charm... it
     should accept a config parameter of a storage url, S3 in this case, to
     slurp the db backups from)
+  - restore from offsite backups... something along the lines of
+    
+    cat summit-$timestamp.dump.bz2 | juju ssh -e failover postgresql/0 'bunzip2 -c | su - postgres pgsql summit'
 
-In practice, that would've taken around 10-15minutes to recover once we started
+
+In practice, that took about 10-15minutes to recover once we started
 acting.  Given the additional delay between notification and action, that could
 spell an hour or two of outtage.  That's not so great.  Juju makes other
 failover scenarios cheaper and easier to implement than they used to be, so why
@@ -248,24 +255,22 @@ not put those into place just to be safe?  Perhaps the additional instance
 costs for hot-spares wouldn't've been necessary for the entire 6-months of
 lead-time for scheduling and planning this conference, but they'd certainly be
 worth the spend during the few days of the event itself.  Juju sort of makes it
-a no-brainer
+a no-brainer.
 
 
 ## Lessons Learned
 
 What would I do differently next time?  Well, I've got a list :).
 
-- use stable ppa... instead of freezing the code
+- use the stable ppa... instead of freezing the code
 - sit the app behind haproxy
 - use s3fs or equivalent subordinate charm to manage backups instead of just
   sshing them off the box
 - better monitoring... we've gotten a great set of monitoring charms
   recently... thanks [Clint](http://fewbar.com/)!
 - log aggregation would've been a little bit of overkill for this app, but next
-  time might warrant it.  We've been developing some great tools for this for
-  our automated testing frameworks
-- I'd like better failover/DR prep next time around
-- we'll soon have access to a production-stable private ubuntu cloud that
-  should work great for hosting these sorts of apps
-- follow a little more careful development process.
+  time might warrant it
+- it's cheap to add failover with juju... just do it
+- maybe follow a development process a little more carefully next time around :)
+- we'll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects
 
