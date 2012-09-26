@@ -131,10 +131,10 @@ nodes with different sets of keys depending on when you changed the keys relativ
 to what actions you've performed on the environment.  It's a problem.
 
 What I recommend now is actually to use _another_ juju environment...  (and no,
-I'm not paid to promote cloud providers by the instance :) I wish! ) a dedicated
-"control" environment.  I bootstrap it, then set up a juju client that controls
+we're not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+"control" environment.  You bootstrap it, then set up a juju client that controls
 the main production environment.  Then set up a shared tmux session that any of
-the admins for the production environment can use.
+the admins for the production environment can use:
 
 <a href="/images/summit-control.png">
 <img src="/images/summit-control.png" width="720px" />
@@ -248,7 +248,7 @@ better set of development practices.
 Sorely lacking.  "What? curl doesn't cut it?"... um... no.
 
 
-### spare environment for fallback
+### planning for failures
 
 Our notion of failover for this app was just a spare set of cloud credentials
 and a tested recovery plan.
@@ -265,20 +265,21 @@ The plan we practiced was...
     cat summit-$timestamp.dump.bz2 | juju ssh -e failover postgresql/0 'bunzip2 -c | su - postgres pgsql summit'
 
 
-In practice, that took about 10-15minutes to recover once we started
-acting.  Given the additional delay between notification and action, that could
-spell an hour or two of outtage.  That's not so great.  Juju makes other
-failover scenarios cheaper and easier to implement than they used to be, so why
-not put those into place just to be safe?  Perhaps the additional instance
-costs for hot-spares wouldn't've been necessary for the entire 6-months of
-lead-time for scheduling and planning this conference, but they'd certainly be
-worth the spend during the few days of the event itself.  Juju sort of makes it
-a no-brainer.
+In practice, that took about 10-15minutes to recover once we started acting.
+Given the additional delay between notification and action, that could spell an
+hour or two of outtage.  That's not so great.  Juju makes other failover
+scenarios cheaper and easier to implement than they used to be, so why not put
+those into place just to be safe?  Perhaps the additional instance costs for
+hot-spares wouldn't've been necessary for the entire 6-months of lead-time for
+scheduling and planning this conference, but they'd certainly be worth the
+spend during the few days of the event itself.  Juju sort of makes it a
+no-brainer.  We should do more posts on this one issue... the game has changed
+here.
 
 
 ## Lessons Learned
 
-What would I do differently next time?  Well, I've got a list :).
+What would We do differently next time?  Well, We've got a list :).
 
 - use the stable ppa... instead of freezing the code
 - sit the app behind haproxy
