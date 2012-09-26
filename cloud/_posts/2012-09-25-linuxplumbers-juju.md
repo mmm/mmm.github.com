@@ -279,7 +279,7 @@ here.
 
 ## Lessons Learned
 
-What would We do differently next time?  Well, We've got a list :).
+What would we do differently next time?  Well, there's a list :).
 
 - use the stable ppa... instead of freezing the code
 - sit the app behind haproxy
