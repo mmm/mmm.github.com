@@ -209,14 +209,15 @@ develop/tweak the theme locally, then push to the branch.  A simple
 
     juju set --config=summit.yaml summit/0
     
-would update config for the live instances.  Well...  some of the menus from
-the base template used absolute paths so it was simpler to cheat a bit early in
-the process to test it all in-place with actual dns names.  Had we been doing
-this the "right" way from the beginning we would've had much more confidence in
-the stack when practicing recovery and failover later in the cycle... we
-would've been doing it all since day one.
+would update config for the live instances.
 
-Another thing we had to do was playing with memcached.  To test out caching
+Well...  some of the menus from the base template used absolute paths so it was
+simpler to cheat a bit early in the process to test it all in-place with actual
+dns names.  Had we been doing this the "right" way from the beginning we
+would've had much more confidence in the stack when practicing recovery and
+failover later in the cycle... we would've been doing it all since day one.
+
+Another thing we had to do was manually test memcached.  To test out caching
 we'd ssh to the memcached instance, stop the service, run memcached verbosely
 in the foreground.  Once we determined everything was working the way we
 expected, we'd kill it and restart the upstart job.
@@ -256,9 +257,9 @@ The plan we practiced was...
 
 - bootstrap a new environment (using spare credentials if necessary)
 - spin up the summit stack
-- ssh to the new `postgresql/0` and drop the db  (Note: this is a bug in postgresql charm... it
-  should accept a config parameter of a storage url, S3 in this case, to
-  slurp the db backups from)
+- ssh to the new `postgresql/0` and drop the db  (Note: the postgresql charm
+  should be extended to accept a config parameter of a storage url, S3 in this
+  case, to slurp the db backups from)
 - restore from offsite backups... something along the lines of
   
     cat summit-$timestamp.dump.bz2 | juju ssh -e failover postgresql/0 'bunzip2 -c | su - postgres pgsql summit'
@@ -266,14 +267,15 @@ The plan we practiced was...
 
 In practice, that took about 10-15minutes to recover once we started acting.
 Given the additional delay between notification and action, that could spell an
-hour or two of outtage.  That's not so great.  Juju makes other failover
-scenarios cheaper and easier to implement than they used to be, so why not put
-those into place just to be safe?  Perhaps the additional instance costs for
-hot-spares wouldn't've been necessary for the entire 6-months of lead-time for
-scheduling and planning this conference, but they'd certainly be worth the
-spend during the few days of the event itself.  Juju sort of makes it a
-no-brainer.  We should do more posts on this one issue... the game has changed
-here.
+hour or two of outtage.  That's not so great.
+
+Juju makes other failover scenarios cheaper and easier to implement than they
+used to be, so why not put those into place just to be safe?  Perhaps the
+additional instance costs for hot-spares wouldn't've been necessary for the
+entire 6-months of lead-time for scheduling and planning this conference, but
+they'd certainly be worth the spend during the few days of the event itself.
+Juju sort of makes it a no-brainer.  We should do more posts on this one
+issue... the game has changed here.
 
 
 ## Lessons Learned
