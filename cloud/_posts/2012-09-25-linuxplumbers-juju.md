@@ -87,20 +87,32 @@ and freely specialized it for summit.
 
 Note that we're updating this charm for 12.04
 [here](https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk), but
-this will probably go away in the near future and we'll just use a generic django charm.  It
-turns out we didn't do too much here that won't apply to django apps in
-general, but more on that another time.
+this will probably go away in the near future and we'll just use a generic
+django charm.  It turns out we didn't do too much here that won't apply to
+django apps in general, but more on that another time.
 
 There was nothing special about our tuning of postgresql or memcached.  We just
-used the services provided by the canned charms.  We actually used a "local"
-repository for these canned charms because the charm store didn't exist yet.
-Nowadays it'd probably be easiest to just manage these two services with the
-charms straight out of the charm store.  Same would be true for haproxy in this
-stack.
+used the services provided by the canned charms.  These sort of peripheral
+services aren't the kind of charms you're likely to be making changes to or
+tweaking outside of their exposed config parameters.  I know _jack_ about
+memcached, so I'll defer to the experts in this regard.  Similarly for
+postgresql... and haproxy if we used it in this stack.
 
-They're not the charms you're likely to be making changes to or
-tweaking outside of their exposed config parameters.  I know _jack_ about postgresql, so I'll defer to the experts in this regard.
-The summit charm I might want to manage locally
+The summit charm is a little different.  It's something we were continuing to
+tweak during development.  Perhaps with future more generic django charm
+versions, we won't need to tweak the charm itself... just configure it.
+
+We used a "local" repository for _all_ charms because the charm store hadn't
+landed when we were setting this up.  Well, now that the charm store is live,
+you can just deploy the canned charms straight from the store
+
+    `juju deploy -e summit memcached`
+    
+and keep the ones you want to tweak in a local repository... 
+
+    `juju deploy -e summit --repository ~/charms local:summit`
+
+all within the same environment.  It works out nicely.
 
 
 ### control environment
@@ -109,8 +121,8 @@ We had multiple people to manage the production summit environment.  What's the
 best way to do that?  It turns out juju supports this pretty well right out of
 the box.  There's an environment config for the set of ssh public keys to
 inject into everything in the environment as it starts up... you can read more
-about that 
-[here](http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju).
+about that on 
+[askubuntu](http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju).
 
 Note that this is only useful to configure at the beginning of the stack.  Once
 you're up, adding keys is problematic.  I don't even recommend trying b/c of
@@ -122,7 +134,13 @@ What I recommend now is actually to use _another_ juju environment...  (and no,
 I'm not paid to promote cloud providers by the instance :) I wish! ) a dedicated
 "control" environment.  I bootstrap it, then set up a juju client that controls
 the main production environment.  Then set up a shared tmux session that any of
-the admins for the production environment can use.  Adding/changing the set of
+the admins for the production environment can use.
+
+<a href="/images/summit-control.png">
+<img src="/images/summit-control.png" width="720px" />
+</a>
+
+Adding/changing the set of
 admin keys is then done in a single place.  This technique isn't strictly
 necessary, but it was certainly worth it here with different admins having
 various different levels of familiarity with the tools.  I started it as a
@@ -236,13 +254,14 @@ Our notion of failover for this app was just a spare set of cloud credentials
 and a tested recovery plan.
 
 The plan we practiced was...
-  - bootstrap a new environment (using spare credentials if necessary)
-  - spin up the summit stack
-  - ssh to the new `postgresql/0` and drop the db  (Note: this is a bug in postgresql charm... it
-    should accept a config parameter of a storage url, S3 in this case, to
-    slurp the db backups from)
-  - restore from offsite backups... something along the lines of
-    
+
+- bootstrap a new environment (using spare credentials if necessary)
+- spin up the summit stack
+- ssh to the new `postgresql/0` and drop the db  (Note: this is a bug in postgresql charm... it
+  should accept a config parameter of a storage url, S3 in this case, to
+  slurp the db backups from)
+- restore from offsite backups... something along the lines of
+  
     cat summit-$timestamp.dump.bz2 | juju ssh -e failover postgresql/0 'bunzip2 -c | su - postgres pgsql summit'
 
 
