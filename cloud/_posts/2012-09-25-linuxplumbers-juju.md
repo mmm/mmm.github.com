@@ -12,7 +12,9 @@ Hey, so last month we ran scheduling for the
 [Linux Plumbers Conference](http://linuxplumbersconf.org)
 entirely on juju!
 
-Here's a little background on the experience.  Along the way, We'll go into a
+Here's a little background on the experience.
+
+Along the way, We'll go into a
 little more detail about running juju in production than the particular problem
 at hand might warrant.  It's a basic stack of services that's only alive for
 6-months or so...  but this discussion applies to bigger longer-running
@@ -29,18 +31,20 @@ scheduling conferences.  It's evolved over time to handle
 
 Chris contacted me to help him use juju to manage summit for this year's
 Plumbers conference.  At the time we started this, the oneiric version of juju
-wasn't quite blessed for production environments, but we figured it'd be a
-great opportunity to try things out.
+wasn't exactly blessed for production environments, but we decided it'd be a
+great opportunity to work things out.
 
 We forked [Michael Nelson](www.google.com)'s excellent
 [django charm](lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk)
 to create a
 [summit-charm](https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk)
-and freely specialized it for summit.  Note that we're updating this for precise
+and freely specialized it for summit.
+
+Note that we're updating this charm for precise
 [here](https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk), but
 this will probably go away in the near future and we'll just use a generic django charm.  It
 turns out we didn't do too much here that won't apply to django apps in
-general, but more on that later.
+general, but more on that another time.
 
 
 ## The Stack
@@ -54,24 +58,31 @@ We additionally talked about putting this all behind some sort of a head like ha
 [ picture ]
 
 This'd let the app scale horizontally as well as give us a stable point to
-attach an elastic-ip.  We decided to not do this at the time b/c sticking
-select snippets into memcached meant we wouldn't likely need an additional
-django service unit to handle the conference load.
+attach an elastic-ip.  We decided to _not_ do this at the time b/c we could
+most likely handle the peak conference load with a single django service-unit
+provided we slam select snippets of the site into memcached.
 
 This turned out to be true load-wise, but it really would've been a whole lot
 easier to have a nice constant haproxy node out there to tack the elastic-ip
-to.  During development (charm, app, and theme) you want the freedom to destroy
+to.
+
+During development (charm, app, and theme) you want the freedom to destroy
 a service and respawn it without having to use external tools to go around and
 attach public IP addresses to the right places.  That's a pain.  Also, if
 there's a sensitive part of this infrastructure in production, it wouldn't be
 postgresql, memcached, or haproxy... the app itself would be the most likely
 point of instability, so it was a mistake to attach the elastic-ip there.
 
+There was nothing special about our tuning of postgresql or memcached.  We just
+used the services provided by the canned charms.  We actually used a "local"
+repository for these canned charms because the charm store didn't exist yet.
+Nowadays it'd probably be easiest to just manage these two services with the
+charms straight out of the charm store.  Same would be true for haproxy in this
+stack.
 
-[ diff focus of ephemeral instances... throw stuff away... means problems with elastic-ips ]
-[ problems with elastic ips ]
-
-
+They're not the charms you're likely to be making changes to or
+tweaking outside of their exposed config parameters.  I know _jack_ about postgresql, so I'll defer to the experts in this regard.
+The summit charm I might want to manage locally
 
 ## The Environment
 
@@ -82,6 +93,8 @@ convenience.  The juju openstack-native provider wasn't completed when we spun
 up the production environment for linuxplumbers and we didn't have access to a
 stable private ubuntu cloud running the openstack-ec2-api at the time.
 All of this has subsequently landed, so we'd have more options today.
+
+### the charms
 
 ### control environment
 
@@ -97,7 +110,7 @@ nodes with different sets of keys depending on when you changed the keys relativ
 to what actions you've performed on the environment.  It's a problem.
 
 What I recommend now is actually to use _another_ juju environment...  (and no,
-I'm not paid to promote cloud providers by the instance :) ) a dedicated
+I'm not paid to promote cloud providers by the instance :) I wish! ) a dedicated
 "control" environment.  I bootstrap it, then set up a juju client that controls
 the main production environment.  Then set up a shared tmux session that any of
 the admins for the production environment can use.  Adding/changing the set of
@@ -110,28 +123,32 @@ recommend it because it works so well.
 
 ### it's chilly in here
 
-freezing the code.  Yeah, so during development you break things.  There were a
-couple of times using oneiric juju that changes to juju core prevented a client
-from talking to an existing stack.  Aargh!  This wasn't going to fly for
-production use.  We've subsequently done a _bunch_ to prevent this from
-happening, but we needed production summit stable at the time.  The answer... freeze the
-code.  Juju has an environment config option `juju-origin` to specify where to
+Yeah, so during development you break things.  There were a couple of times
+using oneiric juju that changes to juju core prevented a client from talking to
+an existing stack.  Aargh!  This wasn't going to fly for production use.
+
+The juju team has subsequently done a _bunch_ to prevent this from happening,
+but hey we needed production summit working and stable at the time.  The
+answer... freeze the code.
+
+Juju has an environment config option `juju-origin` to specify where to
 get the juju installed on all instances in the environment.  I branched juju
 core to `lp:~mark-mims/juju/running-summit` and just worked straight from there
-for the lifetime of the environment (still up atm).
+for the lifetime of the environment (still up atm).  Easy enough.
 
-Ok, that's easy enough.  Well, the tricky part is to make sure that you're
-always using the `lp:~mark-mims/juju/running-summit` version of the juju cli
-when talking to the production summit environment.
+Now the tricky part is to make sure that you're always using the
+`lp:~mark-mims/juju/running-summit` version of the juju cli when talking to the
+production summit environment.
 
 I set up
 
     #!/bin/bash
-    export JUJU_BRANCH=/home/ubuntu/src/juju/running-summit
+    export JUJU_BRANCH=$HOME/src/juju/running-summit
     export PATH=$JUJU_BRANCH/bin:$PATH
     export PYTHONPATH=$JUJU_BRANCH
 
 which my tmuxinator config sources into every pane in my `summit` tmux session.
+
 This was also done on the `summit-control` instance so it's easy to make sure
 we're all using the right version of the juju cli to talk to the production
 environment.
