@@ -14,11 +14,11 @@ entirely on juju!
 
 Here's a little background on the experience.
 
-Along the way, We'll go into a
-little more detail about running juju in production than the particular problem
-at hand might warrant.  It's a basic stack of services that's only alive for
-6-months or so...  but this discussion applies to bigger longer-running
-production infrastructures too, so it's worth going over here.
+Along the way, we'll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It's a basic
+stack of services that's only alive for 6-months or so...  but this discussion
+applies to bigger longer-running production infrastructures too, so it's worth
+going over here.
 
 
 ## The App
@@ -201,9 +201,8 @@ failover.
 
 The biggest debugging activity during development was cleaning up the app's
 theming.  The summit charm is configured to get the django app itself from
-one [application branch](code.launchpad.net/summit) and the theme from a separate
-[theme branch](
-).
+one [application branch](https://code.launchpad.net/summit) and the theme from a separate
+[theme branch](https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme).
 
 So... ahem... "best practice" for theme development would've been to
 develop/tweak the theme locally, then push to the branch.  A simple
