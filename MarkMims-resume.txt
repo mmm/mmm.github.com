@@ -1,4 +1,4 @@
-                      Mark M. Mims, Ph.D. - Resume
+                      Mark M. Mims, Ph.D. - Résumé
 
 
 Contact Information:
@@ -10,7 +10,7 @@ Email: mark.mims@gmail.com
 URL: http://www.markmims.com/
 
 
-Summary:
+Interests:
 
     * Member of the Ubuntu Server Team
     * Software Developer (Rails, Ruby/C++/Java)
