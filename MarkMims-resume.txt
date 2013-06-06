@@ -4,22 +4,19 @@
 Contact Information:
 
 Mark M. Mims, Ph.D.
-Austin/Boulder
 
 Email: mark.mims@gmail.com
 URL: http://www.markmims.com/
 
+Summary:
+* Member of the Ubuntu Server Team
+* Software Developer (Ruby/C++/Java/Python)
+* Design/Build Private & Hybrid Clouds
+* Enterprise Integration (Chief Architect for $30MM J2EE project in
+  the Energy Industry)
+* 3D Modeling/Simulation/AI
+* Ph.D. Physics - Quantum Computation
 
-Interests:
-
-    * Member of the Ubuntu Server Team
-    * Software Developer (Rails, Ruby/C++/Java)
-    * Design/Build Private & Hybrid Clouds
-    * Enterprise Integration (Chief Architect for $30MM J2EE project in
-      the Energy Industry)
-    * 3D Modeling/Simulation/AI
-    * Ph.D. Physics
-    
 
 Employment History:
 
@@ -52,10 +49,9 @@ Employment History:
     monitoring needed to set up and support a Cloud Computing System,
     Storage Systems, and cloud-based High Performance Computing Systems.
     Help integrate the Cloud Computing System with existing systems and
-    applications throughout the university environment.
-    
-    This includes a web-based (Rails) Cloud Management Console with
-    account, instance, image, and storage management.
+    applications throughout the university environment. This includes a
+    web-based (Rails) Cloud Management Console with account, instance,
+    image, and storage management.
     
     Technology Used: Eucalyptus, AWS/EC2 API, RightAWS, Ruby, Rails,
     Chef.
@@ -266,9 +262,6 @@ Education:
     
 
 Publications:
-
-    Clint Byrum, Mark Mims, Juan Negron. DevOps on Ubuntu Server.
-    2012(in progress).
 
     Luis J. Boya, Mark Byrd, Mark Mims, E. C. G. Sudarshan.
     "Geometry of n-state systems, pure and mixed". J. Phys.: Conf.
