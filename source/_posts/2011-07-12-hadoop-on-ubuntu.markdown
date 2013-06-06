@@ -3,6 +3,7 @@ layout: post
 title: "Painless Hadoop / Ubuntu / EC2"
 categories: cloud
 comments: true
+alias: /ensemble/2011/07/12/hadoop-on-ubuntu.html
 ---
 
     #########################################################
