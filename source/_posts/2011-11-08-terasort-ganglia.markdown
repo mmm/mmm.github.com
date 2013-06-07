@@ -27,6 +27,8 @@ to play around with monitoring some
 like
 [Terasort](http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/).
 
+<!--more-->
+
 ## Short Story
 
 Deploy hadoop and ganglia using juju:

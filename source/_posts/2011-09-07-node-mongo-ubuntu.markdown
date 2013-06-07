@@ -22,6 +22,8 @@ Along the way, we'll see what it takes to connect and scale this particular stac
 of services.  I'll err on the side of too much detail over simplicity in this
 example, but I'll try to make it clear when there's a sidebar topic.
 
+<!--more-->
+
 At the end of the day, the deployment for our application
 would look like the usual juju deployment
 

@@ -15,6 +15,7 @@ lots of great stuff going on here, so we figured it's time to start posting abou
 First off, the coolest thing we did during last month's Ubuntu Developer Summit (UDS)
 was get the go-ahead to spend more time/effort/money scale-testing Juju.
 
+<!--more-->
 
 ## The Plan
 

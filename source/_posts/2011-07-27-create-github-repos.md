@@ -16,6 +16,8 @@ I want
 
 to create a new github repo 'myrepo'.
 
+<!--more-->
+
 ## manually
 
 Grab your API Token from your github account, "Account Settings" -- "Account Admin".

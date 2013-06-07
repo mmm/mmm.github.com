@@ -23,6 +23,8 @@ Thanks Michael Noll for the posts where I first learned how to do this stuff:
 I'd like to run his exact examples, but this time around I'll use 
 [juju](http://juju.ubuntu.com/) for hadoop deployment/management.
 
+<!--more-->
+
 ---
 
 ## The Short Story

@@ -13,6 +13,8 @@ Drop by [Charm School](https://juju.ubuntu.com/CharmSchool/2December11):
   <img src="/images/charmschool.png" width="220px" />
 </a>
 
+<!--more-->
+
 Details from [Jorge's post](http://tumblr.com/ZKG8NyCGhHZR):
 
     We're holding a Charm School on IRC.

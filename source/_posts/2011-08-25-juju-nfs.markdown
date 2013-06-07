@@ -18,6 +18,8 @@ look.  Many friends keep ancient boxes around as dedicated NFS
 fileserver appliances that are usually in fairly critical roles.
 Well, how would this fit into a sexy new juju stack of services?
 
+<!--more-->
+
 
 ## The Goal
 

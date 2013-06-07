@@ -26,6 +26,8 @@ shebang over to jack every time I wanna record something.
 Here's my attempt to do it without realtime priorities...
 I'll track my progress here.
 
+<!--more-->
+
 ## The quick and the dirty...
 
 Starting from a Natty desktop.

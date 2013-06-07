@@ -21,6 +21,7 @@ stack of services that's only alive for 6-months or so...  but this discussion
 applies to bigger longer-running production infrastructures too, so it's worth
 going over here.
 
+<!--more-->
 
 ## The App
 
