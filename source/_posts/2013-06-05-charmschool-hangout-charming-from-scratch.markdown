@@ -7,14 +7,15 @@ categories: cloud
 ---
 
 
-Continuing the series of regular CharmSchool Hangouts.
-
-[Last week](http://www.youtube.com/watch?v=yRcqSjOGweo)
-we wrote a charm from scratch.
+Continuing the series of regular CharmSchool Hangouts.  In last week's video
+we wrote a charm from scratch...
+{% youtube NQmxuzdc4Zg %}
 
 Starting from a simple node.js application, we put together "just enough" charm
 to get things working.  Watch for future episodes where we'll refactor and
 refine both the application and the charm.
+
+<!--more-->
 
 As before, there are links to the whole series of charmschool hangouts in the juju
 [video archive](https://juju.ubuntu.com/resources/videos/)

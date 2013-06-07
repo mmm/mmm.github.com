@@ -13,5 +13,5 @@ The room was packed with 300+... and they pretty much stayed the whole time... w
 Watch it 
 [here](http://www.openstack.org/summit/portland-2013/session-videos/presentation/juju-with-openstack-workshop)
 or 
-[here](http://www.youtube.com/watch?v=YenD4oxfEa4).
+{% youtube YenD4oxfEa4 %}
 

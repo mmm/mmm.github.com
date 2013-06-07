@@ -7,10 +7,8 @@ categories: cloud
 ---
 
 We're doing a series of regular CharmSchools on G+ hangouts.
-
-Watch the video from last week 
-[here](http://www.youtube.com/watch?v=yRcqSjOGweo)
-where we did an intro to juju and charming.
+Last week we did an intro to juju and charming...
+{% youtube yRcqSjOGweo %}
 
 There're links to the whole series of charmschool hangouts in the juju
 [video archive](https://juju.ubuntu.com/resources/videos/)
