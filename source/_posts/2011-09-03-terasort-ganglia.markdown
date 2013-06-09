@@ -23,7 +23,7 @@ like
 
 ---
 
-*Update:*
+*Updated on 2011-11-08:*
 The ubuntu project "ensemble" is now known as "juju".
 This post has been updated to reflect the new names and updates to the api.
 
