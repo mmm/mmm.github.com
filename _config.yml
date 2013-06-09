@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://markmims.com
-title: Snippets, Thoughts, and Links
-subtitle: ... chaotic bits of my distributed hybrid associative memory
-author: Mark Mims
+title: Software, Physics, Data, Mountains
+subtitle: ...snippets from my distributed hybrid associative memory
+author: Mark M Mims, Ph.D.
 simple_search: http://google.com/search
-description:
+description: where DevOps meets Data Science
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
