@@ -24,8 +24,8 @@ like
 ---
 
 *Update:*
-The ubuntu project "ensemble" is now publicly known as "juju".
-This post has bee updated to reflect the new names and updates to the api.
+The ubuntu project "ensemble" is now known as "juju".
+This post has been updated to reflect the new names and updates to the api.
 
 ---
 
