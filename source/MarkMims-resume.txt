@@ -8,34 +8,54 @@ Mark M. Mims, Ph.D.
 Email: mark.mims@gmail.com
 URL: http://www.markmims.com/
 Achievements:
-* Member of the Ubuntu Server Team
-* Software Developer (Ruby/C++/Java/Python)
-* Design/Build Private & Hybrid Clouds
-* Enterprise Integration (Chief Architect for $30MM J2EE project in
+* Experienced Data Scientist
+* Developer on the Ubuntu Server Team
+* Private & Hybrid Cloud and Cloud Application Architect
+* Enterprise Experience (Chief Architect for $30MM J2EE project in
   the Energy Industry)
-* 3D Modeling/Simulation/AI
+* Entrepreneurial Experience (Data Science and DevOps Consulting)
 * Ph.D. Physics - Quantum Computation
 
 
 Employment History:
 
-    Software Engineer - Ubuntu Server
-    Canonical Ltd. (Global)
+    Software Engineer - Ubuntu Server Team
+    Canonical Ltd. (Logan / UK)
     2011-Present
     
-    Part of the team working to build juju, a new suite of DevOps tools
+    Building DevOps tools for Ubuntu Server.
+    
+    Part of the team working to build Juju, a new suite of DevOps tools
     for Ubuntu Server. Developing juju charms to orchestrate various
     services throughout the enterprise. Designing / developing APIs and
-    tools surrounding the juju DevOps stack. Developing service stacks
-    for everything from Hadoop clusters to complex large-scale
-    infrastructures like Wikipedia. Integrate / test deployments on bare
-    metal as well as EC2, Eucalyptus, and OpenStack cloud
-    infrastructures.
+    tools surrounding the juju DevOps stack. Integrate / test
+    deployments on LXC, bare metal-as-a-service (MaaS) as well as EC2
+    and OpenStack cloud infrastructures.
+    
+    Implement data-intensive service stacks and using Juju to capture,
+    test, and model data science pipelines.
+    
+    
+    Visiting Scholar
+    Department of Physics, Utah State University (Logan)
+    2012-Present
+    
+    Research in data management and data modeling.
+    
+    Particularly interested in data plumbing and the toolchains
+    surrounding data science pipelines and how they effect subsequent
+    results at various scales.
+    
+    Helping define curricula for data science tracks within various
+    departments in universities across the US.
     
     
     Cloud Architect
-    Archethought (Austin, TX)
+    Archethought (Austin / Boulder)
     2010-2011
+    
+    Building private and hybrid clouds and cloud applications for
+    universities.
     
     Archethought is a consulting firm specializing in designing and
     building *private and hybrid clouds* for colleges and universities
@@ -56,16 +76,11 @@ Employment History:
     Chef.
     
     
-    Chief Scientist
-    Agile Dynamics (Austin, TX)
+    Founder / Chief Scientist
+    Agile Dynamics (Austin)
     2005-2011
     
-    Agile Dynamics is a consulting firm specializing in *data-driven
-    decision making*, helping businesses adopt a more quantitative view
-    of everyday business decisions. We provide the leadership, business
-    acumen, and technical expertise necessary to adapt business
-    processes and implement the enterprise software needed to support
-    this process across various different industries.
+    Data Science Consulting.
     
     Designed and built a *data-driven decision support system* for the
     Jamaican Ministry of Education. This USAID-sponsored project serves
@@ -87,12 +102,6 @@ Employment History:
     bulk data importers for a game company wanting a portal for
     customers to manage game content.
     
-    Provide *social network integration* services to help today's
-    businesses migrate away from traditional marketing models and
-    embrace a new role as part of a community of customers. This
-    includes management consulting and the development of web-based
-    applications and Facebook apps using Ruby on Rails.
-    
     Provided quantitative marketing tools and services for the
     visualization and *modeling of social networks*. Allowed for trend
     identification and analysis, growth rate predictions, and what-if
@@ -109,15 +118,21 @@ Employment History:
     Technology Used: Ruby, Rails, Java, SWT/JFace.
     
     
+    Board of Directors
+    LoneStarRuby Foundation (Austin)
+    2009-2011
+    
+    LSRF organizes an annual LoneStarRuby Conference
+    
+    
     Chief Technology Officer
-    Rational Systems (Houston, TX)
+    Rational Systems (Houston)
     2002-2005
     
-    Developed business models for the Energy Industry and then designed
-    / developed systems to implement these models. For regulated energy
-    utilities, this allows for efficient daily operations and longterm
-    optimization decisions. Directed delivery of two complete product
-    lines, Rational Pipe(TM) and Rational Catalyst(TM), from conception.
+    Building Operations/Optimization systems for the Energy Industry.
+    
+    Directed delivery of two complete product lines, Rational Pipe(TM)
+    and Rational Catalyst(TM), from conception.
     
     Rational Pipe is software designed to *manage the commercial
     activities of interstate natural gas pipelines*, including
@@ -125,7 +140,7 @@ Employment History:
     and invoicing. It was the result of a 140+ man-year, joint
     development project between Rational Systems and a major US
     interstate natural gas pipeline, utilizing Rational's Rights-Based
-    engine (pat pending).
+    engine.
     
     Chief Architect for this $30M project delivered on time and on
     budget. Provided Technical leadership for a team of approximately
@@ -155,8 +170,10 @@ Employment History:
     
     
     Lead Software Architect
-    The AEgis Technologies Group, Inc. (Austin, TX)
+    The AEgis Technologies Group, Inc. (Austin)
     2000-2002
+    
+    Building IDEs for Simulation Engineers.
     
     Principal architect of AEgis' AcslXtreme(TM) product line, a suite
     of *commercial simulation tools* based on the industry standard
@@ -184,8 +201,10 @@ Employment History:
     
     
     Software Developer
-    Wesson International, Inc., now Adacel Technologies, Ltd. (Austin, TX)
+    Wesson International, Inc., now Adacel Technologies, Ltd. (Austin)
     1996-1998
+    
+    Building Air Traffic Control simulators.
     
     Responsible for creating and maintaining realistic aircraft movement
     and intelligent pilot behavior in a multi-platform, scaleable *air
@@ -213,7 +232,7 @@ Employment History:
     
     
     Instructor
-    Dept. of Physics - UT Austin (Austin, TX)
+    Dept. of Physics - UT Austin (Austin)
     1994-2000
     
     Physical Science I: Mechanics (AI, Instructor of Record)
@@ -224,7 +243,7 @@ Employment History:
     
     
     Lecturer
-    Austin Community College (Austin, TX)
+    Austin Community College (Austin)
     1995-1996
     
     Intro to General Physics I
