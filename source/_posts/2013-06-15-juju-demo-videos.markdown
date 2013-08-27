@@ -15,15 +15,14 @@ series, but the idea's still sound.
 There's no sound on these... they're raw video backups for demoing juju (in
 case we lost networking during the demo).
 
-migrate ec2 to hpcloud
-{% youtube HUtR3_YlKXU %}
+migrate local to hp
+{% youtube Jfnxl1Kh9SY %}
 
 <!--more-->
 
+migrate ec2 to hpcloud
+{% youtube HUtR3_YlKXU %}
 
 Local provider
 {% youtube EpIP4ly4E0E %}
-
-migrate local to hp
-{% youtube Jfnxl1Kh9SY %}
 
