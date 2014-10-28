@@ -66,31 +66,42 @@ activity, and also determine when a student is engaged in a learning activity
 or not at any given moment.
 
 Let's define a function similar to a characteristic function
-that identifies activity over time.
-I.e., some function
+that identifies learning activity over time.
+I.e., define `activity` as a function
 
 $$
-\alpha(t) = 
-  \left\{
-    \begin{array}{ll}
-      1 & \mbox{if student is actively learning} \\
-      0 & \mbox{otherwise }
-    \end{array}
-  \right.
+    \alpha: \\R_+ \arrow [0,1]
 $$
 
-that registers when learning is occurring.
-I'm totally still being vague about what learning or learning
+where
+
+$$
+    \alpha(t) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if student is actively learning} \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right.
+$$
+
+This function is on/off when learning is occurring... no accounting
+here for partial engagement.
+I'm also totally still being vague about what learning or learning
 activity might mean for the moment.  We'll come back to this in a bit.
 
+Let's extend the notion of activity to include content or
+subject via tagging...
 
+$$
+    \alpha: \\R \cross {tags} \arrow [0,1]
+$$
 
+So
 
-As before, there are links to the whole series of charmschool hangouts in the juju
-where we also have videos and screencasts of demos, talks,  and any other charm
-schools we've been able to capture on video.
-
-
+$$
+    \alpha: \\R \cross {tags} \arrow [0,1]
+$$
 
 
 
