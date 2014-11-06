@@ -40,13 +40,13 @@ etc.
 It's a simple function
 
 $$
-\phi_A(x) = 
-  \left\{
-    \begin{array}{ll}
-      1 & \mbox{if } x \in A \\
-      0 & \mbox{otherwise }
-    \end{array}
-  \right.
+    \phi_A(x) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if } x \in A \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right.
 $$
 
 that takes a value of `1` for any domain entry that's 
@@ -56,7 +56,7 @@ Now we can integrate a characteristic function over intervals and establish
 some notion of size of the set
 
 $$
-\mbox{size of A} = \int_A \phi_A(x) dx.
+    \mbox{size of A} = \int_A \phi_A(x) dx.
 $$
 
 Ok, so what does all this have to do with education and learning?
@@ -70,7 +70,7 @@ that identifies learning activity over time.
 I.e., define `activity` as a function
 
 $$
-    \alpha: \\R_+ \arrow [0,1]
+    \alpha \colon R_+ \rightarrow [0,1]
 $$
 
 where
@@ -82,11 +82,11 @@ $$
           1 & \mbox{if student is actively learning} \\
           0 & \mbox{otherwise }
         \end{array}
-      \right.
+      \right\}.
 $$
 
-This function is on/off when learning is occurring... no accounting
-here for partial engagement.
+This function is on (1) when learning is occurring... off (0) when not.
+There's no accounting here for partial engagement.
 I'm also totally still being vague about what learning or learning
 activity might mean for the moment.  We'll come back to this in a bit.
 
@@ -94,14 +94,17 @@ Let's extend the notion of activity to include content or
 subject via tagging...
 
 $$
-    \alpha: \\R \cross {tags} \arrow [0,1]
+    \alpha \colon R_+ \times \lbrace\mbox{tags}\rbrace \to [0,1],
 $$
 
-So
+so we're really dealing with
 
 $$
-    \alpha: \\R \cross {tags} \arrow [0,1]
+    \alpha_{\lbrace{\mbox tags}\rbrace}(t).
 $$
+
+### Example: college curriculum
+
 
 
 
