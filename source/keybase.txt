@@ -1,0 +1,63 @@
+==================================================================
+https://keybase.io/m_3
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://markmims.com
+  * I am m_3 (https://keybase.io/m_3) on keybase.
+  * I have a public key with fingerprint 0D9E DC5F 633B 05D4 7633  42C3 76D4 635F B2A3 4D75
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "0d9edc5f633b05d4763342c376d4635fb2a34d75",
+            "host": "keybase.io",
+            "key_id": "76d4635fb2a34d75",
+            "uid": "1e1953de1cdf19a5704eca6736a8c400",
+            "username": "m_3"
+        },
+        "service": {
+            "hostname": "markmims.com",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1415301637,
+    "expire_in": 157680000,
+    "prev": "6d42baf1e817589108de41ee15feb52ad101982d75907cf5106304d4d72f469a",
+    "seqno": 6,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1
+
+owFtUWtIFFEU3lVLWkkU8UdiQQNB1rrMnefuSj8MF4qwBwohFsvM3DvrZLOzzuxu
+LqtJBUESlqAW2YNYsqhIcCl8tVlqVoIZSGQKUmlZGATRQ9HsjuS/7p97zznf953z
+3XN+fbIlyRoek7wdseKQdbjvq2gpLX++ECVEDUYId5SoRCuXrPh9SA/oij9IuAkS
+uhCUWJmjaZFkIcPjB0NJNM9BhqNZWaQEmoE8S9iJCs0wGVhGFAzkUDScw4FXgTj7
+H3xopQAQcLE0RECCMnAJLE8ySBI4nuYEp8SQpAk0kO4XVITRqpcmau0EToQVCZnj
+ml1Xi4JeqSqq4ZA0FdMCuhbUJO0orlQEgwG3SQxGAibyGBK9/zS8ouKH2DImhJFu
+KJqfcAOMlIKKKQoYwNIk4GjeTqDqgKIjr2IiWJ5zkviYbVAYS2J/lCjIADkBzzpd
+gHRCxACEACsjkaUECEjgclLYuovkJZkFJEeTDMR/QckM5xII01WVXyPcHB5T8GFJ
+Q/H5hWBIR0St7Yw1N8ViTbKsXZNkbs1iW5exukvldery4eWuTYNtXSOBRGFT613D
+dm42Pj6VuJfZc3NU6M4d/jhXREXEyzFvyJFe9db1XanbMttAlcfns6Ibb9x/1E31
+ztSoiP+U9rBlQEzO6dw+dLpoc/P1X6fSewdOTuSm9H2pgc9eRupmTvTAXUeeNpdk
+TERjkzljocn9LQeNzyOPyzqSDf2DssRJg+3v23a/ybo21deoen4v+L6925Z/Jytl
+vDW7O7YnUTLvKTbi7aG8gtu3lmZ+7Gue7mzqjaQlprW2kUpP/ZO9/RdSbY150cyr
+B46PvihLK73k6VezNzjqCwsWa/+8sufXLTb8vLjDadt6FnbMXdkZt1U/ODTSOPQX
+=Pkd8
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/m_3
+
+==================================================================
