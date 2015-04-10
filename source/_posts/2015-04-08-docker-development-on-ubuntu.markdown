@@ -40,18 +40,29 @@ using `debconf-get-selections` during `Dockerfile` development.
 
 ## Docker Development
 
-- create a bare container to interact with
-- manually install any packages that require initial settings
-- install `debconf-tools`
+Start off with a bare interactive container
 
-```
-    apt-get install debconf-utils
-```
+    my-laptop$ docker run -it ubuntu
 
-- get the package config
+Then, manually install any packages that require initial settings.
+Let's take `mysql` as a simple example
 
-```
+    root@1bad1842db71:/# apt-get update && apt-get install mysql-server
+
+fill in config as prompted.
+
+Now, let's figure out what set of config values `mysql-server`
+exposes to the OS.
+
+We'll need some tools... install `debconf-tools`
+
+    root@1bad1842db71:/# apt-get install debconf-utils
+
+
+then get the package config
+
     root@1bad1842db71:/# debconf-get-selections | grep -i mysql
+
     # Repeat password for the MySQL "root" user:
     mysql-server-5.5  mysql-server/root_password_again  password  
     # New password for the MySQL "root" user:
@@ -66,27 +77,29 @@ using `debconf-get-selections` during `Dockerfile` development.
     mysql-server-5.5  mysql-server-5.5/really_downgrade boolean false
     mysql-server-5.5  mysql-server-5.5/nis_warning  note  
     mysql-server-5.5  mysql-server/password_mismatch  error 
-```
+
 
 the ones we care about are
 
-```
     # New password for the MySQL "root" user:
     mysql-server-5.5  mysql-server/root_password  password  
     # Repeat password for the MySQL "root" user:
     mysql-server-5.5  mysql-server/root_password_again  password  
-```
 
 
-- let's add these to the dockerfile using `debconf-set-selections` 
+Now, let's expose these config settings out to docker using `debconf-set-selections` 
+in bash
 
-```
+    echo "mysql-server mysql-server/root_password password secret" | debconf-set-selections
+    echo "mysql-server mysql-server/root_password_again password secret" | debconf-set-selections
+
+or in python
+
     dconf = Popen(['debconf-set-selections'], stdin=PIPE)
     dconf.stdin.write("%s %s/root_password password %s\n" % (package, package, root_pass))
     dconf.stdin.write("%s %s/root_password_again password %s\n" % (package, package, root_pass))
-```
-
-- test it out
 
 
-<!--more-->
+Now test it all out.
+
+
