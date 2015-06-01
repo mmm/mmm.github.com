@@ -6,13 +6,37 @@ comments: true
 categories: 
 ---
 
+Starting to collect notes to help first-time contributors work with open source
+projects.
+
+These are quite rough atm, but I'll flesh them out as I get time.
+
+## Contents
+
+- Upstream of What?
+- Issues
+- Repo Management
+- Pull Requests
+- Programming Style
+
+<!--more-->
 
 
+## Upstream of What?
 
-## tickets
+- [TODO] define / describe
+- [TODO] advice on compatibility
 
 
-## repo mgmt
+## Issues
+
+- [TODO] basic ticket management
+- [TODO] too many ticketing systems
+- [TODO] starter tickets
+- [TODO] advice
+
+
+## Repo Management
 
 Start with an upstream...
 
@@ -69,7 +93,11 @@ which should work as shorthand for
     git push origin master
 
 
-## PRs
+- [TODO] more "advice"
+
+
+
+## Pull Requests
 
 Example of a PR from a feature branch on a fork.
 
@@ -100,5 +128,12 @@ people use feature branches on the same common repository, it's a common
 practice to namespace the feature branches with user names... so instead of a
 branch named `add-install-notes` I'd call it `mmm-add-install-notes`.
 
+
+- [TODO] more "advice"
+
+
+## Style
+
+- [TODO] project style guidelines are important
 
 
