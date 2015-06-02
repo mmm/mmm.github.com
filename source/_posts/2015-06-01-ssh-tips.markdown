@@ -24,11 +24,56 @@ Agenda:
 <!-- more -->
 
 
-# Config
+## Why SSH?
 
-In your home directory, put a `~/.ssh/config` file...
+It's common practice to secure a cluster of servers using a `bastion` host.
+This might be a cluster of servers in a colocation facility, containers on a
+single host, or instances in an `EC2` region... the pattern can still be applied.
 
-## you can use this for simple aliases...
+The way this works is that the servers in the cluster are all locked down and
+not accessible to the outside world except where necessary for the production
+network design of the pipeline or application.
+
+That's all great for production network traffic.  However, there's often a need
+for adhoc access: testing, debugging, monitoring, etc of the cluster.  This is
+usually access to information that's required _in addition_ to the existing
+monitoring and logging for the production pipeline.  Until automated management
+solutions involving immutable infrastructure components are widely adopted,
+you'll almost always need the ability for an engineer to directly log into
+cluster instances to do things like clear `/tmp` directories, run jobs, etc.  
+
+You've also gotta routinely access various web consoles (ClouderaManager,
+spark, hdfs, etc) to debug functional or performance problems, to change
+config, or even just to do sanity checks on overall cluster health.
+
+How do you access all of this?  You can't just expose them to the outside
+world.  None of these consoles were ever designed for that.  They're rife with
+holes...  with often _huge_ ramifications for any incursions!  On the other
+hand, it's often quite difficult (and dangerous!) to add adhoc network access
+into production network planning.
+
+Two practices are common:
+
+- VPN access
+- SSH proxies and tunnels
+
+They each have pros/cons, tradeoffs between security, ease-of-use, flexibility,
+and capability.  VPN access is often ineffective due to its static nature and
+sensitivity to all manner of bad security practices.  It's particularly
+pointless due to the random way different web consoles choose which interfaces
+they like to bind to.  That's a whole other discussion... for this talk,
+suffice it to say that I highly recommend and infinitely prefer an SSH-based
+solution.  It's worth traversing the learning curve of SSH for the sheer power
+and flexiblity it gives you without compromising security.
+
+---
+
+## Config Files
+
+In your home directory, there's an optional `~/.ssh/config` file 
+where you can customize your local SSH client behavior.
+
+You can use this for simple aliases...
 
     #################
     # MyBastions
@@ -41,7 +86,7 @@ In your home directory, put a `~/.ssh/config` file...
         Hostname ec2-zzz-zzz-zzz-zzz.compute-1.amazonaws.com 
 
 
-## or adding extra stuff that's a pain to type _every_ time
+or adding extra stuff that's a pain to type _every_ time
 
     ############
     # CustomerX
@@ -57,8 +102,9 @@ In your home directory, put a `~/.ssh/config` file...
         IdentityFile ~/projects/customerX/creds/dev_hdp.pem
     (etc)
 
+notice the pattern entries?
 
-## or to include tunnels
+You can include tunnels (discussed below)
 
     Host myserver
         Hostname 10.2.3.4
@@ -66,7 +112,7 @@ In your home directory, put a `~/.ssh/config` file...
         LocalForward 8080 localhost:8080
 
 
-## or to include proxies
+or proxies (also discussed below)
 
     #############
     # CustomerY
@@ -80,16 +126,18 @@ In your home directory, put a `~/.ssh/config` file...
         ProxyCommand ssh customerYbastion nc -q0 %h %p
 
 
-\pagebreak
+---
 
 
+## Proxies
 
-# Proxies
+One server, a `bastion` host, accepts SSH traffic from the outside world.
+Remaining `target` hosts in the cluster are configured internal access only.
 
-# ssh using a bastion
+Consider the following scenario using a `ProxyCommand`.
 
-
-
+Take an externally accessible `bastion` and an internally accessible `target`.
+Set up your SSH config so you can ssh directly to the `bastion` host
 
 
          +--------------------+         +-------------------+
@@ -110,11 +158,11 @@ In your home directory, put a `~/.ssh/config` file...
          |                    |         |                   |
          +--------------------+         +-------------------+
 
+with a command like 
+
          `ssh bastion`
 
-
-and then
-
+Then you can ssh from there to a `target` host
 
 
                                         +-------------------+          +-------------------+
@@ -140,7 +188,7 @@ and then
 
 
 
-can we compress this to one step?
+The key bit here is that we can compress this to one step for the user.
 
 
          +--------------------+         +-------------------+       +-------------------+
@@ -162,7 +210,6 @@ can we compress this to one step?
          +--------------------+         +-------------------+       +-------------------+
 
 
-Yes!
 
 From laptop's `~/.ssh/config` file:
 
@@ -172,19 +219,24 @@ From laptop's `~/.ssh/config` file:
         Hostname ip-10-xx-xx-xx.internal....amazon.com
         ProxyCommand ssh bastion nc -q1 %h %p
 
-then you can just `ssh target` directly from your laptop.
+then you can just `ssh target` directly from your laptop.  It automatically
+traverses the proxy `bastion` on your behalf.
+
+Note, that from an administrative perspective, it's easy to control user access
+at the single `bastion`... if you can't establish an ssh connection to the
+bastion, you can't "jump through it" to internal hosts.
     
 
 
 
-\pagebreak
+---
 
 
 
 
-# Tunnels
+## Tunnels
 
-## ssh in general is a tunnel
+SSH in general _is_ a tunnel
 
 
             +-----------------------+                             +------------------------+
@@ -213,12 +265,12 @@ then you can just `ssh target` directly from your laptop.
 
 
 
-## forward tunnels
+### forward tunnels
 
 aka, "port forwarding"
 
 
-### forwarding web traffic
+#### forwarding web traffic
 
 
               +----------------+                  +------------------------+
@@ -250,7 +302,7 @@ aka, "port forwarding"
 
 
 
-### forwarding localhost
+#### forwarding localhost
 
 
 
@@ -290,7 +342,7 @@ or
 
 
 
-## reverse tunnels
+### reverse tunnels
 
 
             +-----------------------+                             +------------------------+
@@ -328,7 +380,7 @@ or even `ssh root@fred -R80:localhost:80`
 
 
 
-## add forwarding to your ssh config
+### add tunnels to your ssh config
 
 
     Host myhost
@@ -337,4 +389,3 @@ or even `ssh root@fred -R80:localhost:80`
         LocalForward 8080 localhost:8080
 
 
-\pagebreak
