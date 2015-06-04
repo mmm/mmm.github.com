@@ -126,6 +126,45 @@ or proxies (also discussed below)
         ProxyCommand ssh customerYbastion nc -q0 %h %p
 
 
+Once you add multiple cluster configs and different customer environments,
+these SSH config files can get quite complex.  Here're a couple of ways I've
+seen people manage that:
+
+- just manage one big `~/.ssh/config` file by hand and use `Host` names and
+  comments to keep track of everything
+
+- explictly specify config files at the command line a la `ssh -c
+  ~/.ssh/customerX-config <server>`... maybe even use a shell alias to shorten
+  this if you do it a lot
+
+- [what I currently do] scripts to glue multiple config snippets from
+  `~/.ssh/config.d/customerX.conf` into a single big read-only `~/.ssh/config`.
+  It'd be nice to eventually change the ssh client to optionally read from
+  these kind of `~/.ssh/config.d/` and `~/.ssh/authorized_keys.d/` snippet
+  directories
+
+- customer-specific containers... I actually work a lot from _inside_ of
+  containers on an ec2 instance.  I usually have them just bind-mount the
+  underlying hosts home directory, but you could easily keep them isolated with
+  separate config and spin them up only when you need overlay specific to a
+  customer.  This also works even with gui apps on a laptop btw, but that's a
+  longer story :)
+
+It's also pretty common for folks to write scripts using config management
+(juju, knife, or ClouderaManager-like APIs) to generate ssh config snippets
+from a running infrastructure.  This can be quite useful, but is still a static
+picture of a cluster that changes.  Depending on the lifetime or stability of
+the cluster, you're often better off using a more dynamic approach like `knife
+ssh`.  It's a no-win tradeoff of sharing static SSH config snippets -vs-
+configuring chef environments for everyone who needs to access the cluster.
+
+I'd love to hear other solutions folks have come up with to deal with this.  I
+have no clue what puppet offers here, and I bet there are great examples of
+ansible's ec2 plugin that'll be a dead-simple way to interact with a dynamic
+host inventory.  Perhaps that's where I'll head next... we'll see.  Totally
+depends on customer environments.
+
+
 ---
 
 
