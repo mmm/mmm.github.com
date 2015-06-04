@@ -133,7 +133,7 @@ seen people manage that:
 - just manage one big `~/.ssh/config` file by hand and use `Host` names and
   comments to keep track of everything
 
-- explictly specify config files at the command line a la `ssh -c
+- explictly specify config files at the command line a la `ssh -F
   ~/.ssh/customerX-config <server>`... maybe even use a shell alias to shorten
   this if you do it a lot
 
