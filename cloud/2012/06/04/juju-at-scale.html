@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="Written by Mark Mims and James Page Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms. There’s
+lots of great stuff &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Scaling a 2000-node Hadoop Cluster on EC2/Ubuntu With Juju</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-04T00:00:00-04:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p class="meta">
+Written by Mark Mims and James Page
+</p>
+
+<p>Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
+lots of great stuff going on here, so we figured it’s time to start posting about it.</p>
+
+<p>First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+was get the go-ahead to spend more time/effort/money scale-testing Juju.</p>
+
+<!--more-->
+
+<h2 id="the-plan">The Plan</h2>
+
+<ul>
+  <li>pick a service that scales</li>
+  <li>spin up a cluster of units for this service</li>
+  <li>try to run it in a way that actively engages all units of the cluster</li>
+  <li>repeat:
+    <ul>
+      <li>instrument</li>
+      <li>profile</li>
+      <li>optimize</li>
+      <li>grow</li>
+    </ul>
+  </li>
+</ul>
+
+<p><a href="https://plus.google.com/u/0/109495998940814132432/posts">James</a>,
+<a href="https://plus.google.com/u/0/108276830347560657704/posts">Kapil</a>,
+<a href="https://plus.google.com/102506066601287922723/posts">Juan</a>,
+<a href="https://plus.google.com/u/0/100536568598074282388/posts">Ben</a>,
+and <a href="http://markmims.com/about">Mark</a>
+sat down over the course of
+a couple of nights at UDS to take a crack at it.
+We chose Hadoop.
+We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
+Here’re some notes on the process.</p>
+
+<h2 id="hadoop">Hadoop</h2>
+
+<p>Hadoop was a pretty obvious choice here.
+It’s a great actively-maintained
+<a href="http://hadoop.apache.org/">project</a>
+with a large community of users.
+It scales in a somewhat known manner, and the
+<a href="http://jujucharms.com/charms/precise/hadoop">hadoop charm</a>
+makes it super-simple to manage.
+There are also several known benchmarks that are pretty straightforward to get going,
+and distribute load throughout the cluster.</p>
+
+<p>There’s an entire science/art to tuning hadoop jobs to run optimally given the 
+characteristics of a particular cluster.  Our sole goal in tuning hadoop benchmarks
+was to <em>engage</em> the entire cluster and profile juju during various activities throughout
+an actual run.  For our purposes, we’re in no hurry… a slower/longer run gives us a
+good profiling picture for managing the nodes themselves under load (with a sufficient
+mix of i/o -vs- cpu load).</p>
+
+<h2 id="ec2">EC2</h2>
+
+<p>Surprisingly enough, we don’t really have that many servers just lying around… so EC2 to the rescue.</p>
+
+<p>Disclaimer… we’re testing our infrastructure tools here, not benchmarking hadoop in EC2.
+Some folks advocate running hadoop in a cloudy virtualized environment… while some
+folks are die-hard server huggers.  That’s actually a really interesting discussion.
+It comes down to the actual jobs/problems you’re
+trying to solve and how those jobs fit in your data pipeline.
+Please note that we’re not
+trying to solve that problem here or even provide realistic benchmarking data to contribute
+to the discussion… we’re simply testing how our infrastructure tools perform at scale.</p>
+
+<p>If you <em>do</em> run hadoop in EC2, Amazon’s Elastic Map Reduce service is likely to perform
+better at scale in EC2 than just running hadoop itself on general purpose instances.
+Amazon can do all sorts of stuff internally to show hadoop lots of love.
+We chose not to use EMR because we’re interested in testing how juju performs
+with <em>generic</em> Ubuntu Server images, not EMR… at least for now.</p>
+
+<p>Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
+ask AWS to bump up your limits.</p>
+
+<h2 id="juju">Juju</h2>
+
+<p>We started scale testing from a fresh branch of juju trunk… what gets deployed to
+the PPA nightly… this freed us up to experiment with live changes to add instrumentation,
+profiling information, and randomly mess with code as necessary.  This also locks in 
+the branch of juju that the scale testing environment uses.</p>
+
+<p>As usual, juju will keep track of the state of our infrastructure going forward and
+we can make changes as necessary via juju commands.  To bootstrap and spin up the
+initial environment we’ll just use shell scripts wrapping juju commands.</p>
+
+<h3 id="spinning-up-a-cluster">Spinning up a cluster</h3>
+
+<p>These scripts are really just
+hadoop versions of some standard juju demo scripts such as those used for 
+a simple <a href="https://gist.github.com/2050525">rails stack</a>
+or a more realistic HA <a href="https://gist.github.com/1406018">wiki stack</a>.</p>
+
+<p>The hadoop scripts for EC2 will get a little more complex as we grow simply because
+we don’t want AWS to think we’re a DoS attack… we’ll pace ourselves during spinup.</p>
+
+<p>From the hadoop charm’s readme, the basic steps to spinning up a simple combined
+hdfs and mapreduce cluster are:</p>
+
+<pre><code>juju bootstrap
+
+juju deploy hadoop hadoop-master
+juju deploy -n3 hadoop hadoop-slavecluster
+
+juju add-relation hadoop-master:namenode hadoop-slavecluster:datanode
+juju add-relation hadoop-master:jobtracker hadoop-slavecluster:tasktracker
+</code></pre>
+
+<p>which we expand on a bit to start with a base startup script that looks like:</p>
+
+<pre><code>#!/bin/bash
+
+juju_root="/home/ubuntu/scale"
+juju_env=${1:-"-escale"}
+
+###
+
+echo "deploying stack"
+
+juju bootstrap $juju_env
+
+deploy_cluster() {
+  local cluster_name=$1
+
+  juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.large" --config "$juju_root/etc/hadoop-master.yaml" local:hadoop ${cluster_name}-master
+
+  juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.medium" --config "$juju_root/etc/hadoop-slave.yaml" -n 37 local:hadoop ${cluster_name}-slave
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  juju expose $juju_env ${cluster_name}-master
+
+}
+
+deploy_cluster hadoop
+
+echo "done"
+</code></pre>
+
+<p>and then manually adjust this for cluster size.</p>
+
+<h3 id="configuring-hadoop">Configuring Hadoop</h3>
+
+<p>Note that we’re specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We’d like an m1.large for the
+hadoop master</p>
+
+<pre><code>juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
+</code></pre>
+
+<p>and m1.mediums for the slaves</p>
+
+<pre><code>juju deploy ... --constraints "instance-type=m1.medium" ... hadoop-slave
+</code></pre>
+
+<p>Note that we’ll also pass config files to specify different heap sizes for the different memory footprints</p>
+
+<pre><code>juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
+</code></pre>
+
+<p>where <code>hadoop-master.yaml</code> looks like</p>
+
+<pre><code># m1.large
+hadoop-master:
+  heap: 2048
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+</code></pre>
+
+<p>and</p>
+
+<pre><code>juju deploy ... --config "hadoop-slave.yaml" ... hadoop-slave
+</code></pre>
+
+<p>where <code>hadoop-slave.yaml</code> looks like</p>
+
+<pre><code># m1.medium
+hadoop-slave:
+  heap: 1024
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+</code></pre>
+
+<p>Note also that we also have our juju environment configured to use
+instance-store images… juju defaults to ebs-rooted images, but that’s
+not a great idea with hdfs.  You specify this by adding a <code>default-image-id</code>
+into your <code>~/.juju/environments.yaml</code> file.
+This gave each of our instances an extra ~400G local drive
+on <code>/mnt</code>… hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
+in the config above.</p>
+
+<h2 id="nodes-and-100-nodes">40 nodes and 100 nodes</h2>
+
+<p>Both the 40-node and 100-node runs went as smooth as silk.
+The only thing to note was that it took a while to get AWS to increase
+our account limits to allow for 100+ nodes.</p>
+
+<h2 id="nodes">500 nodes</h2>
+
+<p>Once we had permission from Amazon to spin up 500 nodes on our account,
+we initially just naively spun
+up 500 instances… and quickly got throttled.</p>
+
+<p>No particular surprise, we’re not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group… we must look like a DoS attack.</p>
+
+<p>The order was eventually fulfilled, and juju waited around for it.
+Everything ran as expected, it just took about an hour and 15 minutes
+to spin up the stack.  This gave us a nice little cluster with HDFS
+storage of almost 200TB</p>
+
+<p><a href="/images/scale-500-50070.png">
+<img src="/images/scale-500-50070.png" width="720px" />
+</a></p>
+
+<p>The hadoop terasort job was run from the following script</p>
+
+<pre><code>#!/bin/bash
+
+SIZE=10000000000
+NUM_MAPS=1500
+NUM_REDUCES=1500
+IN_DIR=in_dir
+OUT_DIR=out_dir
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar teragen -Dmapred.map.tasks=${NUM_MAPS} ${SIZE} ${IN_DIR}
+
+sleep 10
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
+</code></pre>
+
+<p>which, with a replfactor of 3, engaged the entire cluster just fine, 
+and ran terasort with no problems</p>
+
+<p><a href="/images/scale-500-50030.png">
+<img src="/images/scale-500-50030.png" width="720px" />
+</a></p>
+
+<p>Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:</p>
+
+<pre><code>- pass the '-n' options directly to the provisioning agent... don't expand `juju deploy -n &lt;num_units&gt;` and `juju add-unit -n &lt;num_units&gt;` in the client
+- pass these along all the way to the ec2 api... don't expand these into multiple api calls
+</code></pre>
+
+<p>We’ll add those to the list of things to do.</p>
+
+<h2 id="nodes-1">1000 nodes</h2>
+
+<p>Onward, upward!</p>
+
+<p>To get around the api throttling, we start up
+batches of 99 slaves at a time with a 2-minute wait
+between each batch</p>
+
+<pre><code>#!/bin/bash
+
+juju_env=${1:-"-escale"}
+juju_root="/home/ubuntu/scale"
+juju_repo="$juju_root/charms"
+
+############################################
+
+timestamp() {
+  date +"%G-%m-%d-%H%M%S"
+}
+
+add_more_units() {
+  local num_units=$1
+  local service_name=$2
+
+  echo "sleeping"
+  sleep 120
+
+  echo "adding another $num_units units at $(timestamp)"
+  juju add-unit $juju_env -n $num_units $service_name
+}
+
+deploy_slaves() {
+  local cluster_name=$1
+  local slave_config="$juju_root/etc/hadoop-slave.yaml"
+  local slave_size="instance-type=m1.medium"
+  local slaves_at_a_time=99
+  #local num_slave_batches=10
+
+  juju deploy $juju_env --repository $juju_repo --constraints $slave_size --config $slave_config -n $slaves_at_a_time local:hadoop ${cluster_name}-slave
+  echo "deployed $slaves_at_a_time slaves"
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  for i in {1..9}; do
+    add_more_units $slaves_at_a_time ${cluster_name}-slave
+    echo "deployed $slaves_at_a_time slaves at $(timestamp)"
+  done
+}
+
+deploy_cluster() {
+  local cluster_name=$1
+  local master_config="$juju_root/etc/hadoop-master.yaml"
+  local master_size="instance-type=m1.large"
+
+  juju deploy $juju_env --repository $juju_repo --constraints $master_size --config $master_config local:hadoop ${cluster_name}-master
+
+  deploy_slaves ${cluster_name}
+
+  juju expose $juju_env ${cluster_name}-master
+}
+
+main() {
+  echo "deploying stack at $(timestamp)"
+
+  juju bootstrap $juju_env --constraints="instance-type=m1.xlarge"
+
+  sleep 120
+  deploy_cluster hadoop
+
+  echo "done at $(timestamp)"
+}
+main $*
+exit 0
+</code></pre>
+
+<p>We experimented with more clever ways of doing the spinup
+(too little coffee at this point of the night)…
+but the real fix is to get juju to take
+advantage of multiplicity in api calls.
+Until then, timed batches work just fine.</p>
+
+<p>Juju spun the cluster up in about 2 and a half hours.
+It had about 380TB of HDFS storage</p>
+
+<p><a href="/images/scale-1000-50070.png">
+<img src="/images/scale-1000-50070.png" width="720px" />
+</a></p>
+
+<p>The terasort job that was run from the script above with</p>
+
+<pre><code>SIZE=10000000000
+NUM_MAPS=3000
+NUM_REDUCES=3000
+</code></pre>
+
+<p><a href="/images/scale-1000-50030.png">
+<img src="/images/scale-1000-50030.png" width="720px" />
+</a></p>
+
+<p>eventually completed.</p>
+
+<h2 id="nodes-2">2000 nodes</h2>
+
+<p>After the 1000-node run, we chose to clean up from the
+previous job and just add more nodes to that same cluster.</p>
+
+<p>Again, to get around the api throttling, we added
+batches of 99 slaves at a time with a 2-minute wait
+between each batch until we got near 2000 slaves.</p>
+
+<p>This gave us almost 760TB of HDFS storage</p>
+
+<p><a href="/images/scale-2000-50070.png">
+<img src="/images/scale-2000-50070.png" width="720px" />
+</a></p>
+
+<p>and was running fine</p>
+
+<p><a href="/images/scale-2000-50030.png">
+<img src="/images/scale-2000-50030.png" width="720px" />
+</a></p>
+
+<p>but was stopped early b/c waiting for the job to complete
+would’ve just been silly at this point.  With our naive job
+config, we’re considerably past the point of diminishing
+returns for adding nodes to the actual terasort, and we’d
+captured the profiling info we needed at this point.</p>
+
+<p>Juju spun up 1972 slaves in just over seven hours total.
+Profiling showed that juju was spending a <em>lot</em> of time
+serializing stuff into zookeeper nodes using yaml.  It
+looks like python’s yaml implementation is python, and
+not just wrapping libyaml.  We tested a smaller run replacing
+the internal yaml serialization with json.. 
+Wham!  two orders of magnitude faster.  No particular surprise.</p>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<p>Ok, so at the end of the day, what did we learn here?</p>
+
+<p>What we did here is the way developing for performance at scale
+should be done… start with a naive, flexible approach
+and then spend time and effort obtaining real profiling
+information.  Follow that with optimization decisions that actually
+make a difference.  Otherwise it’s all just a crapshoot
+based on where developers think the bottlenecks might be.</p>
+
+<p>Things to do to juju as a result of these tests:</p>
+
+<ul>
+  <li>streamline our implementation of ‘-n’ options
+    <ul>
+      <li>the client should pass the multiplicity to the provisioning agent</li>
+      <li>the provisioning agent should pass the multiplicity to the EC2 api</li>
+    </ul>
+  </li>
+  <li>don’t use yaml to marshall data in and out of zookeeper</li>
+  <li>replace per-instance security groups with per-instance firewalls</li>
+</ul>
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p>So that’s a big enough bite for one round of scale testing.</p>
+
+<p>Next up:</p>
+
+<ul>
+  <li>land a few of the changes outlined above into trunk.
+Then, spin up another round of scale tests to look at the numbers.</li>
+  <li>more providers (other clouds as well as a MaaS lab too)</li>
+  <li>regular scale testing?
+    <ul>
+      <li>can this coincide with upstream scale testing for projects like hadoop?</li>
+    </ul>
+  </li>
+  <li>test scaling for various services?  What does this look like for other stacks
+of services?</li>
+</ul>
+
+<h2 id="wishlist">Wishlist</h2>
+
+<ul>
+  <li>
+    <p>find some better test jobs!  benchmarks are boring… perhaps we can use
+this compute time to mine educational data or cure cancer or something?</p>
+  </li>
+  <li>
+    <p>perhaps push juju topology information further into zk leaf nodes?
+Are there transactional features in more recent versions of zk that we can use?</p>
+  </li>
+  <li>
+    <p>use spot instances on ec2.  This is harder because you’ve gotta incorporate price monitoring.</p>
+  </li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-04T00:00:00-04:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cloud/'>cloud</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html" data-via="m_3" data-counturl="http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/cloud/2011/11/22/charm-school.html" title="Previous Post: Charm School!">&laquo; Charm School!</a>
+      
+      
+        <a class="basic-alignment right" href="/cloud/2012/09/25/linuxplumbers-juju.html" title="Next Post: Running the LinuxPlumbers Conference Schedule with Juju">Running the LinuxPlumbers Conference Schedule with Juju &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html';
+        var disqus_url = 'http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

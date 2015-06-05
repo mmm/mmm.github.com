@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ <title>Mark Mims</title>
+ <link href="http://markmims.com/cloud-atom.xml" rel="self"/>
+ <link href="http://markmims.com/"/>
+ <updated>2015-06-05T07:49:16-04:00</updated>
+ <id>http://markmims.com/</id>
+ <author>
+   <name>Mark Mims</name>
+   <email>mark.mims@canonical.com</email>
+ </author>
+ 
+ <entry>
+   <title>CharmSchool Hangout - Juju Local Provider</title>
+   <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
+   <updated>2013-08-23T13:02:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
+   <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  This week’s video
+walks through using the new version of the juju local provider.  It’s cool!&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;3AiQhHIBQJk&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=3AiQhHIBQJk&quot; id=&quot;3AiQhHIBQJk&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video 3AiQhHIBQJk&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video 3AiQhHIBQJk&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;As before, there are links to the whole series of charmschool hangouts in the juju
+&lt;a href=&quot;https://juju.ubuntu.com/resources/videos/&quot;&gt;video archive&lt;/a&gt;
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.&lt;/p&gt;
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>CharmSchool Hangout - Juju Events in Depth</title>
+   <link href="http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth.html"/>
+   <updated>2013-07-12T13:02:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
+   <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  This week’s video
+is a little more detail on juju events…&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;vPBrpMcXHN0&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=vPBrpMcXHN0&quot; id=&quot;vPBrpMcXHN0&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video vPBrpMcXHN0&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video vPBrpMcXHN0&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;As before, there are links to the whole series of charmschool hangouts in the juju
+&lt;a href=&quot;https://juju.ubuntu.com/resources/videos/&quot;&gt;video archive&lt;/a&gt;
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.&lt;/p&gt;
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>CharmSchool Hangout - Charming Best Practices</title>
+   <link href="http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
+   <updated>2013-06-28T13:02:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
+   <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
+we just sort of sat around and discussed best practices…&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;08dOs3eO04M&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=08dOs3eO04M&quot; id=&quot;08dOs3eO04M&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video 08dOs3eO04M&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video 08dOs3eO04M&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;As before, there are links to the whole series of charmschool hangouts in the juju
+&lt;a href=&quot;https://juju.ubuntu.com/resources/videos/&quot;&gt;video archive&lt;/a&gt;
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.&lt;/p&gt;
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>Juju Demo Videos</title>
+   <link href="http://markmims.com/cloud/2013/06/15/juju-demo-videos.html"/>
+   <updated>2013-06-15T13:02:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/06/15/juju-demo-videos</id>
+   <content type="html">&lt;p&gt;I Put together a series of demo videos using juju-0.7 for oscon.&lt;/p&gt;
+
+&lt;p&gt;These are really interesting in that they involve migrating environments
+between providers.  This works slightly differently on the newer juju-1.x
+series, but the idea’s still sound.&lt;/p&gt;
+
+&lt;p&gt;There’s no sound on these… they’re raw video backups for demoing juju (in
+case we lost networking during the demo).&lt;/p&gt;
+
+&lt;p&gt;migrate local to hp&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;Jfnxl1Kh9SY&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/Jfnxl1Kh9SY?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/Jfnxl1Kh9SY/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=Jfnxl1Kh9SY&quot; id=&quot;Jfnxl1Kh9SY&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video Jfnxl1Kh9SY&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video Jfnxl1Kh9SY&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;migrate ec2 to hpcloud&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;HUtR3_YlKXU&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/HUtR3_YlKXU?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/HUtR3_YlKXU/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=HUtR3_YlKXU&quot; id=&quot;HUtR3_YlKXU&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video HUtR3_YlKXU&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video HUtR3_YlKXU&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Local provider&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;EpIP4ly4E0E&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/EpIP4ly4E0E?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/EpIP4ly4E0E/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=EpIP4ly4E0E&quot; id=&quot;EpIP4ly4E0E&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video EpIP4ly4E0E&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video EpIP4ly4E0E&lt;/div&gt;
+&lt;/div&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>CharmSchool Hangout - Charming from scratch</title>
+   <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
+   <updated>2013-06-05T13:02:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
+   <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  In last week’s video
+we wrote a charm from scratch…&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;NQmxuzdc4Zg&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=NQmxuzdc4Zg&quot; id=&quot;NQmxuzdc4Zg&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video NQmxuzdc4Zg&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video NQmxuzdc4Zg&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Starting from a simple node.js application, we put together “just enough” charm
+to get things working.  Watch for future episodes where we’ll refactor and
+refine both the application and the charm.&lt;/p&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;As before, there are links to the whole series of charmschool hangouts in the juju
+&lt;a href=&quot;https://juju.ubuntu.com/resources/videos/&quot;&gt;video archive&lt;/a&gt;
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.&lt;/p&gt;
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>CharmSchool Hangouts</title>
+   <link href="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html"/>
+   <updated>2013-05-20T12:49:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/05/20/charmschool-hangouts</id>
+   <content type="html">&lt;p&gt;We’re doing a series of regular CharmSchools on G+ hangouts.
+Last week we did an intro to juju and charming…&lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;yRcqSjOGweo&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/yRcqSjOGweo?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/yRcqSjOGweo/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=yRcqSjOGweo&quot; id=&quot;yRcqSjOGweo&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video yRcqSjOGweo&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video yRcqSjOGweo&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There’re links to the whole series of charmschool hangouts in the juju
+&lt;a href=&quot;https://juju.ubuntu.com/resources/videos/&quot;&gt;video archive&lt;/a&gt;
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.&lt;/p&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>CharmSchool Video from the Openstack Summit</title>
+   <link href="http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html"/>
+   <updated>2013-04-25T12:40:00-04:00</updated>
+   <id>http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit</id>
+   <content type="html">&lt;p&gt;Jorge and I gave a charmschool at the ODS summit.
+The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!&lt;/p&gt;
+
+&lt;p&gt;Watch it 
+&lt;a href=&quot;http://www.openstack.org/summit/portland-2013/session-videos/presentation/juju-with-openstack-workshop&quot;&gt;here&lt;/a&gt;
+or &lt;/p&gt;
+
+&lt;div class=&quot;ratio-4-3 embed-video-container&quot; onclick=&quot;var myAnchor = document.getElementById(&#39;YenD4oxfEa4&#39;);var tmpDiv = document.createElement(&#39;div&#39;);tmpDiv.innerHTML = &#39;&amp;lt;iframe style=&amp;quot;vertical-align:top;width:100%;height:100%;position:absolute;&amp;quot; src=&amp;quot;http://www.youtube.com/embed/YenD4oxfEa4?autoplay=1&amp;quot; frameborder=&amp;quot;0&amp;quot; allowfullscreen&amp;gt;&amp;lt;/iframe&amp;gt;&#39;;myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;&quot; title=&quot;click here to play&quot;&gt;
+&lt;a class=&quot;youtube-lazy-link&quot; style=&quot;width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/YenD4oxfEa4/0.jpg) center center no-repeat;background-size:contain;position:absolute&quot; href=&quot;http://www.youtube.com/watch?v=YenD4oxfEa4&quot; id=&quot;YenD4oxfEa4&quot; onclick=&quot;return false;&quot;&gt;
+&lt;div class=&quot;youtube-lazy-link-div&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;youtube-lazy-link-info&quot;&gt;embedded youtube video YenD4oxfEa4&lt;/div&gt;
+&lt;/a&gt;
+&lt;div class=&quot;video-info&quot;&gt;embedded youtube video YenD4oxfEa4&lt;/div&gt;
+&lt;/div&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>Running the LinuxPlumbers Conference Schedule with Juju</title>
+   <link href="http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html"/>
+   <updated>2012-09-25T00:00:00-04:00</updated>
+   <id>http://markmims.com/cloud/2012/09/25/linuxplumbers-juju</id>
+   <content type="html">&lt;p class=&quot;meta&quot;&gt;
+Written by Mark Mims and Chris Johnston
+&lt;/p&gt;
+
+&lt;p&gt;Hey, so last month we ran scheduling for the 
+&lt;a href=&quot;http://linuxplumbersconf.org&quot;&gt;Linux Plumbers Conference&lt;/a&gt;
+entirely on juju!&lt;/p&gt;
+
+&lt;p&gt;Here’s a little background on the experience.&lt;/p&gt;
+
+&lt;p&gt;Along the way, we’ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It’s a basic
+stack of services that’s only alive for 6-months or so…  but this discussion
+applies to bigger longer-running production infrastructures too, so it’s worth
+going over here.&lt;/p&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;h2 id=&quot;the-app&quot;&gt;The App&lt;/h2&gt;
+
+&lt;p&gt;So &lt;a href=&quot;https://launchpad.net/summit&quot;&gt;summit&lt;/a&gt; is this great django app built for
+scheduling conferences.  It’s evolved over time to handle
+&lt;a href=&quot;uds.ubuntu.com&quot;&gt;UDS&lt;/a&gt;-level traffic and is currently maintained by a
+&lt;a href=&quot;https://launchpad.net/~summit-hackers&quot;&gt;Summit Hackers&lt;/a&gt; team that includes
+&lt;a href=&quot;http://www.chrisjohnston.org/&quot;&gt;Chris Johnston&lt;/a&gt;
+and &lt;a href=&quot;http://mhall119.com/&quot;&gt;Michael Hall&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Chris contacted me to help him use juju to manage summit for this year’s
+Plumbers conference.  At the time we started this, the 11.10 version of juju
+wasn’t exactly blessed for production environments, but we decided it’d be a
+great opportunity to work things out.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-stack&quot;&gt;The Stack&lt;/h2&gt;
+
+&lt;p&gt;A typical summit stack’s got postgresql, the django app itself, and a memcached server.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/django-stack.png&quot;&gt;
+&lt;img src=&quot;/images/django-stack.png&quot; width=&quot;198px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;We additionally talked about putting this all behind some sort of a head like haproxy.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/bigger-django-stack.png&quot;&gt;
+&lt;img src=&quot;/images/bigger-django-stack.png&quot; width=&quot;334px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This’d let the app scale horizontally as well as give us a stable point to
+attach an elastic-ip.  We decided to &lt;em&gt;not&lt;/em&gt; do this at the time b/c we could
+most likely handle the peak conference load with a single django service-unit
+provided we slam select snippets of the site into memcached.&lt;/p&gt;
+
+&lt;p&gt;This turned out to be true load-wise, but it really would’ve been a whole lot
+easier to have a nice constant haproxy node out there to tack the elastic-ip
+to.
+During development (charm, app, and theme) you want the freedom to destroy
+a service and respawn it without having to use external tools to go around and
+attach public IP addresses to the right places.  That’s a pain.  Also, if
+there’s a sensitive part of this infrastructure in production, it wouldn’t be
+postgresql, memcached, or haproxy… the app itself would be the most likely
+point of instability, so it was a mistake to attach the elastic-ip there.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-environment&quot;&gt;The Environment&lt;/h2&gt;
+
+&lt;h3 id=&quot;choice-of-cloud&quot;&gt;choice of cloud&lt;/h3&gt;
+
+&lt;p&gt;We chose to use ec2 to host the summit stack… mostly a matter of
+convenience.  The juju openstack-native provider wasn’t completed when we spun
+up the production environment for linuxplumbers and we didn’t have access to a
+stable private ubuntu cloud running the openstack-ec2-api at the time.
+All of this has subsequently landed, so we’d have more options today.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-charms&quot;&gt;the charms&lt;/h3&gt;
+
+&lt;p&gt;We forked &lt;a href=&quot;https://twitter.com/michaelanelson&quot;&gt;Michael Nelson&lt;/a&gt;’s excellent
+&lt;a href=&quot;lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk&quot;&gt;django charm&lt;/a&gt;
+to create a
+&lt;a href=&quot;https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk&quot;&gt;summit-charm&lt;/a&gt;
+and freely specialized it for summit.&lt;/p&gt;
+
+&lt;p&gt;Note that we’re updating this charm for 12.04
+&lt;a href=&quot;https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk&quot;&gt;here&lt;/a&gt;, but
+this will probably go away in the near future and we’ll just use a generic
+django charm.  It turns out we didn’t do too much here that won’t apply to
+django apps in general, but more on that another time.&lt;/p&gt;
+
+&lt;p&gt;There was nothing special about our tuning of postgresql or memcached.  We just
+used the services provided by the canned charms.  These sort of peripheral
+services aren’t the kind of charms you’re likely to be making changes to or
+tweaking outside of their exposed config parameters.  I know &lt;em&gt;jack&lt;/em&gt; about
+memcached, so I’ll defer to the experts in this regard.  Similarly for
+postgresql… and haproxy if we used it in this stack.&lt;/p&gt;
+
+&lt;p&gt;The summit charm is a little different.  It’s something we were continuing to
+tweak during development.  Perhaps with future more generic django charm
+versions, we won’t need to tweak the charm itself… just configure it.&lt;/p&gt;
+
+&lt;p&gt;We used a “local” repository for &lt;em&gt;all&lt;/em&gt; charms because the charm store hadn’t
+landed when we were setting this up.  Well, now that the charm store is live,
+you can just deploy the canned charms straight from the store&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`juju deploy -e summit memcached`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and keep the ones you want to tweak in a local repository… &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;`juju deploy -e summit &#8211;repository ~/charms local:summit`
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;all within the same environment.  It works out nicely.&lt;/p&gt;
+
+&lt;h3 id=&quot;control-environment&quot;&gt;control environment&lt;/h3&gt;
+
+&lt;p&gt;We had multiple people to manage the production summit environment.  What’s the
+best way to do that?  It turns out juju supports this pretty well right out of
+the box.  There’s an environment config for the set of ssh public keys to
+inject into everything in the environment as it starts up… you can read more
+about that on 
+&lt;a href=&quot;http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju&quot;&gt;askubuntu&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note that this is only useful to configure at the beginning of the stack.  Once
+you’re up, adding keys is problematic.  I don’t even recommend trying b/c of
+the risk of getting undetermined state for the environment.  i.e., different
+nodes with different sets of keys depending on when you changed the keys relative
+to what actions you’ve performed on the environment.  It’s a problem.&lt;/p&gt;
+
+&lt;p&gt;What I recommend now is actually to use &lt;em&gt;another&lt;/em&gt; juju environment…  (and no,
+we’re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+“control” environment.  You bootstrap it, then set up a juju client that controls
+the main production environment.  Then set up a shared tmux session that any of
+the admins for the production environment can use:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/summit-control.png&quot;&gt;
+&lt;img src=&quot;/images/summit-control.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Adding/changing the set of
+admin keys is then done in a single place.  This technique isn’t strictly
+necessary, but it was certainly worth it here with different admins having
+various different levels of familiarity with the tools.  I started it as a
+teaching tool, left it up because it was an easy control dashboard, and now
+recommend it because it works so well.&lt;/p&gt;
+
+&lt;h3 id=&quot;its-chilly-in-here&quot;&gt;it’s chilly in here&lt;/h3&gt;
+
+&lt;p&gt;Yeah, so during development you break things.  There were a couple of times
+using 11.10 juju that changes to juju core prevented a client from talking to
+an existing stack.  Aargh!  This wasn’t going to fly for production use.&lt;/p&gt;
+
+&lt;p&gt;The juju team has subsequently done a &lt;em&gt;bunch&lt;/em&gt; to prevent this from happening,
+but hey we needed production summit working and stable at the time.  The
+answer… freeze the code.&lt;/p&gt;
+
+&lt;p&gt;Juju has an environment config option &lt;code&gt;juju-origin&lt;/code&gt; to specify where to
+get the juju installed on all instances in the environment.  I branched juju
+core to &lt;code&gt;lp:~mark-mims/juju/running-summit&lt;/code&gt; and just worked straight from there
+for the lifetime of the environment (still up atm).  Easy enough.&lt;/p&gt;
+
+&lt;p&gt;Now the tricky part is to make sure that you’re always using the
+&lt;code&gt;lp:~mark-mims/juju/running-summit&lt;/code&gt; version of the juju cli when talking to the
+production summit environment.&lt;/p&gt;
+
+&lt;p&gt;I set up&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+export JUJU_BRANCH=$HOME/src/juju/running-summit
+export PATH=$JUJU_BRANCH/bin:$PATH
+export PYTHONPATH=$JUJU_BRANCH
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which my tmuxinator config sources into every pane in my &lt;code&gt;summit&lt;/code&gt; tmux session.&lt;/p&gt;
+
+&lt;p&gt;This was also done on the &lt;code&gt;summit-control&lt;/code&gt; instance so it’s easy to make sure
+we’re all using the right version of the juju cli to talk to the production
+environment.&lt;/p&gt;
+
+&lt;h3 id=&quot;backups&quot;&gt;backups&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;juju ssh&lt;/code&gt; subcommand to the rescue.  You can do all your standard ssh
+tricks…&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju ssh postgresql/0 &#39;su postgres pg_dump summit&#39; &amp;gt; summit.dump
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;… on a cronjob.  Juju just stays out of the way and just helps out a bit with
+the addressing.  Real version pipes through bzip2 and adds timestamps of course.&lt;/p&gt;
+
+&lt;p&gt;Of course snapshots are easy enough too via euca2ools, but the pgsql dumps
+themselves turned out to be more useful and easy to get to in case of a
+failover.&lt;/p&gt;
+
+&lt;h3 id=&quot;debugging&quot;&gt;debugging&lt;/h3&gt;
+
+&lt;p&gt;The biggest debugging activity during development was cleaning up the app’s
+theming.  The summit charm is configured to get the django app itself from
+one &lt;a href=&quot;https://code.launchpad.net/summit&quot;&gt;application branch&lt;/a&gt; and the theme from a separate
+&lt;a href=&quot;https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme&quot;&gt;theme branch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So… ahem… “best practice” for theme development would’ve been to
+develop/tweak the theme locally, then push to the branch.  A simple&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju set &#8211;config=summit.yaml summit/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;would update config for the live instances.&lt;/p&gt;
+
+&lt;p&gt;Well…  some of the menus from the base template used absolute paths so it was
+simpler to cheat a bit early in the process to test it all in-place with actual
+dns names.  Had we been doing this the “right” way from the beginning we
+would’ve had much more confidence in the stack when practicing recovery and
+failover later in the cycle… we would’ve been doing it all since day one.&lt;/p&gt;
+
+&lt;p&gt;Another thing we had to do was manually test memcached.  To test out caching
+we’d ssh to the memcached instance, stop the service, run memcached verbosely
+in the foreground.  Once we determined everything was working the way we
+expected, we’d kill it and restart the upstart job.&lt;/p&gt;
+
+&lt;p&gt;This is a bug in the memcached charm imo… the option to temporarily run
+verbosely for debugging should totally be a config option for that service.
+It’d then be a simple matter of&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju set memcached/0 debug=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju ssh memcached/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;to watch some logs.  Once we’re convinced it’s working the way it should&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju set memcached/0 debug=false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;should make it performant again.&lt;/p&gt;
+
+&lt;p&gt;Next time around, we should take more advantage of &lt;code&gt;juju set&lt;/code&gt; config to
+update/reconfigure the app as we made changes… and generally implement a
+better set of development practices.&lt;/p&gt;
+
+&lt;h3 id=&quot;monitoring&quot;&gt;monitoring&lt;/h3&gt;
+
+&lt;p&gt;Sorely lacking.  “What? curl doesn’t cut it?”… um… no.&lt;/p&gt;
+
+&lt;h3 id=&quot;planning-for-failures&quot;&gt;planning for failures&lt;/h3&gt;
+
+&lt;p&gt;Our notion of failover for this app was just a spare set of cloud credentials
+and a tested recovery plan.&lt;/p&gt;
+
+&lt;p&gt;The plan we practiced was…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;bootstrap a new environment (using spare credentials if necessary)&lt;/li&gt;
+  &lt;li&gt;spin up the summit stack&lt;/li&gt;
+  &lt;li&gt;ssh to the new &lt;code&gt;postgresql/0&lt;/code&gt; and drop the db  (Note: the postgresql charm
+should be extended to accept a config parameter of a storage url, S3 in this
+case, to slurp the db backups from)&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;restore from offsite backups… something along the lines of&lt;/p&gt;
+
+    &lt;table&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;cat summit-$timestamp.dump.bz2&lt;/td&gt;
+          &lt;td&gt;juju ssh -e failover postgresql/0 ‘bunzip2 -c&lt;/td&gt;
+          &lt;td&gt;su - postgres pgsql summit’&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In practice, that took about 10-15minutes to recover once we started acting.
+Given the additional delay between notification and action, that could spell an
+hour or two of outtage.  That’s not so great.&lt;/p&gt;
+
+&lt;p&gt;Juju makes other failover scenarios cheaper and easier to implement than they
+used to be, so why not put those into place just to be safe?  Perhaps the
+additional instance costs for hot-spares wouldn’t’ve been necessary for the
+entire 6-months of lead-time for scheduling and planning this conference, but
+they’d certainly be worth the spend during the few days of the event itself.
+Juju sort of makes it a no-brainer.  We should do more posts on this one
+issue… the game has changed here.&lt;/p&gt;
+
+&lt;h2 id=&quot;lessons-learned&quot;&gt;Lessons Learned&lt;/h2&gt;
+
+&lt;p&gt;What would we do differently next time?  Well, there’s a list :).&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;use the stable ppa… instead of freezing the code&lt;/li&gt;
+  &lt;li&gt;sit the app behind haproxy&lt;/li&gt;
+  &lt;li&gt;use s3fs or equivalent subordinate charm to manage backups instead of just
+sshing them off the box&lt;/li&gt;
+  &lt;li&gt;better monitoring… we’ve gotten a great set of monitoring charms
+recently… thanks &lt;a href=&quot;http://fewbar.com/&quot;&gt;Clint&lt;/a&gt;!&lt;/li&gt;
+  &lt;li&gt;log aggregation would’ve been a little bit of overkill for this app, but next
+time might warrant it&lt;/li&gt;
+  &lt;li&gt;it’s cheap to add failover with juju… just do it&lt;/li&gt;
+  &lt;li&gt;maybe follow a development process a little more carefully next time around :)&lt;/li&gt;
+  &lt;li&gt;we’ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju</title>
+   <link href="http://markmims.com/cloud/2012/06/04/juju-at-scale.html"/>
+   <updated>2012-06-04T00:00:00-04:00</updated>
+   <id>http://markmims.com/cloud/2012/06/04/juju-at-scale</id>
+   <content type="html">&lt;p class=&quot;meta&quot;&gt;
+Written by Mark Mims and James Page
+&lt;/p&gt;
+
+&lt;p&gt;Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
+lots of great stuff going on here, so we figured it’s time to start posting about it.&lt;/p&gt;
+
+&lt;p&gt;First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+was get the go-ahead to spend more time/effort/money scale-testing Juju.&lt;/p&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;h2 id=&quot;the-plan&quot;&gt;The Plan&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;pick a service that scales&lt;/li&gt;
+  &lt;li&gt;spin up a cluster of units for this service&lt;/li&gt;
+  &lt;li&gt;try to run it in a way that actively engages all units of the cluster&lt;/li&gt;
+  &lt;li&gt;repeat:
+    &lt;ul&gt;
+      &lt;li&gt;instrument&lt;/li&gt;
+      &lt;li&gt;profile&lt;/li&gt;
+      &lt;li&gt;optimize&lt;/li&gt;
+      &lt;li&gt;grow&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://plus.google.com/u/0/109495998940814132432/posts&quot;&gt;James&lt;/a&gt;,
+&lt;a href=&quot;https://plus.google.com/u/0/108276830347560657704/posts&quot;&gt;Kapil&lt;/a&gt;,
+&lt;a href=&quot;https://plus.google.com/102506066601287922723/posts&quot;&gt;Juan&lt;/a&gt;,
+&lt;a href=&quot;https://plus.google.com/u/0/100536568598074282388/posts&quot;&gt;Ben&lt;/a&gt;,
+and &lt;a href=&quot;http://markmims.com/about&quot;&gt;Mark&lt;/a&gt;
+sat down over the course of
+a couple of nights at UDS to take a crack at it.
+We chose Hadoop.
+We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
+Here’re some notes on the process.&lt;/p&gt;
+
+&lt;h2 id=&quot;hadoop&quot;&gt;Hadoop&lt;/h2&gt;
+
+&lt;p&gt;Hadoop was a pretty obvious choice here.
+It’s a great actively-maintained
+&lt;a href=&quot;http://hadoop.apache.org/&quot;&gt;project&lt;/a&gt;
+with a large community of users.
+It scales in a somewhat known manner, and the
+&lt;a href=&quot;http://jujucharms.com/charms/precise/hadoop&quot;&gt;hadoop charm&lt;/a&gt;
+makes it super-simple to manage.
+There are also several known benchmarks that are pretty straightforward to get going,
+and distribute load throughout the cluster.&lt;/p&gt;
+
+&lt;p&gt;There’s an entire science/art to tuning hadoop jobs to run optimally given the 
+characteristics of a particular cluster.  Our sole goal in tuning hadoop benchmarks
+was to &lt;em&gt;engage&lt;/em&gt; the entire cluster and profile juju during various activities throughout
+an actual run.  For our purposes, we’re in no hurry… a slower/longer run gives us a
+good profiling picture for managing the nodes themselves under load (with a sufficient
+mix of i/o -vs- cpu load).&lt;/p&gt;
+
+&lt;h2 id=&quot;ec2&quot;&gt;EC2&lt;/h2&gt;
+
+&lt;p&gt;Surprisingly enough, we don’t really have that many servers just lying around… so EC2 to the rescue.&lt;/p&gt;
+
+&lt;p&gt;Disclaimer… we’re testing our infrastructure tools here, not benchmarking hadoop in EC2.
+Some folks advocate running hadoop in a cloudy virtualized environment… while some
+folks are die-hard server huggers.  That’s actually a really interesting discussion.
+It comes down to the actual jobs/problems you’re
+trying to solve and how those jobs fit in your data pipeline.
+Please note that we’re not
+trying to solve that problem here or even provide realistic benchmarking data to contribute
+to the discussion… we’re simply testing how our infrastructure tools perform at scale.&lt;/p&gt;
+
+&lt;p&gt;If you &lt;em&gt;do&lt;/em&gt; run hadoop in EC2, Amazon’s Elastic Map Reduce service is likely to perform
+better at scale in EC2 than just running hadoop itself on general purpose instances.
+Amazon can do all sorts of stuff internally to show hadoop lots of love.
+We chose not to use EMR because we’re interested in testing how juju performs
+with &lt;em&gt;generic&lt;/em&gt; Ubuntu Server images, not EMR… at least for now.&lt;/p&gt;
+
+&lt;p&gt;Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
+ask AWS to bump up your limits.&lt;/p&gt;
+
+&lt;h2 id=&quot;juju&quot;&gt;Juju&lt;/h2&gt;
+
+&lt;p&gt;We started scale testing from a fresh branch of juju trunk… what gets deployed to
+the PPA nightly… this freed us up to experiment with live changes to add instrumentation,
+profiling information, and randomly mess with code as necessary.  This also locks in 
+the branch of juju that the scale testing environment uses.&lt;/p&gt;
+
+&lt;p&gt;As usual, juju will keep track of the state of our infrastructure going forward and
+we can make changes as necessary via juju commands.  To bootstrap and spin up the
+initial environment we’ll just use shell scripts wrapping juju commands.&lt;/p&gt;
+
+&lt;h3 id=&quot;spinning-up-a-cluster&quot;&gt;Spinning up a cluster&lt;/h3&gt;
+
+&lt;p&gt;These scripts are really just
+hadoop versions of some standard juju demo scripts such as those used for 
+a simple &lt;a href=&quot;https://gist.github.com/2050525&quot;&gt;rails stack&lt;/a&gt;
+or a more realistic HA &lt;a href=&quot;https://gist.github.com/1406018&quot;&gt;wiki stack&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The hadoop scripts for EC2 will get a little more complex as we grow simply because
+we don’t want AWS to think we’re a DoS attack… we’ll pace ourselves during spinup.&lt;/p&gt;
+
+&lt;p&gt;From the hadoop charm’s readme, the basic steps to spinning up a simple combined
+hdfs and mapreduce cluster are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju bootstrap
+
+juju deploy hadoop hadoop-master
+juju deploy -n3 hadoop hadoop-slavecluster
+
+juju add-relation hadoop-master:namenode hadoop-slavecluster:datanode
+juju add-relation hadoop-master:jobtracker hadoop-slavecluster:tasktracker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which we expand on a bit to start with a base startup script that looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+juju_root=&quot;/home/ubuntu/scale&quot;
+juju_env=${1:-&quot;-escale&quot;}
+
+###
+
+echo &quot;deploying stack&quot;
+
+juju bootstrap $juju_env
+
+deploy_cluster() {
+  local cluster_name=$1
+
+  juju deploy $juju_env &#8211;repository &quot;$juju_root/charms&quot; &#8211;constraints=&quot;instance-type=m1.large&quot; &#8211;config &quot;$juju_root/etc/hadoop-master.yaml&quot; local:hadoop ${cluster_name}-master
+
+  juju deploy $juju_env &#8211;repository &quot;$juju_root/charms&quot; &#8211;constraints=&quot;instance-type=m1.medium&quot; &#8211;config &quot;$juju_root/etc/hadoop-slave.yaml&quot; -n 37 local:hadoop ${cluster_name}-slave
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  juju expose $juju_env ${cluster_name}-master
+
+}
+
+deploy_cluster hadoop
+
+echo &quot;done&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then manually adjust this for cluster size.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuring-hadoop&quot;&gt;Configuring Hadoop&lt;/h3&gt;
+
+&lt;p&gt;Note that we’re specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We’d like an m1.large for the
+hadoop master&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju deploy &#8230; &#8211;constraints &quot;instance-type=m1.large&quot; &#8230; hadoop-master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and m1.mediums for the slaves&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju deploy &#8230; &#8211;constraints &quot;instance-type=m1.medium&quot; &#8230; hadoop-slave
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that we’ll also pass config files to specify different heap sizes for the different memory footprints&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju deploy &#8230; &#8211;config &quot;hadoop-master.yaml&quot; &#8230; hadoop-master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;where &lt;code&gt;hadoop-master.yaml&lt;/code&gt; looks like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# m1.large
+hadoop-master:
+  heap: 2048
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;juju deploy &#8230; &#8211;config &quot;hadoop-slave.yaml&quot; &#8230; hadoop-slave
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;where &lt;code&gt;hadoop-slave.yaml&lt;/code&gt; looks like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# m1.medium
+hadoop-slave:
+  heap: 1024
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note also that we also have our juju environment configured to use
+instance-store images… juju defaults to ebs-rooted images, but that’s
+not a great idea with hdfs.  You specify this by adding a &lt;code&gt;default-image-id&lt;/code&gt;
+into your &lt;code&gt;~/.juju/environments.yaml&lt;/code&gt; file.
+This gave each of our instances an extra ~400G local drive
+on &lt;code&gt;/mnt&lt;/code&gt;… hence the &lt;code&gt;hadoop.dir.base&lt;/code&gt; of &lt;code&gt;/mnt/hadoop&lt;/code&gt;
+in the config above.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodes-and-100-nodes&quot;&gt;40 nodes and 100 nodes&lt;/h2&gt;
+
+&lt;p&gt;Both the 40-node and 100-node runs went as smooth as silk.
+The only thing to note was that it took a while to get AWS to increase
+our account limits to allow for 100+ nodes.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodes&quot;&gt;500 nodes&lt;/h2&gt;
+
+&lt;p&gt;Once we had permission from Amazon to spin up 500 nodes on our account,
+we initially just naively spun
+up 500 instances… and quickly got throttled.&lt;/p&gt;
+
+&lt;p&gt;No particular surprise, we’re not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group… we must look like a DoS attack.&lt;/p&gt;
+
+&lt;p&gt;The order was eventually fulfilled, and juju waited around for it.
+Everything ran as expected, it just took about an hour and 15 minutes
+to spin up the stack.  This gave us a nice little cluster with HDFS
+storage of almost 200TB&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-500-50070.png&quot;&gt;
+&lt;img src=&quot;/images/scale-500-50070.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The hadoop terasort job was run from the following script&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+SIZE=10000000000
+NUM_MAPS=1500
+NUM_REDUCES=1500
+IN_DIR=in_dir
+OUT_DIR=out_dir
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar teragen -Dmapred.map.tasks=${NUM_MAPS} ${SIZE} ${IN_DIR}
+
+sleep 10
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which, with a replfactor of 3, engaged the entire cluster just fine, 
+and ran terasort with no problems&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-500-50030.png&quot;&gt;
+&lt;img src=&quot;/images/scale-500-50030.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;- pass the &#39;-n&#39; options directly to the provisioning agent&#8230; don&#39;t expand `juju deploy -n &amp;lt;num_units&amp;gt;` and `juju add-unit -n &amp;lt;num_units&amp;gt;` in the client
+- pass these along all the way to the ec2 api&#8230; don&#39;t expand these into multiple api calls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We’ll add those to the list of things to do.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodes-1&quot;&gt;1000 nodes&lt;/h2&gt;
+
+&lt;p&gt;Onward, upward!&lt;/p&gt;
+
+&lt;p&gt;To get around the api throttling, we start up
+batches of 99 slaves at a time with a 2-minute wait
+between each batch&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+juju_env=${1:-&quot;-escale&quot;}
+juju_root=&quot;/home/ubuntu/scale&quot;
+juju_repo=&quot;$juju_root/charms&quot;
+
+############################################
+
+timestamp() {
+  date +&quot;%G-%m-%d-%H%M%S&quot;
+}
+
+add_more_units() {
+  local num_units=$1
+  local service_name=$2
+
+  echo &quot;sleeping&quot;
+  sleep 120
+
+  echo &quot;adding another $num_units units at $(timestamp)&quot;
+  juju add-unit $juju_env -n $num_units $service_name
+}
+
+deploy_slaves() {
+  local cluster_name=$1
+  local slave_config=&quot;$juju_root/etc/hadoop-slave.yaml&quot;
+  local slave_size=&quot;instance-type=m1.medium&quot;
+  local slaves_at_a_time=99
+  #local num_slave_batches=10
+
+  juju deploy $juju_env &#8211;repository $juju_repo &#8211;constraints $slave_size &#8211;config $slave_config -n $slaves_at_a_time local:hadoop ${cluster_name}-slave
+  echo &quot;deployed $slaves_at_a_time slaves&quot;
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  for i in {1..9}; do
+    add_more_units $slaves_at_a_time ${cluster_name}-slave
+    echo &quot;deployed $slaves_at_a_time slaves at $(timestamp)&quot;
+  done
+}
+
+deploy_cluster() {
+  local cluster_name=$1
+  local master_config=&quot;$juju_root/etc/hadoop-master.yaml&quot;
+  local master_size=&quot;instance-type=m1.large&quot;
+
+  juju deploy $juju_env &#8211;repository $juju_repo &#8211;constraints $master_size &#8211;config $master_config local:hadoop ${cluster_name}-master
+
+  deploy_slaves ${cluster_name}
+
+  juju expose $juju_env ${cluster_name}-master
+}
+
+main() {
+  echo &quot;deploying stack at $(timestamp)&quot;
+
+  juju bootstrap $juju_env &#8211;constraints=&quot;instance-type=m1.xlarge&quot;
+
+  sleep 120
+  deploy_cluster hadoop
+
+  echo &quot;done at $(timestamp)&quot;
+}
+main $*
+exit 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We experimented with more clever ways of doing the spinup
+(too little coffee at this point of the night)…
+but the real fix is to get juju to take
+advantage of multiplicity in api calls.
+Until then, timed batches work just fine.&lt;/p&gt;
+
+&lt;p&gt;Juju spun the cluster up in about 2 and a half hours.
+It had about 380TB of HDFS storage&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-1000-50070.png&quot;&gt;
+&lt;img src=&quot;/images/scale-1000-50070.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The terasort job that was run from the script above with&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SIZE=10000000000
+NUM_MAPS=3000
+NUM_REDUCES=3000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-1000-50030.png&quot;&gt;
+&lt;img src=&quot;/images/scale-1000-50030.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;eventually completed.&lt;/p&gt;
+
+&lt;h2 id=&quot;nodes-2&quot;&gt;2000 nodes&lt;/h2&gt;
+
+&lt;p&gt;After the 1000-node run, we chose to clean up from the
+previous job and just add more nodes to that same cluster.&lt;/p&gt;
+
+&lt;p&gt;Again, to get around the api throttling, we added
+batches of 99 slaves at a time with a 2-minute wait
+between each batch until we got near 2000 slaves.&lt;/p&gt;
+
+&lt;p&gt;This gave us almost 760TB of HDFS storage&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-2000-50070.png&quot;&gt;
+&lt;img src=&quot;/images/scale-2000-50070.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;and was running fine&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/scale-2000-50030.png&quot;&gt;
+&lt;img src=&quot;/images/scale-2000-50030.png&quot; width=&quot;720px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;but was stopped early b/c waiting for the job to complete
+would’ve just been silly at this point.  With our naive job
+config, we’re considerably past the point of diminishing
+returns for adding nodes to the actual terasort, and we’d
+captured the profiling info we needed at this point.&lt;/p&gt;
+
+&lt;p&gt;Juju spun up 1972 slaves in just over seven hours total.
+Profiling showed that juju was spending a &lt;em&gt;lot&lt;/em&gt; of time
+serializing stuff into zookeeper nodes using yaml.  It
+looks like python’s yaml implementation is python, and
+not just wrapping libyaml.  We tested a smaller run replacing
+the internal yaml serialization with json.. 
+Wham!  two orders of magnitude faster.  No particular surprise.&lt;/p&gt;
+
+&lt;h2 id=&quot;lessons-learned&quot;&gt;Lessons Learned&lt;/h2&gt;
+
+&lt;p&gt;Ok, so at the end of the day, what did we learn here?&lt;/p&gt;
+
+&lt;p&gt;What we did here is the way developing for performance at scale
+should be done… start with a naive, flexible approach
+and then spend time and effort obtaining real profiling
+information.  Follow that with optimization decisions that actually
+make a difference.  Otherwise it’s all just a crapshoot
+based on where developers think the bottlenecks might be.&lt;/p&gt;
+
+&lt;p&gt;Things to do to juju as a result of these tests:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;streamline our implementation of ‘-n’ options
+    &lt;ul&gt;
+      &lt;li&gt;the client should pass the multiplicity to the provisioning agent&lt;/li&gt;
+      &lt;li&gt;the provisioning agent should pass the multiplicity to the EC2 api&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;don’t use yaml to marshall data in and out of zookeeper&lt;/li&gt;
+  &lt;li&gt;replace per-instance security groups with per-instance firewalls&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;whats-next&quot;&gt;What’s Next?&lt;/h2&gt;
+
+&lt;p&gt;So that’s a big enough bite for one round of scale testing.&lt;/p&gt;
+
+&lt;p&gt;Next up:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;land a few of the changes outlined above into trunk.
+Then, spin up another round of scale tests to look at the numbers.&lt;/li&gt;
+  &lt;li&gt;more providers (other clouds as well as a MaaS lab too)&lt;/li&gt;
+  &lt;li&gt;regular scale testing?
+    &lt;ul&gt;
+      &lt;li&gt;can this coincide with upstream scale testing for projects like hadoop?&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;test scaling for various services?  What does this look like for other stacks
+of services?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;wishlist&quot;&gt;Wishlist&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;find some better test jobs!  benchmarks are boring… perhaps we can use
+this compute time to mine educational data or cure cancer or something?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;perhaps push juju topology information further into zk leaf nodes?
+Are there transactional features in more recent versions of zk that we can use?&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;use spot instances on ec2.  This is harder because you’ve gotta incorporate price monitoring.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+ <entry>
+   <title>Charm School!</title>
+   <link href="http://markmims.com/cloud/2011/11/22/charm-school.html"/>
+   <updated>2011-11-22T00:00:00-05:00</updated>
+   <id>http://markmims.com/cloud/2011/11/22/charm-school</id>
+   <content type="html">&lt;p&gt;Wanna learn more about &lt;a href=&quot;http://juju.ubuntu.com&quot;&gt;juju&lt;/a&gt;?&lt;/p&gt;
+
+&lt;p&gt;Drop by &lt;a href=&quot;https://juju.ubuntu.com/CharmSchool/2December11&quot;&gt;Charm School&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://juju.ubuntu.com/CharmSchool/2December11&quot;&gt;
+  &lt;img src=&quot;/images/charmschool.png&quot; width=&quot;220px&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;p&gt;Details from &lt;a href=&quot;http://tumblr.com/ZKG8NyCGhHZR&quot;&gt;Jorge’s post&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;We&#39;re holding a Charm School on IRC.
+
+juju Charm School is a virtual event where a juju expert
+is available to answer questions about writing your own
+juju charms. The intended audience are people who deploy
+software and want to contribute charms to the wider devops
+community to make deploying in the public and private
+cloud easy.
+
+Attendees are more than welcome to:
+
+Ask questions about juju and charms
+Ask for help modifying existing scripts and make charms out of them
+Ask for peer review on existing charms you might be working on
+
+Though not required, we recommend that you have juju installed
+and configured if you want to get deep into the event.
+&lt;/code&gt;&lt;/pre&gt;
+
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
+ 
+</feed>

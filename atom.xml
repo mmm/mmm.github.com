@@ -1,0 +1,3072 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Software, Physics, Data, Mountains]]></title>
+  <link href="http://mmm.github.io/atom.xml" rel="self"/>
+  <link href="http://mmm.github.io/"/>
+  <updated>2015-06-05T07:49:16-04:00</updated>
+  <id>http://mmm.github.io/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[SSH Tips and Tricks]]></title>
+    <link href="http://mmm.github.io/2015/06/01/ssh-tips.html"/>
+    <updated>2015-06-01T16:00:00-04:00</updated>
+    <id>http://mmm.github.io/2015/06/01/ssh-tips</id>
+    <content type="html"><![CDATA[<p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
+but I’ll post it here for reference anyway.</p>
+
+<p>Agenda:</p>
+
+<ul>
+  <li>config</li>
+  <li>tunnels
+    <ul>
+      <li>forward</li>
+      <li>reverse</li>
+    </ul>
+  </li>
+  <li>proxies</li>
+  <li>ssh + tmux = &lt;3
+    <ul>
+      <li>ssh, then tmux</li>
+      <li>tmux, then ssh</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- more -->
+
+<h2 id="why-ssh">Why SSH?</h2>
+
+<p>It’s common practice to secure a cluster of servers using a <code>bastion</code> host.
+This might be a cluster of servers in a colocation facility, containers on a
+single host, or instances in an <code>EC2</code> region… the pattern can still be applied.</p>
+
+<p>The way this works is that the servers in the cluster are all locked down and
+not accessible to the outside world except where necessary for the production
+network design of the pipeline or application.</p>
+
+<p>That’s all great for production network traffic.  However, there’s often a need
+for adhoc access: testing, debugging, monitoring, etc of the cluster.  This is
+usually access to information that’s required <em>in addition</em> to the existing
+monitoring and logging for the production pipeline.  Until automated management
+solutions involving immutable infrastructure components are widely adopted,
+you’ll almost always need the ability for an engineer to directly log into
+cluster instances to do things like clear <code>/tmp</code> directories, run jobs, etc.  </p>
+
+<p>You’ve also gotta routinely access various web consoles (ClouderaManager,
+spark, hdfs, etc) to debug functional or performance problems, to change
+config, or even just to do sanity checks on overall cluster health.</p>
+
+<p>How do you access all of this?  You can’t just expose them to the outside
+world.  None of these consoles were ever designed for that.  They’re rife with
+holes…  with often <em>huge</em> ramifications for any incursions!  On the other
+hand, it’s often quite difficult (and dangerous!) to add adhoc network access
+into production network planning.</p>
+
+<p>Two practices are common:</p>
+
+<ul>
+  <li>VPN access</li>
+  <li>SSH proxies and tunnels</li>
+</ul>
+
+<p>They each have pros/cons, tradeoffs between security, ease-of-use, flexibility,
+and capability.  VPN access is often ineffective due to its static nature and
+sensitivity to all manner of bad security practices.  It’s particularly
+pointless due to the random way different web consoles choose which interfaces
+they like to bind to.  That’s a whole other discussion… for this talk,
+suffice it to say that I highly recommend and infinitely prefer an SSH-based
+solution.  It’s worth traversing the learning curve of SSH for the sheer power
+and flexiblity it gives you without compromising security.</p>
+
+<hr />
+
+<h2 id="config-files">Config Files</h2>
+
+<p>In your home directory, there’s an optional <code>~/.ssh/config</code> file 
+where you can customize your local SSH client behavior.</p>
+
+<p>You can use this for simple aliases…</p>
+
+<pre><code>#################
+# MyBastions
+#################
+Host customerXbastion
+    Hostname ec2-xxx-xxx-xxx-xxx.compute-1.amazonaws.com
+Host customerYbastion
+    Hostname ec2-yyy-yyy-yyy-yyy.compute-1.amazonaws.com
+Host customerZbastion
+    Hostname ec2-zzz-zzz-zzz-zzz.compute-1.amazonaws.com 
+</code></pre>
+
+<p>or adding extra stuff that’s a pain to type <em>every</em> time</p>
+
+<pre><code>############
+# CustomerX
+############
+Host dev-control-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_control.pem
+Host dev-es-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_es.pem
+Host dev-hdp-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_hdp.pem
+(etc)
+</code></pre>
+
+<p>notice the pattern entries?</p>
+
+<p>You can include tunnels (discussed below)</p>
+
+<pre><code>Host myserver
+    Hostname 10.2.3.4
+    LocalForward 7080 localhost:7080
+    LocalForward 8080 localhost:8080
+</code></pre>
+
+<p>or proxies (also discussed below)</p>
+
+<pre><code>#############
+# CustomerY
+#############
+Host customerYbastion
+    Hostname ec2-yyy-yyy-yyy-yyy.compute-1.amazonaws.com
+    User ubuntu
+    ProxyCommand none
+Host *.inside.customerY.com
+    User ubuntu
+    ProxyCommand ssh customerYbastion nc -q0 %h %p
+</code></pre>
+
+<p>Once you add multiple cluster configs and different customer environments,
+these SSH config files can get quite complex.  Here’re a couple of ways I’ve
+seen people manage that:</p>
+
+<ul>
+  <li>
+    <p>just manage one big <code>~/.ssh/config</code> file by hand and use <code>Host</code> names and
+comments to keep track of everything</p>
+  </li>
+  <li>
+    <p>explictly specify config files at the command line a la <code>ssh -F
+~/.ssh/customerX-config &lt;server&gt;</code>… maybe even use a shell alias to shorten
+this if you do it a lot</p>
+  </li>
+  <li>
+    <p>[what I currently do] scripts to glue multiple config snippets from
+<code>~/.ssh/config.d/customerX.conf</code> into a single big read-only <code>~/.ssh/config</code>.
+It’d be nice to eventually change the ssh client to optionally read from
+these kind of <code>~/.ssh/config.d/</code> and <code>~/.ssh/authorized_keys.d/</code> snippet
+directories</p>
+  </li>
+  <li>
+    <p>customer-specific containers… I actually work a lot from <em>inside</em> of
+containers on an ec2 instance.  I usually have them just bind-mount the
+underlying hosts home directory, but you could easily keep them isolated with
+separate config and spin them up only when you need overlay specific to a
+customer.  This also works even with gui apps on a laptop btw, but that’s a
+longer story :)</p>
+  </li>
+</ul>
+
+<p>It’s also pretty common for folks to write scripts using config management
+(juju, knife, or ClouderaManager-like APIs) to generate ssh config snippets
+from a running infrastructure.  This can be quite useful, but is still a static
+picture of a cluster that changes.  Depending on the lifetime or stability of
+the cluster, you’re often better off using a more dynamic approach like <code>knife
+ssh</code>.  It’s a no-win tradeoff of sharing static SSH config snippets -vs-
+configuring chef environments for everyone who needs to access the cluster.</p>
+
+<p>I’d love to hear other solutions folks have come up with to deal with this.  I
+have no clue what puppet offers here, and I bet there are great examples of
+ansible’s ec2 plugin that’ll be a dead-simple way to interact with a dynamic
+host inventory.  Perhaps that’s where I’ll head next… we’ll see.  Totally
+depends on customer environments.</p>
+
+<hr />
+
+<h2 id="proxies">Proxies</h2>
+
+<p>One server, a <code>bastion</code> host, accepts SSH traffic from the outside world.
+Remaining <code>target</code> hosts in the cluster are configured internal access only.</p>
+
+<p>Consider the following scenario using a <code>ProxyCommand</code>.</p>
+
+<p>Take an externally accessible <code>bastion</code> and an internally accessible <code>target</code>.
+Set up your SSH config so you can ssh directly to the <code>bastion</code> host</p>
+
+<pre><code>     +--------------------+         +-------------------+
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |    laptop          |         |      bastion      |
+     |                    |  ssh    |                   |
+     |                    +---------&gt;                   +
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     +--------------------+         +-------------------+
+</code></pre>
+
+<p>with a command like </p>
+
+<pre><code>     `ssh bastion`
+</code></pre>
+
+<p>Then you can ssh from there to a <code>target</code> host</p>
+
+<pre><code>                                    +-------------------+          +-------------------+
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |      bastion      |          |     target        |
+                                    |                   |  ssh     |                   |
+                                    |                   +----------&gt;                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    +-------------------+          +-------------------+
+
+
+                                    `ssh target`
+</code></pre>
+
+<p>The key bit here is that we can compress this to one step for the user.</p>
+
+<pre><code>     +--------------------+         +-------------------+       +-------------------+
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |    laptop          |         |      bastion      |       |      target       |
+     |                    |  ssh    |                   |  ssh  |                   |
+     |                    +---------&gt;                   +-------&gt;                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     +--------------------+         +-------------------+       +-------------------+
+</code></pre>
+
+<p>From laptop’s <code>~/.ssh/config</code> file:</p>
+
+<pre><code>Host bastion
+    Hostname ec2-xxx.xxx.....amazon.com
+Host target
+    Hostname ip-10-xx-xx-xx.internal....amazon.com
+    ProxyCommand ssh bastion nc -q1 %h %p
+</code></pre>
+
+<p>then you can just <code>ssh target</code> directly from your laptop.  It automatically
+traverses the proxy <code>bastion</code> on your behalf.</p>
+
+<p>Note, that from an administrative perspective, it’s easy to control user access
+at the single <code>bastion</code>… if you can’t establish an ssh connection to the
+bastion, you can’t “jump through it” to internal hosts.</p>
+
+<hr />
+
+<h2 id="tunnels">Tunnels</h2>
+
+<p>SSH in general <em>is</em> a tunnel</p>
+
+<pre><code>        +-----------------------+                             +------------------------+
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |            Inet             |                        |
+        |                       |                             |                        |
+        |                       +-----------------------------&gt;                        |
+        |                       +         &lt;-- text --&gt;        |           fred         |
+        |                       +                             |                        |
+        |        laptop         +-----------------------------&gt;      (ec2 instance)    |
+        |                       |                             |                        |
+        |                       |                             |    (any remote server) |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             +------------------------+
+        +-----------------------+
+
+
+
+`ssh fred`
+</code></pre>
+
+<h3 id="forward-tunnels">forward tunnels</h3>
+
+<p>aka, “port forwarding”</p>
+
+<h4 id="forwarding-web-traffic">forwarding web traffic</h4>
+
+<pre><code>          +----------------+                  +------------------------+
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+-- 8888 -&gt;|                |                  |                        |
+          |                +------------------&gt;                        |
+          |                +   &lt;-- text --&gt;   |                        |
+          |                +   &lt;--  web --&gt;   |                        | -----&gt;  http://nfl.com/
+          |     laptop     +------------------&gt;      ec2 instance      |
+          |                |                  |                        |
+          |                |                  |    (any remote server) |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  +------------------------+
+          +----------------+
+
+
+`ssh fred -L8888:www.nfl.com:80`
+
+`open http://localhost:8888/`
+</code></pre>
+
+<h4 id="forwarding-localhost">forwarding localhost</h4>
+
+<pre><code>          +------------+                +------------------------+
+          |            |                |                        |
+          |            |                |                        |
+-- 50070-&gt;|            |                |                        |
+          |            |                |                        | http://...  &lt;---+
+          |            |                |                        |    (50070)      |
+          |            +----------------&gt;                        |                 |
+          |            +    &lt;-----&gt;     |                        |                 |
+          |            +    &lt;-----&gt;     |                        | ----------------+
+          |  laptop    +----------------&gt;      ec2 instance      |
+          |            |                |                        |
+          |            |                |    (any remote server) |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                +------------------------+
+          +------------+
+
+
+`ssh fred -L8888:localhost:80`
+</code></pre>
+
+<p>or, perhaps more useful…</p>
+
+<pre><code>`ssh fred -L50070:localhost:50070`
+`open http://localhost:50070/`
+</code></pre>
+
+<p>or </p>
+
+<pre><code>`ssh fred -L50070:localhost:50070 -L50030:localhost:50030`
+</code></pre>
+
+<h3 id="reverse-tunnels">reverse tunnels</h3>
+
+<pre><code>        +-----------------------+                             +------------------------+
+        |                       |                             |                        |
+        |                       |                   -- 2222 -&gt;|                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       +-----------------------------&gt;                        |
+        |                       +            &lt;-----&gt;          |                        |
+        |                       +            &lt;-----&gt;          |                        |
+        |        laptop         +-----------------------------&gt;      ec2 instance      |
+        |                       |                             |                        |
+        |                       |                             |    (any remote server) |
+        |                       |                             |                        |
+        |                       | 22 &lt;---+                    |                        |
+        |                       |        |                    |                        |
+        |                       |        |                    |                        |
+        |                       |--------+                    |                        |
+        |                       |                             |                        |
+        |                       |                             +------------------------+
+        +-----------------------+
+
+
+
+`ssh fred -R2222:localhost:22`
+</code></pre>
+
+<p>or maybe something like…</p>
+
+<pre><code>`ssh fred -R8888:localhost:80`
+</code></pre>
+
+<p>or even <code>ssh root@fred -R80:localhost:80</code></p>
+
+<h3 id="add-tunnels-to-your-ssh-config">add tunnels to your ssh config</h3>
+
+<pre><code>Host myhost
+    Hostname 10.1.2.3
+    LocalForward 7080 localhost:7080
+    LocalForward 8080 localhost:8080
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Hangout - Juju Local Provider]]></title>
+    <link href="http://mmm.github.io/cloud/2013/08/23/charmschool-local-provider.html"/>
+    <updated>2013-08-23T13:02:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/08/23/charmschool-local-provider</id>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
+walks through using the new version of the juju local provider.  It’s cool!</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 3AiQhHIBQJk</div>
+</a>
+<div class="video-info">embedded youtube video 3AiQhHIBQJk</div>
+</div>
+
+<!--more-->
+
+<p>As before, there are links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Hangout - Juju Events in Depth]]></title>
+    <link href="http://mmm.github.io/cloud/2013/07/12/charmschool-events-in-depth.html"/>
+    <updated>2013-07-12T13:02:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/07/12/charmschool-events-in-depth</id>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
+is a little more detail on juju events…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video vPBrpMcXHN0</div>
+</a>
+<div class="video-info">embedded youtube video vPBrpMcXHN0</div>
+</div>
+
+<!--more-->
+
+<p>As before, there are links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Hangout - Charming Best Practices]]></title>
+    <link href="http://mmm.github.io/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
+    <updated>2013-06-28T13:02:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/06/28/charmschool-charm-best-practices</id>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
+we just sort of sat around and discussed best practices…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 08dOs3eO04M</div>
+</a>
+<div class="video-info">embedded youtube video 08dOs3eO04M</div>
+</div>
+
+<!--more-->
+
+<p>As before, there are links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Juju Demo Videos]]></title>
+    <link href="http://mmm.github.io/cloud/2013/06/15/juju-demo-videos.html"/>
+    <updated>2013-06-15T13:02:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/06/15/juju-demo-videos</id>
+    <content type="html"><![CDATA[<p>I Put together a series of demo videos using juju-0.7 for oscon.</p>
+
+<p>These are really interesting in that they involve migrating environments
+between providers.  This works slightly differently on the newer juju-1.x
+series, but the idea’s still sound.</p>
+
+<p>There’s no sound on these… they’re raw video backups for demoing juju (in
+case we lost networking during the demo).</p>
+
+<p>migrate local to hp</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('Jfnxl1Kh9SY');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/Jfnxl1Kh9SY?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/Jfnxl1Kh9SY/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=Jfnxl1Kh9SY" id="Jfnxl1Kh9SY" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video Jfnxl1Kh9SY</div>
+</a>
+<div class="video-info">embedded youtube video Jfnxl1Kh9SY</div>
+</div>
+
+<!--more-->
+
+<p>migrate ec2 to hpcloud</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('HUtR3_YlKXU');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/HUtR3_YlKXU?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/HUtR3_YlKXU/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=HUtR3_YlKXU" id="HUtR3_YlKXU" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video HUtR3_YlKXU</div>
+</a>
+<div class="video-info">embedded youtube video HUtR3_YlKXU</div>
+</div>
+
+<p>Local provider</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('EpIP4ly4E0E');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/EpIP4ly4E0E?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/EpIP4ly4E0E/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=EpIP4ly4E0E" id="EpIP4ly4E0E" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video EpIP4ly4E0E</div>
+</a>
+<div class="video-info">embedded youtube video EpIP4ly4E0E</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Hangout - Charming from scratch]]></title>
+    <link href="http://mmm.github.io/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
+    <updated>2013-06-05T13:02:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week’s video
+we wrote a charm from scratch…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('NQmxuzdc4Zg');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=NQmxuzdc4Zg" id="NQmxuzdc4Zg" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video NQmxuzdc4Zg</div>
+</a>
+<div class="video-info">embedded youtube video NQmxuzdc4Zg</div>
+</div>
+
+<p>Starting from a simple node.js application, we put together “just enough” charm
+to get things working.  Watch for future episodes where we’ll refactor and
+refine both the application and the charm.</p>
+
+<!--more-->
+
+<p>As before, there are links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Hangouts]]></title>
+    <link href="http://mmm.github.io/cloud/2013/05/20/charmschool-hangouts.html"/>
+    <updated>2013-05-20T12:49:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/05/20/charmschool-hangouts</id>
+    <content type="html"><![CDATA[<p>We’re doing a series of regular CharmSchools on G+ hangouts.
+Last week we did an intro to juju and charming…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('yRcqSjOGweo');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/yRcqSjOGweo?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/yRcqSjOGweo/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=yRcqSjOGweo" id="yRcqSjOGweo" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video yRcqSjOGweo</div>
+</a>
+<div class="video-info">embedded youtube video yRcqSjOGweo</div>
+</div>
+
+<p>There’re links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[CharmSchool Video from the Openstack Summit]]></title>
+    <link href="http://mmm.github.io/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html"/>
+    <updated>2013-04-25T12:40:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2013/04/25/charmschool-video-from-the-openstack-summit</id>
+    <content type="html"><![CDATA[<p>Jorge and I gave a charmschool at the ODS summit.
+The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!</p>
+
+<p>Watch it 
+<a href="http://www.openstack.org/summit/portland-2013/session-videos/presentation/juju-with-openstack-workshop">here</a>
+or </p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('YenD4oxfEa4');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/YenD4oxfEa4?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/YenD4oxfEa4/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=YenD4oxfEa4" id="YenD4oxfEa4" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video YenD4oxfEa4</div>
+</a>
+<div class="video-info">embedded youtube video YenD4oxfEa4</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Running the LinuxPlumbers Conference Schedule with Juju]]></title>
+    <link href="http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html"/>
+    <updated>2012-09-25T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju</id>
+    <content type="html"><![CDATA[<p class="meta">
+Written by Mark Mims and Chris Johnston
+</p>
+
+<p>Hey, so last month we ran scheduling for the 
+<a href="http://linuxplumbersconf.org">Linux Plumbers Conference</a>
+entirely on juju!</p>
+
+<p>Here’s a little background on the experience.</p>
+
+<p>Along the way, we’ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It’s a basic
+stack of services that’s only alive for 6-months or so…  but this discussion
+applies to bigger longer-running production infrastructures too, so it’s worth
+going over here.</p>
+
+<!--more-->
+
+<h2 id="the-app">The App</h2>
+
+<p>So <a href="https://launchpad.net/summit">summit</a> is this great django app built for
+scheduling conferences.  It’s evolved over time to handle
+<a href="uds.ubuntu.com">UDS</a>-level traffic and is currently maintained by a
+<a href="https://launchpad.net/~summit-hackers">Summit Hackers</a> team that includes
+<a href="http://www.chrisjohnston.org/">Chris Johnston</a>
+and <a href="http://mhall119.com/">Michael Hall</a>.</p>
+
+<p>Chris contacted me to help him use juju to manage summit for this year’s
+Plumbers conference.  At the time we started this, the 11.10 version of juju
+wasn’t exactly blessed for production environments, but we decided it’d be a
+great opportunity to work things out.</p>
+
+<h2 id="the-stack">The Stack</h2>
+
+<p>A typical summit stack’s got postgresql, the django app itself, and a memcached server.</p>
+
+<p><a href="http://mmm.github.io/images/django-stack.png">
+<img src="http://mmm.github.io/images/django-stack.png" width="198px" />
+</a></p>
+
+<p>We additionally talked about putting this all behind some sort of a head like haproxy.</p>
+
+<p><a href="http://mmm.github.io/images/bigger-django-stack.png">
+<img src="http://mmm.github.io/images/bigger-django-stack.png" width="334px" />
+</a></p>
+
+<p>This’d let the app scale horizontally as well as give us a stable point to
+attach an elastic-ip.  We decided to <em>not</em> do this at the time b/c we could
+most likely handle the peak conference load with a single django service-unit
+provided we slam select snippets of the site into memcached.</p>
+
+<p>This turned out to be true load-wise, but it really would’ve been a whole lot
+easier to have a nice constant haproxy node out there to tack the elastic-ip
+to.
+During development (charm, app, and theme) you want the freedom to destroy
+a service and respawn it without having to use external tools to go around and
+attach public IP addresses to the right places.  That’s a pain.  Also, if
+there’s a sensitive part of this infrastructure in production, it wouldn’t be
+postgresql, memcached, or haproxy… the app itself would be the most likely
+point of instability, so it was a mistake to attach the elastic-ip there.</p>
+
+<h2 id="the-environment">The Environment</h2>
+
+<h3 id="choice-of-cloud">choice of cloud</h3>
+
+<p>We chose to use ec2 to host the summit stack… mostly a matter of
+convenience.  The juju openstack-native provider wasn’t completed when we spun
+up the production environment for linuxplumbers and we didn’t have access to a
+stable private ubuntu cloud running the openstack-ec2-api at the time.
+All of this has subsequently landed, so we’d have more options today.</p>
+
+<h3 id="the-charms">the charms</h3>
+
+<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>’s excellent
+<a href="lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk">django charm</a>
+to create a
+<a href="https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk">summit-charm</a>
+and freely specialized it for summit.</p>
+
+<p>Note that we’re updating this charm for 12.04
+<a href="https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk">here</a>, but
+this will probably go away in the near future and we’ll just use a generic
+django charm.  It turns out we didn’t do too much here that won’t apply to
+django apps in general, but more on that another time.</p>
+
+<p>There was nothing special about our tuning of postgresql or memcached.  We just
+used the services provided by the canned charms.  These sort of peripheral
+services aren’t the kind of charms you’re likely to be making changes to or
+tweaking outside of their exposed config parameters.  I know <em>jack</em> about
+memcached, so I’ll defer to the experts in this regard.  Similarly for
+postgresql… and haproxy if we used it in this stack.</p>
+
+<p>The summit charm is a little different.  It’s something we were continuing to
+tweak during development.  Perhaps with future more generic django charm
+versions, we won’t need to tweak the charm itself… just configure it.</p>
+
+<p>We used a “local” repository for <em>all</em> charms because the charm store hadn’t
+landed when we were setting this up.  Well, now that the charm store is live,
+you can just deploy the canned charms straight from the store</p>
+
+<pre><code>`juju deploy -e summit memcached`
+</code></pre>
+
+<p>and keep the ones you want to tweak in a local repository… </p>
+
+<pre><code>`juju deploy -e summit --repository ~/charms local:summit`
+</code></pre>
+
+<p>all within the same environment.  It works out nicely.</p>
+
+<h3 id="control-environment">control environment</h3>
+
+<p>We had multiple people to manage the production summit environment.  What’s the
+best way to do that?  It turns out juju supports this pretty well right out of
+the box.  There’s an environment config for the set of ssh public keys to
+inject into everything in the environment as it starts up… you can read more
+about that on 
+<a href="http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju">askubuntu</a>.</p>
+
+<p>Note that this is only useful to configure at the beginning of the stack.  Once
+you’re up, adding keys is problematic.  I don’t even recommend trying b/c of
+the risk of getting undetermined state for the environment.  i.e., different
+nodes with different sets of keys depending on when you changed the keys relative
+to what actions you’ve performed on the environment.  It’s a problem.</p>
+
+<p>What I recommend now is actually to use <em>another</em> juju environment…  (and no,
+we’re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+“control” environment.  You bootstrap it, then set up a juju client that controls
+the main production environment.  Then set up a shared tmux session that any of
+the admins for the production environment can use:</p>
+
+<p><a href="http://mmm.github.io/images/summit-control.png">
+<img src="http://mmm.github.io/images/summit-control.png" width="720px" />
+</a></p>
+
+<p>Adding/changing the set of
+admin keys is then done in a single place.  This technique isn’t strictly
+necessary, but it was certainly worth it here with different admins having
+various different levels of familiarity with the tools.  I started it as a
+teaching tool, left it up because it was an easy control dashboard, and now
+recommend it because it works so well.</p>
+
+<h3 id="its-chilly-in-here">it’s chilly in here</h3>
+
+<p>Yeah, so during development you break things.  There were a couple of times
+using 11.10 juju that changes to juju core prevented a client from talking to
+an existing stack.  Aargh!  This wasn’t going to fly for production use.</p>
+
+<p>The juju team has subsequently done a <em>bunch</em> to prevent this from happening,
+but hey we needed production summit working and stable at the time.  The
+answer… freeze the code.</p>
+
+<p>Juju has an environment config option <code>juju-origin</code> to specify where to
+get the juju installed on all instances in the environment.  I branched juju
+core to <code>lp:~mark-mims/juju/running-summit</code> and just worked straight from there
+for the lifetime of the environment (still up atm).  Easy enough.</p>
+
+<p>Now the tricky part is to make sure that you’re always using the
+<code>lp:~mark-mims/juju/running-summit</code> version of the juju cli when talking to the
+production summit environment.</p>
+
+<p>I set up</p>
+
+<pre><code>#!/bin/bash
+export JUJU_BRANCH=$HOME/src/juju/running-summit
+export PATH=$JUJU_BRANCH/bin:$PATH
+export PYTHONPATH=$JUJU_BRANCH
+</code></pre>
+
+<p>which my tmuxinator config sources into every pane in my <code>summit</code> tmux session.</p>
+
+<p>This was also done on the <code>summit-control</code> instance so it’s easy to make sure
+we’re all using the right version of the juju cli to talk to the production
+environment.</p>
+
+<h3 id="backups">backups</h3>
+
+<p>The <code>juju ssh</code> subcommand to the rescue.  You can do all your standard ssh
+tricks…</p>
+
+<pre><code>juju ssh postgresql/0 'su postgres pg_dump summit' &gt; summit.dump
+</code></pre>
+
+<p>… on a cronjob.  Juju just stays out of the way and just helps out a bit with
+the addressing.  Real version pipes through bzip2 and adds timestamps of course.</p>
+
+<p>Of course snapshots are easy enough too via euca2ools, but the pgsql dumps
+themselves turned out to be more useful and easy to get to in case of a
+failover.</p>
+
+<h3 id="debugging">debugging</h3>
+
+<p>The biggest debugging activity during development was cleaning up the app’s
+theming.  The summit charm is configured to get the django app itself from
+one <a href="https://code.launchpad.net/summit">application branch</a> and the theme from a separate
+<a href="https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme">theme branch</a>.</p>
+
+<p>So… ahem… “best practice” for theme development would’ve been to
+develop/tweak the theme locally, then push to the branch.  A simple</p>
+
+<pre><code>juju set --config=summit.yaml summit/0
+</code></pre>
+
+<p>would update config for the live instances.</p>
+
+<p>Well…  some of the menus from the base template used absolute paths so it was
+simpler to cheat a bit early in the process to test it all in-place with actual
+dns names.  Had we been doing this the “right” way from the beginning we
+would’ve had much more confidence in the stack when practicing recovery and
+failover later in the cycle… we would’ve been doing it all since day one.</p>
+
+<p>Another thing we had to do was manually test memcached.  To test out caching
+we’d ssh to the memcached instance, stop the service, run memcached verbosely
+in the foreground.  Once we determined everything was working the way we
+expected, we’d kill it and restart the upstart job.</p>
+
+<p>This is a bug in the memcached charm imo… the option to temporarily run
+verbosely for debugging should totally be a config option for that service.
+It’d then be a simple matter of</p>
+
+<pre><code>juju set memcached/0 debug=true
+</code></pre>
+
+<p>and then</p>
+
+<pre><code>juju ssh memcached/0
+</code></pre>
+
+<p>to watch some logs.  Once we’re convinced it’s working the way it should</p>
+
+<pre><code>juju set memcached/0 debug=false
+</code></pre>
+
+<p>should make it performant again.</p>
+
+<p>Next time around, we should take more advantage of <code>juju set</code> config to
+update/reconfigure the app as we made changes… and generally implement a
+better set of development practices.</p>
+
+<h3 id="monitoring">monitoring</h3>
+
+<p>Sorely lacking.  “What? curl doesn’t cut it?”… um… no.</p>
+
+<h3 id="planning-for-failures">planning for failures</h3>
+
+<p>Our notion of failover for this app was just a spare set of cloud credentials
+and a tested recovery plan.</p>
+
+<p>The plan we practiced was…</p>
+
+<ul>
+  <li>bootstrap a new environment (using spare credentials if necessary)</li>
+  <li>spin up the summit stack</li>
+  <li>ssh to the new <code>postgresql/0</code> and drop the db  (Note: the postgresql charm
+should be extended to accept a config parameter of a storage url, S3 in this
+case, to slurp the db backups from)</li>
+  <li>
+    <p>restore from offsite backups… something along the lines of</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <td>cat summit-$timestamp.dump.bz2</td>
+          <td>juju ssh -e failover postgresql/0 ‘bunzip2 -c</td>
+          <td>su - postgres pgsql summit’</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>In practice, that took about 10-15minutes to recover once we started acting.
+Given the additional delay between notification and action, that could spell an
+hour or two of outtage.  That’s not so great.</p>
+
+<p>Juju makes other failover scenarios cheaper and easier to implement than they
+used to be, so why not put those into place just to be safe?  Perhaps the
+additional instance costs for hot-spares wouldn’t’ve been necessary for the
+entire 6-months of lead-time for scheduling and planning this conference, but
+they’d certainly be worth the spend during the few days of the event itself.
+Juju sort of makes it a no-brainer.  We should do more posts on this one
+issue… the game has changed here.</p>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<p>What would we do differently next time?  Well, there’s a list :).</p>
+
+<ul>
+  <li>use the stable ppa… instead of freezing the code</li>
+  <li>sit the app behind haproxy</li>
+  <li>use s3fs or equivalent subordinate charm to manage backups instead of just
+sshing them off the box</li>
+  <li>better monitoring… we’ve gotten a great set of monitoring charms
+recently… thanks <a href="http://fewbar.com/">Clint</a>!</li>
+  <li>log aggregation would’ve been a little bit of overkill for this app, but next
+time might warrant it</li>
+  <li>it’s cheap to add failover with juju… just do it</li>
+  <li>maybe follow a development process a little more carefully next time around :)</li>
+  <li>we’ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju]]></title>
+    <link href="http://mmm.github.io/cloud/2012/06/04/juju-at-scale.html"/>
+    <updated>2012-06-04T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2012/06/04/juju-at-scale</id>
+    <content type="html"><![CDATA[<p class="meta">
+Written by Mark Mims and James Page
+</p>
+
+<p>Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
+lots of great stuff going on here, so we figured it’s time to start posting about it.</p>
+
+<p>First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+was get the go-ahead to spend more time/effort/money scale-testing Juju.</p>
+
+<!--more-->
+
+<h2 id="the-plan">The Plan</h2>
+
+<ul>
+  <li>pick a service that scales</li>
+  <li>spin up a cluster of units for this service</li>
+  <li>try to run it in a way that actively engages all units of the cluster</li>
+  <li>repeat:
+    <ul>
+      <li>instrument</li>
+      <li>profile</li>
+      <li>optimize</li>
+      <li>grow</li>
+    </ul>
+  </li>
+</ul>
+
+<p><a href="https://plus.google.com/u/0/109495998940814132432/posts">James</a>,
+<a href="https://plus.google.com/u/0/108276830347560657704/posts">Kapil</a>,
+<a href="https://plus.google.com/102506066601287922723/posts">Juan</a>,
+<a href="https://plus.google.com/u/0/100536568598074282388/posts">Ben</a>,
+and <a href="http://markmims.com/about">Mark</a>
+sat down over the course of
+a couple of nights at UDS to take a crack at it.
+We chose Hadoop.
+We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
+Here’re some notes on the process.</p>
+
+<h2 id="hadoop">Hadoop</h2>
+
+<p>Hadoop was a pretty obvious choice here.
+It’s a great actively-maintained
+<a href="http://hadoop.apache.org/">project</a>
+with a large community of users.
+It scales in a somewhat known manner, and the
+<a href="http://jujucharms.com/charms/precise/hadoop">hadoop charm</a>
+makes it super-simple to manage.
+There are also several known benchmarks that are pretty straightforward to get going,
+and distribute load throughout the cluster.</p>
+
+<p>There’s an entire science/art to tuning hadoop jobs to run optimally given the 
+characteristics of a particular cluster.  Our sole goal in tuning hadoop benchmarks
+was to <em>engage</em> the entire cluster and profile juju during various activities throughout
+an actual run.  For our purposes, we’re in no hurry… a slower/longer run gives us a
+good profiling picture for managing the nodes themselves under load (with a sufficient
+mix of i/o -vs- cpu load).</p>
+
+<h2 id="ec2">EC2</h2>
+
+<p>Surprisingly enough, we don’t really have that many servers just lying around… so EC2 to the rescue.</p>
+
+<p>Disclaimer… we’re testing our infrastructure tools here, not benchmarking hadoop in EC2.
+Some folks advocate running hadoop in a cloudy virtualized environment… while some
+folks are die-hard server huggers.  That’s actually a really interesting discussion.
+It comes down to the actual jobs/problems you’re
+trying to solve and how those jobs fit in your data pipeline.
+Please note that we’re not
+trying to solve that problem here or even provide realistic benchmarking data to contribute
+to the discussion… we’re simply testing how our infrastructure tools perform at scale.</p>
+
+<p>If you <em>do</em> run hadoop in EC2, Amazon’s Elastic Map Reduce service is likely to perform
+better at scale in EC2 than just running hadoop itself on general purpose instances.
+Amazon can do all sorts of stuff internally to show hadoop lots of love.
+We chose not to use EMR because we’re interested in testing how juju performs
+with <em>generic</em> Ubuntu Server images, not EMR… at least for now.</p>
+
+<p>Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
+ask AWS to bump up your limits.</p>
+
+<h2 id="juju">Juju</h2>
+
+<p>We started scale testing from a fresh branch of juju trunk… what gets deployed to
+the PPA nightly… this freed us up to experiment with live changes to add instrumentation,
+profiling information, and randomly mess with code as necessary.  This also locks in 
+the branch of juju that the scale testing environment uses.</p>
+
+<p>As usual, juju will keep track of the state of our infrastructure going forward and
+we can make changes as necessary via juju commands.  To bootstrap and spin up the
+initial environment we’ll just use shell scripts wrapping juju commands.</p>
+
+<h3 id="spinning-up-a-cluster">Spinning up a cluster</h3>
+
+<p>These scripts are really just
+hadoop versions of some standard juju demo scripts such as those used for 
+a simple <a href="https://gist.github.com/2050525">rails stack</a>
+or a more realistic HA <a href="https://gist.github.com/1406018">wiki stack</a>.</p>
+
+<p>The hadoop scripts for EC2 will get a little more complex as we grow simply because
+we don’t want AWS to think we’re a DoS attack… we’ll pace ourselves during spinup.</p>
+
+<p>From the hadoop charm’s readme, the basic steps to spinning up a simple combined
+hdfs and mapreduce cluster are:</p>
+
+<pre><code>juju bootstrap
+
+juju deploy hadoop hadoop-master
+juju deploy -n3 hadoop hadoop-slavecluster
+
+juju add-relation hadoop-master:namenode hadoop-slavecluster:datanode
+juju add-relation hadoop-master:jobtracker hadoop-slavecluster:tasktracker
+</code></pre>
+
+<p>which we expand on a bit to start with a base startup script that looks like:</p>
+
+<pre><code>#!/bin/bash
+
+juju_root="/home/ubuntu/scale"
+juju_env=${1:-"-escale"}
+
+###
+
+echo "deploying stack"
+
+juju bootstrap $juju_env
+
+deploy_cluster() {
+  local cluster_name=$1
+
+  juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.large" --config "$juju_root/etc/hadoop-master.yaml" local:hadoop ${cluster_name}-master
+
+  juju deploy $juju_env --repository "$juju_root/charms" --constraints="instance-type=m1.medium" --config "$juju_root/etc/hadoop-slave.yaml" -n 37 local:hadoop ${cluster_name}-slave
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  juju expose $juju_env ${cluster_name}-master
+
+}
+
+deploy_cluster hadoop
+
+echo "done"
+</code></pre>
+
+<p>and then manually adjust this for cluster size.</p>
+
+<h3 id="configuring-hadoop">Configuring Hadoop</h3>
+
+<p>Note that we’re specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We’d like an m1.large for the
+hadoop master</p>
+
+<pre><code>juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
+</code></pre>
+
+<p>and m1.mediums for the slaves</p>
+
+<pre><code>juju deploy ... --constraints "instance-type=m1.medium" ... hadoop-slave
+</code></pre>
+
+<p>Note that we’ll also pass config files to specify different heap sizes for the different memory footprints</p>
+
+<pre><code>juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
+</code></pre>
+
+<p>where <code>hadoop-master.yaml</code> looks like</p>
+
+<pre><code># m1.large
+hadoop-master:
+  heap: 2048
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+</code></pre>
+
+<p>and</p>
+
+<pre><code>juju deploy ... --config "hadoop-slave.yaml" ... hadoop-slave
+</code></pre>
+
+<p>where <code>hadoop-slave.yaml</code> looks like</p>
+
+<pre><code># m1.medium
+hadoop-slave:
+  heap: 1024
+  dfs.block.size: 134217728
+  dfs.namenode.handler.count: 20
+  mapred.reduce.parallel.copies: 50
+  mapred.child.java.opts: -Xmx512m
+  mapred.job.tracker.handler.count: 60
+#  fs.inmemory.size.mb: 200
+  io.sort.factor: 100
+  io.sort.mb: 200
+  io.file.buffer.size: 131072
+  tasktracker.http.threads: 50
+  hadoop.dir.base: /mnt/hadoop
+</code></pre>
+
+<p>Note also that we also have our juju environment configured to use
+instance-store images… juju defaults to ebs-rooted images, but that’s
+not a great idea with hdfs.  You specify this by adding a <code>default-image-id</code>
+into your <code>~/.juju/environments.yaml</code> file.
+This gave each of our instances an extra ~400G local drive
+on <code>/mnt</code>… hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
+in the config above.</p>
+
+<h2 id="nodes-and-100-nodes">40 nodes and 100 nodes</h2>
+
+<p>Both the 40-node and 100-node runs went as smooth as silk.
+The only thing to note was that it took a while to get AWS to increase
+our account limits to allow for 100+ nodes.</p>
+
+<h2 id="nodes">500 nodes</h2>
+
+<p>Once we had permission from Amazon to spin up 500 nodes on our account,
+we initially just naively spun
+up 500 instances… and quickly got throttled.</p>
+
+<p>No particular surprise, we’re not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group… we must look like a DoS attack.</p>
+
+<p>The order was eventually fulfilled, and juju waited around for it.
+Everything ran as expected, it just took about an hour and 15 minutes
+to spin up the stack.  This gave us a nice little cluster with HDFS
+storage of almost 200TB</p>
+
+<p><a href="http://mmm.github.io/images/scale-500-50070.png">
+<img src="http://mmm.github.io/images/scale-500-50070.png" width="720px" />
+</a></p>
+
+<p>The hadoop terasort job was run from the following script</p>
+
+<pre><code>#!/bin/bash
+
+SIZE=10000000000
+NUM_MAPS=1500
+NUM_REDUCES=1500
+IN_DIR=in_dir
+OUT_DIR=out_dir
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar teragen -Dmapred.map.tasks=${NUM_MAPS} ${SIZE} ${IN_DIR}
+
+sleep 10
+
+hadoop jar /usr/lib/hadoop/hadoop-examples*.jar terasort -Dmapred.reduce.tasks=${NUM_REDUCES} ${IN_DIR} ${OUT_DIR}
+</code></pre>
+
+<p>which, with a replfactor of 3, engaged the entire cluster just fine, 
+and ran terasort with no problems</p>
+
+<p><a href="http://mmm.github.io/images/scale-500-50030.png">
+<img src="http://mmm.github.io/images/scale-500-50030.png" width="720px" />
+</a></p>
+
+<p>Juju itself seemed to work great in this run, but this brought up a couple of basic optimizations against the EC2 api:</p>
+
+<pre><code>- pass the '-n' options directly to the provisioning agent... don't expand `juju deploy -n &lt;num_units&gt;` and `juju add-unit -n &lt;num_units&gt;` in the client
+- pass these along all the way to the ec2 api... don't expand these into multiple api calls
+</code></pre>
+
+<p>We’ll add those to the list of things to do.</p>
+
+<h2 id="nodes-1">1000 nodes</h2>
+
+<p>Onward, upward!</p>
+
+<p>To get around the api throttling, we start up
+batches of 99 slaves at a time with a 2-minute wait
+between each batch</p>
+
+<pre><code>#!/bin/bash
+
+juju_env=${1:-"-escale"}
+juju_root="/home/ubuntu/scale"
+juju_repo="$juju_root/charms"
+
+############################################
+
+timestamp() {
+  date +"%G-%m-%d-%H%M%S"
+}
+
+add_more_units() {
+  local num_units=$1
+  local service_name=$2
+
+  echo "sleeping"
+  sleep 120
+
+  echo "adding another $num_units units at $(timestamp)"
+  juju add-unit $juju_env -n $num_units $service_name
+}
+
+deploy_slaves() {
+  local cluster_name=$1
+  local slave_config="$juju_root/etc/hadoop-slave.yaml"
+  local slave_size="instance-type=m1.medium"
+  local slaves_at_a_time=99
+  #local num_slave_batches=10
+
+  juju deploy $juju_env --repository $juju_repo --constraints $slave_size --config $slave_config -n $slaves_at_a_time local:hadoop ${cluster_name}-slave
+  echo "deployed $slaves_at_a_time slaves"
+
+  juju add-relation $juju_env ${cluster_name}-master:namenode ${cluster_name}-slave:datanode
+  juju add-relation $juju_env ${cluster_name}-master:jobtracker ${cluster_name}-slave:tasktracker
+
+  for i in {1..9}; do
+    add_more_units $slaves_at_a_time ${cluster_name}-slave
+    echo "deployed $slaves_at_a_time slaves at $(timestamp)"
+  done
+}
+
+deploy_cluster() {
+  local cluster_name=$1
+  local master_config="$juju_root/etc/hadoop-master.yaml"
+  local master_size="instance-type=m1.large"
+
+  juju deploy $juju_env --repository $juju_repo --constraints $master_size --config $master_config local:hadoop ${cluster_name}-master
+
+  deploy_slaves ${cluster_name}
+
+  juju expose $juju_env ${cluster_name}-master
+}
+
+main() {
+  echo "deploying stack at $(timestamp)"
+
+  juju bootstrap $juju_env --constraints="instance-type=m1.xlarge"
+
+  sleep 120
+  deploy_cluster hadoop
+
+  echo "done at $(timestamp)"
+}
+main $*
+exit 0
+</code></pre>
+
+<p>We experimented with more clever ways of doing the spinup
+(too little coffee at this point of the night)…
+but the real fix is to get juju to take
+advantage of multiplicity in api calls.
+Until then, timed batches work just fine.</p>
+
+<p>Juju spun the cluster up in about 2 and a half hours.
+It had about 380TB of HDFS storage</p>
+
+<p><a href="http://mmm.github.io/images/scale-1000-50070.png">
+<img src="http://mmm.github.io/images/scale-1000-50070.png" width="720px" />
+</a></p>
+
+<p>The terasort job that was run from the script above with</p>
+
+<pre><code>SIZE=10000000000
+NUM_MAPS=3000
+NUM_REDUCES=3000
+</code></pre>
+
+<p><a href="http://mmm.github.io/images/scale-1000-50030.png">
+<img src="http://mmm.github.io/images/scale-1000-50030.png" width="720px" />
+</a></p>
+
+<p>eventually completed.</p>
+
+<h2 id="nodes-2">2000 nodes</h2>
+
+<p>After the 1000-node run, we chose to clean up from the
+previous job and just add more nodes to that same cluster.</p>
+
+<p>Again, to get around the api throttling, we added
+batches of 99 slaves at a time with a 2-minute wait
+between each batch until we got near 2000 slaves.</p>
+
+<p>This gave us almost 760TB of HDFS storage</p>
+
+<p><a href="http://mmm.github.io/images/scale-2000-50070.png">
+<img src="http://mmm.github.io/images/scale-2000-50070.png" width="720px" />
+</a></p>
+
+<p>and was running fine</p>
+
+<p><a href="http://mmm.github.io/images/scale-2000-50030.png">
+<img src="http://mmm.github.io/images/scale-2000-50030.png" width="720px" />
+</a></p>
+
+<p>but was stopped early b/c waiting for the job to complete
+would’ve just been silly at this point.  With our naive job
+config, we’re considerably past the point of diminishing
+returns for adding nodes to the actual terasort, and we’d
+captured the profiling info we needed at this point.</p>
+
+<p>Juju spun up 1972 slaves in just over seven hours total.
+Profiling showed that juju was spending a <em>lot</em> of time
+serializing stuff into zookeeper nodes using yaml.  It
+looks like python’s yaml implementation is python, and
+not just wrapping libyaml.  We tested a smaller run replacing
+the internal yaml serialization with json.. 
+Wham!  two orders of magnitude faster.  No particular surprise.</p>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<p>Ok, so at the end of the day, what did we learn here?</p>
+
+<p>What we did here is the way developing for performance at scale
+should be done… start with a naive, flexible approach
+and then spend time and effort obtaining real profiling
+information.  Follow that with optimization decisions that actually
+make a difference.  Otherwise it’s all just a crapshoot
+based on where developers think the bottlenecks might be.</p>
+
+<p>Things to do to juju as a result of these tests:</p>
+
+<ul>
+  <li>streamline our implementation of ‘-n’ options
+    <ul>
+      <li>the client should pass the multiplicity to the provisioning agent</li>
+      <li>the provisioning agent should pass the multiplicity to the EC2 api</li>
+    </ul>
+  </li>
+  <li>don’t use yaml to marshall data in and out of zookeeper</li>
+  <li>replace per-instance security groups with per-instance firewalls</li>
+</ul>
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p>So that’s a big enough bite for one round of scale testing.</p>
+
+<p>Next up:</p>
+
+<ul>
+  <li>land a few of the changes outlined above into trunk.
+Then, spin up another round of scale tests to look at the numbers.</li>
+  <li>more providers (other clouds as well as a MaaS lab too)</li>
+  <li>regular scale testing?
+    <ul>
+      <li>can this coincide with upstream scale testing for projects like hadoop?</li>
+    </ul>
+  </li>
+  <li>test scaling for various services?  What does this look like for other stacks
+of services?</li>
+</ul>
+
+<h2 id="wishlist">Wishlist</h2>
+
+<ul>
+  <li>
+    <p>find some better test jobs!  benchmarks are boring… perhaps we can use
+this compute time to mine educational data or cure cancer or something?</p>
+  </li>
+  <li>
+    <p>perhaps push juju topology information further into zk leaf nodes?
+Are there transactional features in more recent versions of zk that we can use?</p>
+  </li>
+  <li>
+    <p>use spot instances on ec2.  This is harder because you’ve gotta incorporate price monitoring.</p>
+  </li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Charm School!]]></title>
+    <link href="http://mmm.github.io/cloud/2011/11/22/charm-school.html"/>
+    <updated>2011-11-22T00:00:00-05:00</updated>
+    <id>http://mmm.github.io/cloud/2011/11/22/charm-school</id>
+    <content type="html"><![CDATA[<p>Wanna learn more about <a href="http://juju.ubuntu.com">juju</a>?</p>
+
+<p>Drop by <a href="https://juju.ubuntu.com/CharmSchool/2December11">Charm School</a>:</p>
+
+<p><a href="https://juju.ubuntu.com/CharmSchool/2December11">
+  <img src="http://mmm.github.io/images/charmschool.png" width="220px" />
+</a></p>
+
+<!--more-->
+
+<p>Details from <a href="http://tumblr.com/ZKG8NyCGhHZR">Jorge’s post</a>:</p>
+
+<pre><code>We're holding a Charm School on IRC.
+
+juju Charm School is a virtual event where a juju expert
+is available to answer questions about writing your own
+juju charms. The intended audience are people who deploy
+software and want to contribute charms to the wider devops
+community to make deploying in the public and private
+cloud easy.
+
+Attendees are more than welcome to:
+
+Ask questions about juju and charms
+Ask for help modifying existing scripts and make charms out of them
+Ask for peer review on existing charms you might be working on
+
+Though not required, we recommend that you have juju installed
+and configured if you want to get deep into the event.
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ensemble renamed to juju]]></title>
+    <link href="http://mmm.github.io/cloud/2011/10/12/project-rename.html"/>
+    <updated>2011-10-12T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2011/10/12/project-rename</id>
+    <content type="html"><![CDATA[<p>Just a note that the Ubuntu Ensemble suite of DevOps tools for
+Ubuntu Server has been renamed to <code>juju</code>.</p>
+
+<p>I’ll be updating previous posts to reflect the name changes so they’ll be up to date.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Where did the 'close-lid' action go in gnome3?]]></title>
+    <link href="http://mmm.github.io/howtos/2011/09/13/power-lid-closed-actions.html"/>
+    <updated>2011-09-13T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/09/13/power-lid-closed-actions</id>
+    <content type="html"><![CDATA[<p>Here’s a workaround… (thanks slangasek!)</p>
+
+<pre><code>gsettings set org.gnome.settings-daemon.plugins.power lid-close-ac-action 'nothing'
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Stir that memory of autotools]]></title>
+    <link href="http://mmm.github.io/howtos/2011/09/08/autotools.html"/>
+    <updated>2011-09-08T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/09/08/autotools</id>
+    <content type="html"><![CDATA[<p>Ok, never going to forget these again, dammit!</p>
+
+<pre><code>$ aclocal
+$ autoconf --force
+$ automake --add-missing --copy --force-missing
+$ ./configure
+$ OS_ARCH=amd64 make
+</code></pre>
+
+<p>or sometimes you can use</p>
+
+<pre><code>$ autoreconf --force --install
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js and MongoDB on Ubuntu]]></title>
+    <link href="http://mmm.github.io/cloud/2011/09/07/node-mongo-ubuntu.html"/>
+    <updated>2011-09-07T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2011/09/07/node-mongo-ubuntu</id>
+    <content type="html"><![CDATA[<p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu… 
+it was quite a new experience.
+Figured I’d post details of the talk here.</p>
+
+<h2 id="an-example-stack">An example stack</h2>
+
+<p>We’ll use <a href="http://juju.ubuntu.com/">juju</a> to deploy a basic
+<a href="http://nodejs.org">node.js</a>
+app along with a couple of typical surrounding services..
+- <a href="http://haproxy.1wt.eu/">haproxy</a> to catch inbound web traffic and route it to our node.js app cluster
+- <a href="http://mongodb.org/">mongodb</a> for app storage</p>
+
+<p>Along the way, we’ll see what it takes to connect and scale this particular stack
+of services.  I’ll err on the side of too much detail over simplicity in this
+example, but I’ll try to make it clear when there’s a sidebar topic.</p>
+
+<!--more-->
+
+<p>At the end of the day, the deployment for our application
+would look like the usual juju deployment</p>
+
+<pre><code>$ juju bootstrap
+</code></pre>
+
+<p>(with a pregnant pause to allow EC2 to catch up)</p>
+
+<pre><code>$ juju deploy --repository ~/charms local:mongodb
+$ juju deploy --repository ~/charms local:node-app myapp
+$ juju add-relation mongodb myapp
+
+$ juju deploy --repository ~/charms local:haproxy
+$ juju add-relation myapp haproxy
+$ juju expose haproxy
+</code></pre>
+
+<p>(with another pregnant pause to allow EC2 to catch up)</p>
+
+<p>We can get the service URLs from</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>and hit the head of the haproxy service to see the app in action.</p>
+
+<p>We can scale it out with</p>
+
+<pre><code>$ for i in {1..4}; do
+$   juju add-unit myapp
+$ done
+</code></pre>
+
+<p>and we’ll soon have a cluster of one haproxy node balancing
+between five application nodes all talking to a single mongo
+node in the backend.  Of course, we can scale mongo too,
+but that’s another post.</p>
+
+<h2 id="juju-application-charms">juju “Application” charms</h2>
+
+<p>There are two types of juju charms used in this example:</p>
+
+<p>“Canned Charms”, like the
+<a href="http://github.com/mmm/juju-haproxy">haproxy charm</a>
+and the
+<a href="http://github.com/mmm/juju-mongodb">mongodb charm</a>,
+and “Application Charms”, like
+the <a href="http://github.com/mmm/juju-node-app">node.js app charm</a>.</p>
+
+<p>Canned charms can be used as-is right off the shelf.</p>
+
+<p>Application charms are used to manage your custom application
+as an juju service.  We haven’t nailed down the language on
+this, but these charms create a contained environment,
+“framework”, or “wrapper” around your custom application and
+help it to play nicely with other services.</p>
+
+<p>The 
+<a href="http://github.com/mmm/juju-node-app">node-app charm</a>
+we use here
+is meant to be an example that you can fork/adapt and use
+to maintain custom components of your infrastructure.</p>
+
+<h2 id="the-node-app-charm">The <code>node-app</code> charm</h2>
+
+<p>The <code>node-app</code> charm is the key feature we want to look at.
+It’s a charm that will pull your app from revision control
+and config/deploy/maintain it as a service within your
+infrastructure.</p>
+
+<p>Setup and clone this charm</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+~/charms$ git clone http://github.com/charms/node-app
+</code></pre>
+
+<p>and we’ll walk through it.</p>
+
+<pre><code>README.markdown
+config.yaml
+copyright
+metadata.yaml
+revision
+hooks/
+  install
+  mongodb-relation-changed
+  mongodb-relation-departed
+  mongodb-relation-joined
+  start
+  stop
+  website-relation-joined
+</code></pre>
+
+<p>We can see the usual <code>install</code>, <code>start</code>, and <code>stop</code> hooks for the
+node.js service, along with a couple of other hooks for relating to
+other services.</p>
+
+<p>Before we go into this in detail, let’s take a little sidebar on
+the Node.js app we’ll be deploying…</p>
+
+<h3 id="example-nodejs-app">Example node.js app</h3>
+
+<p>The example app I’m using for this</p>
+
+<pre><code>http://github.com/mmm/testnode
+</code></pre>
+
+<p>just logs page hits in mongo and reports results.</p>
+
+<p>As usual, I have absolutely no graphic design gifts so things look a little
+bare-bones.  Don’t let that fool you… it’s quite easy to dress this up
+with some svg maps and some client-side js a la topfunky’s (peepcode.com)
+node examples.</p>
+
+<p>This is a really basic node app that…</p>
+
+<p>Reads config info</p>
+
+<pre><code>var config = require('./config/config'),
+    mongo = require('mongodb'),
+    http = require('http');
+</code></pre>
+
+<p>from a file <code>config/config.js</code></p>
+
+<pre><code>module.exports = config = {
+   "name" : "mynodeapp"
+  ,"listen_port" : 8000
+  ,"mongo_host" : "localhost"
+  ,"mongo_port" : 27017
+}
+</code></pre>
+
+<p>attaches to the mongo instance specified in the config file</p>
+
+<pre><code>var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+</code></pre>
+
+<p>spins up a webservice</p>
+
+<pre><code>var server = http.createServer(function (request, response) {
+
+  var url = require('url').parse(request.url);
+
+  if(url.pathname === '/hits') {
+    show_log(request, response);
+  } else {
+    track_hit(request, response);
+  }
+
+});
+server.listen(config.listen_port);
+</code></pre>
+
+<p>and handles requests.</p>
+
+<p>The entire app would look something like</p>
+
+<pre><code>//require.paths.unshift(__dirname + '/lib');
+//require.paths.unshift(__dirname);
+
+var config = require('./config/config'),
+    mongo = require('mongodb'),
+    http = require('http');
+
+var show_log = function(request, response){
+  var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+  db.addListener("error", function(error) { console.log("Error connecting to mongo"); });
+  db.open(function(err, db){
+    db.collection('addresses', function(err, collection){
+      collection.find({}, {limit:10, sort:[['_id','desc']]}, function(err, cursor){
+        cursor.toArray(function(err, items){
+          response.writeHead(200, {'Content-Type': 'text/plain'});
+          for(i=0; i&lt;items.length;i++){
+            response.write(JSON.stringify(items[i]) + "\n");
+          }
+          response.end();
+        });
+      });
+    });
+  });
+}
+
+var track_hit = function(request, response){
+  var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+  db.addListener("error", function(error) { console.log("Error connecting to mongo"); });
+  db.open(function(err, db){
+    db.collection('addresses', function(err, collection){
+      var address = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+      hit_record = { 'client': address,'ts': new Date() };
+
+      collection.insert( hit_record, {safe:true}, function(err){
+        if(err) { 
+          console.log(err.stack);
+        }
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.write(JSON.stringify(hit_record));
+        response.end("Tracked hit from " + address + "\n");
+      });
+    });
+  });
+}
+
+var server = http.createServer(function (request, response) {
+
+  var url = require('url').parse(request.url);
+
+  if(url.pathname === '/hits') {
+    show_log(request, response);
+  } else {
+    track_hit(request, response);
+  }
+
+});
+server.listen(config.listen_port);
+
+console.log("Server running at http://0.0.0.0:" + config.listen_port + "/");
+</code></pre>
+
+<p>We won’t get into my node.js skillz at the moment… 
+it’s a deployment example.</p>
+
+<p>I’ve also got a <code>package.json</code> in there to let <code>npm</code> resolve
+some example dependencies upon install.</p>
+
+<p>Now, there’s no standard way to handle configuration in node
+apps, so it’s quite likely your app’s config looks a bit 
+different.  No problem, it’s pretty straightforward to adapt
+this example charm to handle the way your app works…
+and use your own config file paths, and config parameter names.</p>
+
+<p>End-of-sidebar… Back to the <code>node-app</code> charm.</p>
+
+<h3 id="hooks">Hooks</h3>
+
+<p>Let’s go through the hooks as they would be executing during
+deployment and service relation.</p>
+
+<p>The <code>install</code> hook is kicked off upon deployment,
+reads its config from <code>config.yaml</code> and then will</p>
+
+<ul>
+  <li>install <code>node</code>/<code>npm</code></li>
+  <li>clone your node app from the repo specified in <code>app_repo</code></li>
+  <li>run <code>npm</code> if your app contains <code>package.json</code></li>
+  <li>configure networking if your app contains <code>config/config.js</code></li>
+  <li>create a startup service for your app</li>
+  <li>wait to startup once we’re joined to a <code>mongodb</code> service</li>
+</ul>
+
+<p><code>start</code> and <code>stop</code> are trivial in this charm because
+we want to wait for mongo to join before we actually run
+the app.  If your app was simpler and didn’t depend on
+a backing store, then you could use these hooks to
+manage the service created during installation.</p>
+
+<h3 id="mongodb">MongoDB</h3>
+
+<p>The key to almost every charm is in the relation hooks.</p>
+
+<p>This particular app is written against mongodb
+so the app’s charm has hooks that get fired when
+the “app” service is related to the mongo service.</p>
+
+<p>This relation was defined when we did</p>
+
+<pre><code>$ juju add-relation mongodb myapp
+</code></pre>
+
+<p>and the <code>relation-joined/changed</code> hooks
+get fired after the <code>install</code> and <code>start</code>
+hooks have successfully completed for both
+ends of the relationship.</p>
+
+<p>The <code>mongodb-relation-changed</code> hook in this charm
+will read config from <code>config.yaml</code></p>
+
+<ul>
+  <li>get relation info from the mongo service (i.e., hostname)</li>
+  <li>configure the app to use that host for mongo connections</li>
+  <li>start the node app service we created during <code>install</code></li>
+</ul>
+
+<p>That’s it really… our app is up and running at this
+point.</p>
+
+<p>Note that the example here depends on mongo,
+but juju makes it easy to relate to some other backend db.
+Just like we have <code>mongodb-relation-changed</code> hooks, we
+could just as easily have <code>cassandra-relation-changed</code> hooks
+that would look strikingly similar.  Of course, our app would
+have to be written in such a way that it could use either,
+but that’s another topic.  The deployment tool supports
+the choice being made dynamically when relations are joined.
+I’d say “at deployment time” but it’s even better than that
+because I can remove relations and add other ones at 
+any time throughout the lifetime of the service… and the
+correct hooks get called.</p>
+
+<h3 id="haproxy">HAProxy</h3>
+
+<p>For this example, I’d like to use haproxy to load balance</p>
+
+<p>This example stack uses haproxy to handle initial
+web requests from outside.  haproxy will load balance
+across multiple instances of our app.  That way we
+could just attach an elastic ip to haproxy, configure
+dns, and we’re cruising 
+(of course we’re leaving out
+plenty of infrastructure aspects like 
+monitoring/logging/backups/etc that are
+pretty important for a production deployment
+in the cloud).</p>
+
+<p>The app charm has
+hooks that get fired when
+the “app” service is related to the haproxy service.
+Just as above, this relation was defined when we did</p>
+
+<pre><code>$ juju add-relation haproxy myapp
+</code></pre>
+
+<p>and the <code>relation-joined/changed</code> hooks
+get fired after the <code>install</code> and <code>start</code>
+hooks have successfully completed for both
+ends of the relationship.</p>
+
+<p>The <code>website-relation-changed</code> hook in this charm
+in its entirety:</p>
+
+<pre><code>#!/bin/sh
+ 
+app_port=`config-get app_port`
+relation-set port=$app_port hostname=`hostname -f`
+</code></pre>
+
+<p>simply tells the haproxy service which 
+address and port our application uses to handle
+requests.</p>
+
+<p>We could of course configure our app to listen on port
+80, tell the charm to open port 80 in its firewall,
+and then expose port 80 for our app service to the
+outside world.  That’d be fine if we never needed to
+scale or we were planning to load balance multiple
+units of our app using dns, elastic load balancer instances,
+or something else external.</p>
+
+<p>Again, note that the example here uses haproxy, but
+we could easily swap that out with any other service
+that consumed the juju <code>http</code> interface.</p>
+
+<h3 id="charm-configuration">Charm configuration</h3>
+
+<p>Ok, so I lied a little up above when I said that the hooks
+read config info from <code>config.yaml</code>.  Yes, they do read config
+information from there, but that’s not the whole story.
+The values of the configurable parameters can be set/overidden
+in a number of different ways throughout the lifecycle of
+the service.</p>
+
+<p>You can pass in dynamic configuration during deployment or later
+at runtime using the cli</p>
+
+<pre><code>`juju set &lt;service_name&gt; &lt;config_param&gt;=&lt;value&gt;`
+</code></pre>
+
+<p>or configure the charm at deployment time via a <code>yaml</code> file
+passed to the <code>juju deploy --config</code> command.</p>
+
+<h3 id="scaling-tips">Scaling tips</h3>
+
+<p>Scaling with juju works really well.  The key
+to this lies in the boundaries between
+configuration for the service itself, versus configuration for
+the service <em>in the context of</em> a relation with another service.</p>
+
+<p>When these two types of configuration are well isolated,
+scaling with juju just works.  I’ve caught myself several
+times working on just getting a service charm working, with
+no real thought to scalability, and being pleasantly surprised
+to find out that the service pretty much scales as written.</p>
+
+<p>The best way to grok this is to walk through the process
+of joining your relations as single unit services…</p>
+
+<p>In our example,</p>
+
+<pre><code>haproxy &lt;-&gt; myapp &lt;-&gt; mongodb
+</code></pre>
+
+<p>containers for each service get instantiated, then the <code>install</code>
+and <code>start</code> hooks are run for each service.  Once both sides
+of relations are <code>started</code> then the relation hooks get called:
+<code>joined</code> and then usually several rounds of <code>changed</code> depending
+on the relation parameters being set.  Once these are complete,
+the services are up, related, and running.</p>
+
+<p>Ok, now comes scaling.  <code>juju add-unit myapp</code> adds a new
+<code>myapp</code> service node and goes through the whole cycle above.
+The “services” are already related, so the relation hooks are
+automatically fired as each new unit is <code>started</code>.
+Since we divided up
+the installation/configuration/setup/startup of the service
+into the parts that are specific to the service and parts that
+are specific to the relation with another service, then each
+new unit runs “just enough” configuration to join it to the
+cluster.</p>
+
+<p>Not all tools can be configured like that, but that’s the key
+to strive for when writing relation hooks.
+Identify the components of your application
+configuration that really depend on another service, and 
+isolate them as much as possible.
+Only configure 
+relation-specific things in the relation hooks.
+The more minimal the relation hooks,
+the more scalable the service.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia]]></title>
+    <link href="http://mmm.github.io/cloud/2011/09/03/terasort-ganglia.html"/>
+    <updated>2011-09-03T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2011/09/03/terasort-ganglia</id>
+    <content type="html"><![CDATA[<p>Here I’m using new features of
+<a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
+(namely <a href="http://juju.ubuntu.com">juju</a>)
+to easily deploy
+<a href="http://ganglia.sourceforge.net">Ganglia</a>
+alongside
+a small <a href="http://hadoop.apache.org">Hadoop</a> cluster
+to play around with monitoring some
+<a href="http://sortbenchmark.org/">benchmarks</a>
+like
+<a href="http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/">Terasort</a>.</p>
+
+<!--more-->
+
+<hr />
+
+<p><em>Updated on 2011-11-08:</em>
+The ubuntu project “ensemble” is now known as “juju”.
+This post has been updated to reflect the new names and updates to the api.</p>
+
+<hr />
+
+<h2 id="short-story">Short Story</h2>
+
+<p>Deploy hadoop and ganglia using juju:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository "~/charms"  local:hadoop-master namenode
+$ juju deploy --repository "~/charms"  local:ganglia jobmonitor
+$ juju deploy --repository "~/charms"  local:hadoop-slave datacluster
+$ juju add-relation namenode datacluster
+$ juju add-relation jobmonitor datacluster
+$ for i in {1..6}; do
+$   juju add-unit datacluster
+$ done
+$ juju expose jobmonitor
+</code></pre>
+
+<p>When all is said and done (and EC2 has caught up),
+run the jobs</p>
+
+<pre><code>$ juju ssh namenode/0
+ubuntu$ sudo -su hdfs
+hdfs$ hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 100000000 in_dir
+hdfs$ hadoop jar hadoop-*-examples.jar terasort -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 in_dir out_dir
+</code></pre>
+
+<p>While these are running, we can run</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>to get the URL for the jobmonitor ganglia web frontend</p>
+
+<pre><code>http://&lt;jobmonitor-instance-ec2-url&gt;/ganglia/
+</code></pre>
+
+<p>and see…</p>
+
+<p><a href="http://mmm.github.io/images/terasort-ganglia-1.png">
+<img src="http://mmm.github.io/images/terasort-ganglia-1.png" width="720px" />
+</a></p>
+
+<p>and a little later as the jobs run…</p>
+
+<p><a href="http://mmm.github.io/images/terasort-ganglia-2.png">
+<img src="http://mmm.github.io/images/terasort-ganglia-2.png" width="720px" />
+</a></p>
+
+<p>Of course, I’m just playing around with ganglia at the moment…
+For real performance, I’d change my juju config file
+to choose larger (and ephemeral) EC2 instances instead of
+the defaults.</p>
+
+<h2 id="a-few-details">A Few Details…</h2>
+
+<p>Let’s grab the charms necessary to reproduce this.</p>
+
+<p>First, let’s install juju and set up a our charms.</p>
+
+<pre><code>$ sudo apt-get install juju charm-tools
+</code></pre>
+
+<p>Note that I’m describing all this using an Ubuntu laptop to run
+the juju cli because that’s how I roll, but you can certainly
+use a Mac to drive your Ubuntu services in the cloud.
+The juju CLI is already available in ports, but I’m not sure
+the version.  Homebrew packages are in the works.
+Windows should work too, but I don’t have a clue.</p>
+
+<pre><code>$ mkdir -p ~/charms/oneiric
+$ cd ~/charms/oneiric
+$ charm get hadoop-master
+$ charm get hadoop-slave
+$ charm get ganglia
+</code></pre>
+
+<p>That’s about all that’s really necessary to get you up and
+benchmarking/monitoring.</p>
+
+<p>I’ll do another post on how to adapt your own charms to use monitoring
+and the <code>monitor</code> juju interface as part of the “Core Infrastructure”
+series I’m writing for charm developers.  I’ll go over the process of
+what I had to do to get the <code>hadoop-slave</code> service talking to monitoring
+services like <code>ganglia</code>.</p>
+
+<p>Until then, clone/test/enjoy… or better yet, fork/adapt/use!</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Core Infrastructure Part 1 - Adding NFS to juju charms]]></title>
+    <link href="http://mmm.github.io/cloud/2011/08/25/juju-nfs.html"/>
+    <updated>2011-08-25T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2011/08/25/juju-nfs</id>
+    <content type="html"><![CDATA[<p>Several features have recently landed in juju that make 
+it easier to convert some common infrastructure-level components 
+over and use them within your stack of services.
+I figured it’s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc…  and how they
+fit into the juju ecosystem.</p>
+
+<p>We’ll start with NFS.  I’d consider that vanilla workhorse to be
+core infrastructure technology… it’s still pretty much everywhere you
+look.  Many friends keep ancient boxes around as dedicated NFS 
+fileserver appliances that are usually in fairly critical roles.
+Well, how would this fit into a sexy new juju stack of services?</p>
+
+<!--more-->
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>In this post I’ll walk through adapting a basic mediawiki
+charm to enable using nfs mounts for shared resource directories.
+The steps here should work pretty closely for a lot of different
+service charms that might benefit from a NFS hooks.</p>
+
+<p>At the end of the day, an example stack might look something like </p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<p>which will result in a mediawiki setup with <code>images</code>
+stored on an nfs server.</p>
+
+<p>As expected,</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>will scale mediawiki instances.</p>
+
+<p>Since the <code>mywiki</code>
+service is related to the <code>myimages</code> service,
+then all <code>mywiki</code> instances will share the same
+resource directory on the nfs server.  This works
+months into the deployment… we add another unit
+and the relation hooks perform the mount.</p>
+
+<p>The nfs server charm is pretty canned, it’ll take 
+config options, but has sane defaults.  There’s 
+little need to adjust anything in there.</p>
+
+<p>To adapt your charm to use a juju-managed
+NFS service, we copy two hooks from an nfs-client
+example charm and adapt to suit the needs of
+the charm we’re working on (mediawiki in this
+example).</p>
+
+<h2 id="detailed-walk-through">Detailed walk-through</h2>
+
+<p>Let’s go through this process of adapting our charms
+to use NFS mounts.</p>
+
+<h3 id="the-problem">The Problem</h3>
+
+<p>Start with a simple mediawiki deploy,</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju expose mywiki
+</code></pre>
+
+<p>With juju, it’s easy to spin up multiple mediawiki
+instances (or “service units” in juju-speak).</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>Now, since the <code>mywiki</code> service is related to the <code>mysql</code> service,
+then all these mywiki units share the same database and hence
+content.  Groovy.</p>
+
+<p>Ok, well there’s a problem.  Each wiki instance has its
+own filesystem-store for various things… images, uploads, etc.
+This is pretty common practice across different CMSes that
+results in scaling pain.
+The content in the database will point to resources that
+only exist on one of the instances.</p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p>A common solution to this
+is to just put these resource directories on a fileserver and
+share them out to each of the wiki instances using NFS.</p>
+
+<p>This, of course, isn’t limited to content management
+systems.  Just about every infrastructure has some sort of need
+for shared storage.</p>
+
+<p>Ubuntu packages for mediawiki install mediawiki’s resource
+directories with respect to <code>/var/lib/mediawiki/</code>.
+So let’s just set adapt the basic mediawiki charm to use
+an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
+
+<p>Each mediawiki
+service unit has a <code>/var/lib/mediawiki/images</code> directory
+that points to 
+up multiple mediawiki instances, they’ll all share the
+same <code>images</code> directory.</p>
+
+<h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
+
+<p>Let’s grab some code and get cranking…</p>
+
+<p>First, pull mediawiki as an example (or any charm you’re
+currently working on that might need shared storage)</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+$ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
+</code></pre>
+
+<p>This gives us</p>
+
+<pre><code>/home/mmm/charms/mediawiki
+|-- copyright
+|-- hooks
+|   |-- ...
+|   |-- db-relation-changed
+|   |-- install
+|   |-- start
+|   |-- stop
+|   |-- website-relation-changed
+|   |-- website-relation-joined
+|   `-- ...
+|-- metadata.yaml
+`-- revision
+</code></pre>
+
+<p>a bare mediawiki charm that we can use as a starting
+point to add our nfs client hooks.
+Note that even though this is an ‘nfsdemo’ branch just for this demo, 
+the real mediawiki charm should now have nfs support in the trunk.</p>
+
+<p>Now, we can copy sample nfs client hooks from</p>
+
+<pre><code>http://bazaar.launchpad.net/~mark-mims/+junk/principia-nfs-client/files/head:/hooks/
+</code></pre>
+
+<p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
+and save them as mediawiki hooks… I’d rename them to something
+that makes sense to future readers of our mediawiki charm.
+Let’s call them <code>nfs-imagestore-relation-joined</code> and 
+<code>nfs-imagestore-relation-changed</code>.</p>
+
+<h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
+
+<p>Let’s look at the
+<code>nfs-imagestore-relation-joined</code> hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+apt-get install -y nfs-common
+
+sed -i -e "s/NEED_IDMAPD.*/NEED_IDMAPD=yes/" /etc/default/nfs-common
+service idmapd restart || service idmapd start
+
+relation-set client=`hostname -f`
+</code></pre>
+
+<p>This looks pretty normal.
+It installs some stuff nfs stuff when the relation is joined…
+this is good it doesn’t really install it until it’s needed.
+Then it tells the nfs server who we are for access control.
+Ok, so no changes need to be made to get this working
+on our mediawiki service unit… we can leave it as-is.</p>
+
+<p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>Ok, when parameters used within charm hooks are likely to change
+from one service deployment to the next, they can be externalized
+into a <code>config.yaml</code> for the charm.  This also allows you to
+pass them in at deploy-time or change them throughout the lifetime
+of the service using juju cli <code>--config</code> options and <code>set</code>
+commands.  See the <a href="http://juju.ubuntu.com/docs/">juju docs</a> for
+how to do all of this.</p>
+
+<p>There are two parameters in the <code>nfs-imagestore-relation-changed</code>
+hook that are set using <code>config-get</code>:</p>
+
+<pre><code>local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+</code></pre>
+
+<p>Well, for mediawiki
+these parameters aren’t really going to change.  It’s reasonable
+to just hard-code them here as:</p>
+
+<pre><code>mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+</code></pre>
+
+<p>We could certainly just add these parameters to a <code>config.yaml</code>
+for the mediawiki charm, but in this case, they’re not really
+interesting “tweakable” aspects of the mediawiki charm, so let’s
+keep the mediawiki config simple.
+For other charms this might not be the case,
+but make that call in context.</p>
+
+<p>Now, at this point, our version of the <code>nfs-imagestore-relation-changed</code>
+hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>will run fine.  It’ll mount the <code>images</code> share and mediawiki
+will run normally.</p>
+
+<h3 id="additional-configuration">Additional configuration</h3>
+
+<p>This next step depends greatly on your particular charm/service.
+With mediawiki, the <code>images</code> directory isn’t really used until
+you tell mediawiki to turn on uploads.  This is true regardless
+of whether <code>images</code> is an nfs mount or you’re just using the
+directory on the local filesystem.</p>
+
+<p>The time to do this though is after the <code>images</code> share is mounted, 
+so putting it in the <code>nfs-imagestore-relation-changed</code> hook after
+the mount is a good place for it.</p>
+
+<pre><code>juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>So we end up with</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+
+juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>the same hook that’s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+
+<h3 id="update-charm-metadata">Update charm metadata</h3>
+
+<p>So we have hooks that should do what we’d like… 
+(I’ll developing and debugging hooks in another post).
+Next we need to update the charm metadata so juju
+knows when to fire them.</p>
+
+<p>My <code>mediawiki/metadata.yaml</code> currently looks like</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>let’s add our nfs requirement (<em>requirement</em> is a strong word… they’re
+all optional),</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+  nfs-imagestore:
+    interface: mount
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>The relation name’s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm’s metadata:</p>
+
+<pre><code>...
+provides:
+  nfs:
+    interface: mount
+...
+</code></pre>
+
+<p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
+
+<p>We can use the interface as a sanity check to insure we’re providing
+and using the right parameters when communicating with the nfs server
+service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
+
+<h3 id="spin-it-up">Spin it up</h3>
+
+<p>Let’s deploy our new charm:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<h3 id="spread-it-out">Spread it out</h3>
+
+<p>Add a few more mediawiki instances…</p>
+
+<pre><code>$ for i in {1..10}; do
+$ juju add-unit mywiki
+$ done
+</code></pre>
+
+<p>When everything’s up, these should all share the same database
+and image store.</p>
+
+<p>In real life you’d probably want to start adding mysql slaves
+to this.  Of course, in real life you’ll also add remote logging,
+monitoring, and other core infrastructure components too.
+Keep an eye out for subsequent posts in this series.</p>
+
+<h3 id="nfs-server-config">NFS server config</h3>
+
+<p>Up until now we’ve only talked about the NFS client.
+The NFS <em>server</em> charm is pretty simple.</p>
+
+<p>It lives at
+<a href="http://bazaar.launchpad.net/~juju-composers/principia/oneiric/nfs/trunk/files">lp:principia/nfs</a>
+and supports configuration options at deploy(or run)-time via</p>
+
+<pre><code>$ juju deploy --repository . --config ./mydata.yaml local:nfs mydata
+</code></pre>
+
+<p>where <code>mydata.yaml</code> looks like</p>
+
+<pre><code>mydata:
+  initial_daemon_count: 43
+  storage_root: /srv/mydata
+  export_options: rw,sync,no_root_squash,no_all_squash
+</code></pre>
+
+<h3 id="whats-left">What’s left?</h3>
+
+<p>This might not be an ideal NFS setup for your particular service.
+What are some other ways we can tweak this?</p>
+
+<p>Currently, the nfs server creates a separate share for each named service
+that attaches to it.</p>
+
+<p>We deployed mediawiki as <code>mywiki</code>, so all <code>mywiki</code> service units would
+share an export.  Well, you could deploy another mediawiki service unit
+called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
+share a different export.  The new export is created on the service when
+the first unit of a new service name joins… subsequent units of that named
+service are just connected to that new export.</p>
+
+<p>Of course, this works for entirely separate services too.  Relating a 
+<code>hadoop-master</code> service named <code>job27</code> to that same nfs service would result in 
+the <code>job27</code> units sharing a new nfs export.</p>
+
+<p>This behavior is a reasonable default, but there may be a need to do this a 
+little differently in your infrastructure.  You could change the nfs server
+charm to provide different levels of export sharing… either by some
+additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
+An nfs client might request a unique export, for backups
+say, or a named export for sharing.</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>I work on the Ubuntu juju project for Canonical.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PreSonus FireBox in Ubuntu]]></title>
+    <link href="http://mmm.github.io/howtos/2011/08/17/presonus-firebox.html"/>
+    <updated>2011-08-17T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/08/17/presonus-firebox</id>
+    <content type="html"><![CDATA[<p>Just some notes to myself for later.</p>
+
+<p>I want a little better sounding audio on screencasts so I dusted off
+the firewire soundcard I got a few years ago for recording bass tracks.</p>
+
+<p>This model 
+<a href="http://www.amazon.com/PreSonus-FireBox-Firewire-Recording-Interface/dp/B0006VYH1Q/ref=sr_1_17?s=musical-instruments&amp;ie=UTF8&amp;qid=1313592982&amp;sr=1-17">FireBox 24-bit/96kHz</a>
+from <a href="http://www.presonus.com/">PreSonus</a> 
+worked great for me on audio production stuff several years
+ago, but at the time I could give jackd and friends a realtime kernel
+to have their way with.</p>
+
+<p>Now, I don’t really have the spare hardware to dedicate to a RT audio setup…<br />
+gotta run several ubuntu server VMs for work and can’t really hand the whole
+shebang over to jack every time I wanna record something.</p>
+
+<p>Here’s my attempt to do it without realtime priorities…
+I’ll track my progress here.</p>
+
+<!--more-->
+
+<h2 id="the-quick-and-the-dirty">The quick and the dirty…</h2>
+
+<p>Starting from a Natty desktop.</p>
+
+<p>install jack</p>
+
+<pre><code># apt-get install jackd
+</code></pre>
+
+<p>when the installer asks to do realtime by default, I said no.</p>
+
+<p>Note that I installed <code>ffado-mixer-qt4 ffado-tools ffado-dbus-server</code>
+earlier trying to get this to work with pulse, without jack… but gave up.
+I don’t know if these packages effect the current setup, but they’re still
+installed</p>
+
+<p>start the jack daemon… </p>
+
+<pre><code>$ jackd -r -dfirewire
+</code></pre>
+
+<p>Connect to jackd</p>
+
+<pre><code>$ qjackctl 
+</code></pre>
+
+<p>(in the foreground so I could watch messages)</p>
+
+<p>Install something like <code>Ardour</code></p>
+
+<pre><code># apt-get install ardour
+</code></pre>
+
+<p>and wire stuff together with the qjackctl patchpanel,
+start <code>jackd</code> and go.</p>
+
+<p>I used to use a better jack patch panel in the past… have to find it.</p>
+
+<h2 id="resources">resources</h2>
+
+<pre><code>http://wiki.jon.geek.nz/index.php/Presonus_Firebox
+http://ubuntuforums.org/showthread.php?t=835477
+http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digital-Audio-Workstation
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git-create new github repos]]></title>
+    <link href="http://mmm.github.io/howtos/2011/07/27/create-github-repos.html"/>
+    <updated>2011-07-27T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/07/27/create-github-repos</id>
+    <content type="html"><![CDATA[<p>Ok, I’m too lazy to go through the web interface every time I want to add a new github repo.
+github api to the rescue…</p>
+
+<h2 id="the-goal">The goal</h2>
+
+<p>I want</p>
+
+<pre><code>git create myrepo "my repo description"
+</code></pre>
+
+<p>to create a new github repo ‘myrepo’.</p>
+
+<!--more-->
+
+<h2 id="manually">manually</h2>
+
+<p>Grab your API Token from your github account, “Account Settings” – “Account Admin”.</p>
+
+<p>Use curl</p>
+
+<pre><code>curl -u "mmm/token:XXXXXXXX" https://github.com/api/v2/json/user/show/mmm | jsonpretty
+
+curl -X POST -u "mmm/token:XXXXXXXX" https://github.com/api/v2/json/repos/create -d "name=junk2&amp;description=morejunk2"
+</code></pre>
+
+<p>or the same thing using restclient (<code>sudo gem install rest-client</code>):</p>
+
+<pre><code>restclient get https://github.com/api/v2/json/user/show/mmm mmm token:XXXXXXXX | jsonpretty 
+
+echo '{"name":"junk3","description":"junk3 description"}' | restclient post https://github.com/api/v2/json/repos/create mmm token:XXXXXXXX
+</code></pre>
+
+<p>Github docs say you should send at least <code>name</code> but it will take any of these as POST args:</p>
+
+<ul>
+  <li><code>name</code> =&gt; name of the repository. ex: “my-repo” or “other-user/my-repo” </li>
+  <li><code>description</code> =&gt; repo description </li>
+  <li><code>homepage</code> =&gt; homepage url </li>
+  <li><code>public</code> =&gt; 1 for public, 0 for private</li>
+</ul>
+
+<h2 id="monkeypatch-git">monkeypatch git</h2>
+
+<p>I’ll use a script…</p>
+
+<pre><code>#!/usr/bin/ruby
+
+require 'rubygems'
+require 'json'
+require 'rest-client'
+
+USER = "mmm"
+TOKEN = "XXXXXXXX"
+URL = "https://github.com/api/v2/json/repos/create"
+
+def usage 
+  puts &lt;&lt;-EOS
+    usage: #{$0} &lt;name&gt; [&lt;description&gt;] [&lt;homepage&gt;] [&lt;public&gt;]
+    where:
+      name =&gt; name of the repository
+      description =&gt; repo description
+      homepage =&gt; homepage url
+      public =&gt; 1 for public, 0 for private
+  EOS
+  exit 1
+end
+ARGV.size &gt; 0 || usage
+
+params = {
+  "login" =&gt; USER,
+  "token" =&gt; TOKEN,
+  "name" =&gt; ARGV[0],
+  "description" =&gt; ARGV[1] || "",
+  "homepage" =&gt; ARGV[2] || "",
+  "public" =&gt; ARGV[3] || "1",
+}
+
+puts "creating repo: #{params.to_json}"
+
+response = RestClient.post URL, params
+
+puts response.body
+</code></pre>
+
+<p>I’ll call it <code>git-create</code> and put it in my path at <code>~/bin</code>.
+Notice that git even picks it up as a builtin so I can</p>
+
+<pre><code>git create myrepo "my repo description"
+</code></pre>
+
+<p>and it just works…</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Painless Hadoop / Ubuntu / EC2]]></title>
+    <link href="http://mmm.github.io/cloud/2011/07/12/hadoop-on-ubuntu.html"/>
+    <updated>2011-07-12T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/cloud/2011/07/12/hadoop-on-ubuntu</id>
+    <content type="html"><![CDATA[<p>Thanks Michael Noll for the posts where I first learned how to do this stuff:</p>
+
+<ul>
+  <li><a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/">Running Hadoop on Ubuntu Linux (Single-Node Cluster)</a></li>
+  <li><a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/">Running Hadoop on Ubuntu Linux (Multi-Node Cluster)</a></li>
+</ul>
+
+<p>I’d like to run his exact examples, but this time around I’ll use 
+<a href="http://juju.ubuntu.com/">juju</a> for hadoop deployment/management.</p>
+
+<!--more-->
+
+<hr />
+
+<p><em>Updated on 2011-11-08:</em>
+The ubuntu project “ensemble” is now known as “juju”.
+This post has been updated to reflect the new names and updates to the api.</p>
+
+<hr />
+
+<h2 id="the-short-story">The Short Story</h2>
+
+<h3 id="setup">Setup</h3>
+
+<p>install/configure juju client tools</p>
+
+<pre><code>$ sudo apt-get install juju charm-tools
+$ mkdir ~/charms &amp;&amp; charm getall ~/charms
+</code></pre>
+
+<p>run hadoop services with juju</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository ~/charms local:hadoop-master namenode
+$ juju deploy --repository ~/charms local:hadoop-slave datanodes
+$ juju add-relation namenode datanodes
+</code></pre>
+
+<p>optionally add datanodes to scale horizontally</p>
+
+<pre><code>$ juju add-unit datanodes
+$ juju add-unit datanodes
+$ juju add-unit datanodes
+</code></pre>
+
+<p>(you can add/remove these later too)</p>
+
+<p>Scaling is so easy there’s no point in separate standalone -vs- multinode 
+versions of the setup.</p>
+
+<h3 id="data-and-jobs">Data and Jobs</h3>
+
+<p>Load your data and jars</p>
+
+<pre><code>$ juju ssh namenode/0
+
+ubuntu$ sudo -su hdfs
+
+hdfs$ cd /tmp
+hdfs$ wget http://files.markmims.com/gutenberg.tar.bz2
+hdfs$ tar xjvf gutenberg.tar.bz2
+</code></pre>
+
+<p>copy the data into hdfs</p>
+
+<pre><code>hdfs$ hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
+</code></pre>
+
+<p>run mapreduce jobs against the dataset</p>
+
+<pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount -Dmapred.map.tasks=20 -Dmapred.reduce.tasks=20 gutenberg gutenberg-output
+</code></pre>
+
+<p>That’s it!</p>
+
+<hr />
+
+<p>Now, again with some more details…</p>
+
+<h2 id="installing-juju">Installing juju</h2>
+
+<p>Install juju client tools onto your local machine…</p>
+
+<pre><code># sudo apt-get install juju charm-tools
+</code></pre>
+
+<p>We’ve got the juju CLI in ports now too for Mac clients
+(Homebrew is in progress).</p>
+
+<p>Now generate your environment settings with</p>
+
+<pre><code>$ juju
+</code></pre>
+
+<p>and then edit <code>~/.juju/environments.yaml</code> to use your EC2 keys.
+It’ll look something like:</p>
+
+<pre><code>environments:
+  sample:
+    type: ec2
+    control-bucket: juju-&lt;hash&gt;
+    admin-secret: &lt;hash&gt;
+    access-key: &lt;your ec2 access key&gt;
+    secret-key: &lt;your ec2 secret key&gt;
+    default-series: oneiric
+</code></pre>
+
+<p>In real life you’d probably want to specify <code>default-image-type</code> to at least <code>m1.large</code> too,
+but I’ll give some examples of that in later posts.</p>
+
+<h2 id="hadoop">Hadoop</h2>
+
+<h3 id="grab-the-juju-charms">Grab the juju charms</h3>
+
+<p>Make a place for charms to live</p>
+
+<pre><code>$ mkdir charms/oneiric
+$ cd charms/oneiric
+$ charm get hadoop-master
+$ charm get hadoop-slave
+</code></pre>
+
+<p>(optionally, you can <code>charm getall</code> but it’ll take a bit to pull all charms).</p>
+
+<h3 id="start-the-hadoop-services">Start the Hadoop Services</h3>
+
+<p>Spin up a juju environment</p>
+
+<pre><code>$ juju bootstrap
+</code></pre>
+
+<p>wait a minute or two for EC2 to comply.
+You’re welcome to watch the water boil with</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>or even </p>
+
+<pre><code>$ watch -n30 juju status
+</code></pre>
+
+<p>which’ll give you output like</p>
+
+<pre><code>$ juju status
+2011-07-12 15:20:54,978 INFO Connecting to environment.
+The authenticity of host 'ec2-50-17-28-19.compute-1.amazonaws.com (50.17.28.19)' can't be established.
+RSA key fingerprint is c5:21:62:f0:ac:bd:9c:0f:99:59:12:ec:4d:41:48:c8.
+Are you sure you want to continue connecting (yes/no)? yes
+machines:
+  0: {dns-name: ec2-50-17-28-19.compute-1.amazonaws.com, instance-id: i-8bc034ea}
+services: {}
+2011-07-12 15:21:01,205 INFO 'status' command finished successfully
+</code></pre>
+
+<p>Next, you need to deploy the hadoop services:</p>
+
+<pre><code>$ juju deploy --repository ~/charms local:hadoop-master namenode
+$ juju deploy --repository ~/charms local:hadoop-slave datanodes
+</code></pre>
+
+<p>now you simply relate the two services:</p>
+
+<pre><code>$ juju add-relation namenode datanodes
+</code></pre>
+
+<p>Relations are where the juju special sauce is,
+but more about that in another post.</p>
+
+<p>You can tell everything’s happy when <code>juju status</code>
+gives you something like (looks a bit different, but basics are the same):</p>
+
+<pre><code>$ juju status
+2011-07-12 15:29:20,331 INFO Connecting to environment.
+machines:
+  0: {dns-name: ec2-50-17-28-19.compute-1.amazonaws.com, instance-id: i-8bc034ea}
+  1: {dns-name: ec2-50-17-0-68.compute-1.amazonaws.com, instance-id: i-4fcf3b2e}
+  2: {dns-name: ec2-75-101-249-123.compute-1.amazonaws.com, instance-id: i-35cf3b54}
+services:
+  namenode:
+    formula: local:hadoop-master-1
+    relations: {hadoop-master: datanodes}
+    units:
+      namenode/0:
+        machine: 1
+        relations:
+          hadoop-master: {state: up}
+        state: started
+  datanodes:
+    formula: local:hadoop-slave-1
+    relations: {hadoop-master: namenode}
+    units:
+      datanodes/0:
+        machine: 2
+        relations:
+          hadoop-master: {state: up}
+        state: started
+2011-07-12 15:29:23,685 INFO 'status' command finished successfully
+</code></pre>
+
+<h3 id="loading-data">Loading Data</h3>
+
+<p>Log into the master node</p>
+
+<pre><code>$ juju ssh namenode/0
+</code></pre>
+
+<p>and become the hdfs user</p>
+
+<pre><code>ubuntu$ sudo -su hdfs
+</code></pre>
+
+<p>pull the example data</p>
+
+<pre><code>hdfs$ cd /tmp
+hdfs$ wget http://files.markmims.com/gutenberg.tar.bz2
+hdfs$ tar xjvf gutenberg.tar.bz2
+</code></pre>
+
+<p>and copy it into hdfs</p>
+
+<pre><code>hdfs$ hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
+</code></pre>
+
+<h3 id="running-jobs">Running Jobs</h3>
+
+<p>Similar to above, but now do</p>
+
+<pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount gutenberg gutenberg-output
+</code></pre>
+
+<p>you might want to explicitly call out the number of jobs to use…</p>
+
+<pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount -Dmapred.map.tasks=20 -Dmapred.reduce.tasks=20 gutenberg gutenberg-output
+</code></pre>
+
+<p>depending on the size of the cluster you decide to spin up.</p>
+
+<p>You can look at logs on the slaves by</p>
+
+<pre><code>$ juju ssh datanodes/0
+ubuntu$ tail /var/log/hadoop/hadoop-hadoop-datanode*.log
+ubuntu$ tail /var/log/hadoop/hadoop-hadoop-tasktracker*.log
+</code></pre>
+
+<p>similarly for subsequent slave nodes if you’ve spun them up</p>
+
+<pre><code>$ juju ssh datanodes/1
+</code></pre>
+
+<p>or </p>
+
+<pre><code>$ juju ssh datanodes/2
+</code></pre>
+
+<h3 id="horizontal-scaling">Horizontal Scaling</h3>
+
+<p>To resize your cluster,</p>
+
+<pre><code>$ juju add-unit datanodes
+</code></pre>
+
+<p>or even</p>
+
+<pre><code>$ for i in {1..10}
+$ do
+$   juju add-unit datanodes
+$ done
+</code></pre>
+
+<p>Wait for <code>juju status</code> to show everything in a happy state and then run your jobs.</p>
+
+<p>I was able to add slave nodes in the middle of a run… they pick up load and crank.</p>
+
+<p>Check out the <code>juju status</code> output for a simple 10-slave cluster <a href="http://pastebin.com/FMF3TQEJ">here</a></p>
+
+]]></content>
+  </entry>
+  
+</feed>

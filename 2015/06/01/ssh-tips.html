@@ -1,0 +1,819 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>SSH Tips and Tricks - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="Notes from a lunch-and-learn talk. It’s a little weak without the narrative,
+but I’ll post it here for reference anyway. Agenda: config tunnels &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/2015/06/01/ssh-tips.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">SSH Tips and Tricks</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-01T16:00:00-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
+but I’ll post it here for reference anyway.</p>
+
+<p>Agenda:</p>
+
+<ul>
+  <li>config</li>
+  <li>tunnels
+    <ul>
+      <li>forward</li>
+      <li>reverse</li>
+    </ul>
+  </li>
+  <li>proxies</li>
+  <li>ssh + tmux = &lt;3
+    <ul>
+      <li>ssh, then tmux</li>
+      <li>tmux, then ssh</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- more -->
+
+<h2 id="why-ssh">Why SSH?</h2>
+
+<p>It’s common practice to secure a cluster of servers using a <code>bastion</code> host.
+This might be a cluster of servers in a colocation facility, containers on a
+single host, or instances in an <code>EC2</code> region… the pattern can still be applied.</p>
+
+<p>The way this works is that the servers in the cluster are all locked down and
+not accessible to the outside world except where necessary for the production
+network design of the pipeline or application.</p>
+
+<p>That’s all great for production network traffic.  However, there’s often a need
+for adhoc access: testing, debugging, monitoring, etc of the cluster.  This is
+usually access to information that’s required <em>in addition</em> to the existing
+monitoring and logging for the production pipeline.  Until automated management
+solutions involving immutable infrastructure components are widely adopted,
+you’ll almost always need the ability for an engineer to directly log into
+cluster instances to do things like clear <code>/tmp</code> directories, run jobs, etc.  </p>
+
+<p>You’ve also gotta routinely access various web consoles (ClouderaManager,
+spark, hdfs, etc) to debug functional or performance problems, to change
+config, or even just to do sanity checks on overall cluster health.</p>
+
+<p>How do you access all of this?  You can’t just expose them to the outside
+world.  None of these consoles were ever designed for that.  They’re rife with
+holes…  with often <em>huge</em> ramifications for any incursions!  On the other
+hand, it’s often quite difficult (and dangerous!) to add adhoc network access
+into production network planning.</p>
+
+<p>Two practices are common:</p>
+
+<ul>
+  <li>VPN access</li>
+  <li>SSH proxies and tunnels</li>
+</ul>
+
+<p>They each have pros/cons, tradeoffs between security, ease-of-use, flexibility,
+and capability.  VPN access is often ineffective due to its static nature and
+sensitivity to all manner of bad security practices.  It’s particularly
+pointless due to the random way different web consoles choose which interfaces
+they like to bind to.  That’s a whole other discussion… for this talk,
+suffice it to say that I highly recommend and infinitely prefer an SSH-based
+solution.  It’s worth traversing the learning curve of SSH for the sheer power
+and flexiblity it gives you without compromising security.</p>
+
+<hr />
+
+<h2 id="config-files">Config Files</h2>
+
+<p>In your home directory, there’s an optional <code>~/.ssh/config</code> file 
+where you can customize your local SSH client behavior.</p>
+
+<p>You can use this for simple aliases…</p>
+
+<pre><code>#################
+# MyBastions
+#################
+Host customerXbastion
+    Hostname ec2-xxx-xxx-xxx-xxx.compute-1.amazonaws.com
+Host customerYbastion
+    Hostname ec2-yyy-yyy-yyy-yyy.compute-1.amazonaws.com
+Host customerZbastion
+    Hostname ec2-zzz-zzz-zzz-zzz.compute-1.amazonaws.com 
+</code></pre>
+
+<p>or adding extra stuff that’s a pain to type <em>every</em> time</p>
+
+<pre><code>############
+# CustomerX
+############
+Host dev-control-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_control.pem
+Host dev-es-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_es.pem
+Host dev-hdp-*.customerX.com
+    User ubuntu
+    IdentityFile ~/projects/customerX/creds/dev_hdp.pem
+(etc)
+</code></pre>
+
+<p>notice the pattern entries?</p>
+
+<p>You can include tunnels (discussed below)</p>
+
+<pre><code>Host myserver
+    Hostname 10.2.3.4
+    LocalForward 7080 localhost:7080
+    LocalForward 8080 localhost:8080
+</code></pre>
+
+<p>or proxies (also discussed below)</p>
+
+<pre><code>#############
+# CustomerY
+#############
+Host customerYbastion
+    Hostname ec2-yyy-yyy-yyy-yyy.compute-1.amazonaws.com
+    User ubuntu
+    ProxyCommand none
+Host *.inside.customerY.com
+    User ubuntu
+    ProxyCommand ssh customerYbastion nc -q0 %h %p
+</code></pre>
+
+<p>Once you add multiple cluster configs and different customer environments,
+these SSH config files can get quite complex.  Here’re a couple of ways I’ve
+seen people manage that:</p>
+
+<ul>
+  <li>
+    <p>just manage one big <code>~/.ssh/config</code> file by hand and use <code>Host</code> names and
+comments to keep track of everything</p>
+  </li>
+  <li>
+    <p>explictly specify config files at the command line a la <code>ssh -F
+~/.ssh/customerX-config &lt;server&gt;</code>… maybe even use a shell alias to shorten
+this if you do it a lot</p>
+  </li>
+  <li>
+    <p>[what I currently do] scripts to glue multiple config snippets from
+<code>~/.ssh/config.d/customerX.conf</code> into a single big read-only <code>~/.ssh/config</code>.
+It’d be nice to eventually change the ssh client to optionally read from
+these kind of <code>~/.ssh/config.d/</code> and <code>~/.ssh/authorized_keys.d/</code> snippet
+directories</p>
+  </li>
+  <li>
+    <p>customer-specific containers… I actually work a lot from <em>inside</em> of
+containers on an ec2 instance.  I usually have them just bind-mount the
+underlying hosts home directory, but you could easily keep them isolated with
+separate config and spin them up only when you need overlay specific to a
+customer.  This also works even with gui apps on a laptop btw, but that’s a
+longer story :)</p>
+  </li>
+</ul>
+
+<p>It’s also pretty common for folks to write scripts using config management
+(juju, knife, or ClouderaManager-like APIs) to generate ssh config snippets
+from a running infrastructure.  This can be quite useful, but is still a static
+picture of a cluster that changes.  Depending on the lifetime or stability of
+the cluster, you’re often better off using a more dynamic approach like <code>knife
+ssh</code>.  It’s a no-win tradeoff of sharing static SSH config snippets -vs-
+configuring chef environments for everyone who needs to access the cluster.</p>
+
+<p>I’d love to hear other solutions folks have come up with to deal with this.  I
+have no clue what puppet offers here, and I bet there are great examples of
+ansible’s ec2 plugin that’ll be a dead-simple way to interact with a dynamic
+host inventory.  Perhaps that’s where I’ll head next… we’ll see.  Totally
+depends on customer environments.</p>
+
+<hr />
+
+<h2 id="proxies">Proxies</h2>
+
+<p>One server, a <code>bastion</code> host, accepts SSH traffic from the outside world.
+Remaining <code>target</code> hosts in the cluster are configured internal access only.</p>
+
+<p>Consider the following scenario using a <code>ProxyCommand</code>.</p>
+
+<p>Take an externally accessible <code>bastion</code> and an internally accessible <code>target</code>.
+Set up your SSH config so you can ssh directly to the <code>bastion</code> host</p>
+
+<pre><code>     +--------------------+         +-------------------+
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |    laptop          |         |      bastion      |
+     |                    |  ssh    |                   |
+     |                    +---------&gt;                   +
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     |                    |         |                   |
+     +--------------------+         +-------------------+
+</code></pre>
+
+<p>with a command like </p>
+
+<pre><code>     `ssh bastion`
+</code></pre>
+
+<p>Then you can ssh from there to a <code>target</code> host</p>
+
+<pre><code>                                    +-------------------+          +-------------------+
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |      bastion      |          |     target        |
+                                    |                   |  ssh     |                   |
+                                    |                   +----------&gt;                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    |                   |          |                   |
+                                    +-------------------+          +-------------------+
+
+
+                                    `ssh target`
+</code></pre>
+
+<p>The key bit here is that we can compress this to one step for the user.</p>
+
+<pre><code>     +--------------------+         +-------------------+       +-------------------+
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |    laptop          |         |      bastion      |       |      target       |
+     |                    |  ssh    |                   |  ssh  |                   |
+     |                    +---------&gt;                   +-------&gt;                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     |                    |         |                   |       |                   |
+     +--------------------+         +-------------------+       +-------------------+
+</code></pre>
+
+<p>From laptop’s <code>~/.ssh/config</code> file:</p>
+
+<pre><code>Host bastion
+    Hostname ec2-xxx.xxx.....amazon.com
+Host target
+    Hostname ip-10-xx-xx-xx.internal....amazon.com
+    ProxyCommand ssh bastion nc -q1 %h %p
+</code></pre>
+
+<p>then you can just <code>ssh target</code> directly from your laptop.  It automatically
+traverses the proxy <code>bastion</code> on your behalf.</p>
+
+<p>Note, that from an administrative perspective, it’s easy to control user access
+at the single <code>bastion</code>… if you can’t establish an ssh connection to the
+bastion, you can’t “jump through it” to internal hosts.</p>
+
+<hr />
+
+<h2 id="tunnels">Tunnels</h2>
+
+<p>SSH in general <em>is</em> a tunnel</p>
+
+<pre><code>        +-----------------------+                             +------------------------+
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |            Inet             |                        |
+        |                       |                             |                        |
+        |                       +-----------------------------&gt;                        |
+        |                       +         &lt;-- text --&gt;        |           fred         |
+        |                       +                             |                        |
+        |        laptop         +-----------------------------&gt;      (ec2 instance)    |
+        |                       |                             |                        |
+        |                       |                             |    (any remote server) |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             +------------------------+
+        +-----------------------+
+
+
+
+`ssh fred`
+</code></pre>
+
+<h3 id="forward-tunnels">forward tunnels</h3>
+
+<p>aka, “port forwarding”</p>
+
+<h4 id="forwarding-web-traffic">forwarding web traffic</h4>
+
+<pre><code>          +----------------+                  +------------------------+
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+-- 8888 -&gt;|                |                  |                        |
+          |                +------------------&gt;                        |
+          |                +   &lt;-- text --&gt;   |                        |
+          |                +   &lt;--  web --&gt;   |                        | -----&gt;  http://nfl.com/
+          |     laptop     +------------------&gt;      ec2 instance      |
+          |                |                  |                        |
+          |                |                  |    (any remote server) |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  |                        |
+          |                |                  +------------------------+
+          +----------------+
+
+
+`ssh fred -L8888:www.nfl.com:80`
+
+`open http://localhost:8888/`
+</code></pre>
+
+<h4 id="forwarding-localhost">forwarding localhost</h4>
+
+<pre><code>          +------------+                +------------------------+
+          |            |                |                        |
+          |            |                |                        |
+-- 50070-&gt;|            |                |                        |
+          |            |                |                        | http://...  &lt;---+
+          |            |                |                        |    (50070)      |
+          |            +----------------&gt;                        |                 |
+          |            +    &lt;-----&gt;     |                        |                 |
+          |            +    &lt;-----&gt;     |                        | ----------------+
+          |  laptop    +----------------&gt;      ec2 instance      |
+          |            |                |                        |
+          |            |                |    (any remote server) |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                |                        |
+          |            |                +------------------------+
+          +------------+
+
+
+`ssh fred -L8888:localhost:80`
+</code></pre>
+
+<p>or, perhaps more useful…</p>
+
+<pre><code>`ssh fred -L50070:localhost:50070`
+`open http://localhost:50070/`
+</code></pre>
+
+<p>or </p>
+
+<pre><code>`ssh fred -L50070:localhost:50070 -L50030:localhost:50030`
+</code></pre>
+
+<h3 id="reverse-tunnels">reverse tunnels</h3>
+
+<pre><code>        +-----------------------+                             +------------------------+
+        |                       |                             |                        |
+        |                       |                   -- 2222 -&gt;|                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       |                             |                        |
+        |                       +-----------------------------&gt;                        |
+        |                       +            &lt;-----&gt;          |                        |
+        |                       +            &lt;-----&gt;          |                        |
+        |        laptop         +-----------------------------&gt;      ec2 instance      |
+        |                       |                             |                        |
+        |                       |                             |    (any remote server) |
+        |                       |                             |                        |
+        |                       | 22 &lt;---+                    |                        |
+        |                       |        |                    |                        |
+        |                       |        |                    |                        |
+        |                       |--------+                    |                        |
+        |                       |                             |                        |
+        |                       |                             +------------------------+
+        +-----------------------+
+
+
+
+`ssh fred -R2222:localhost:22`
+</code></pre>
+
+<p>or maybe something like…</p>
+
+<pre><code>`ssh fred -R8888:localhost:80`
+</code></pre>
+
+<p>or even <code>ssh root@fred -R80:localhost:80</code></p>
+
+<h3 id="add-tunnels-to-your-ssh-config">add tunnels to your ssh config</h3>
+
+<pre><code>Host myhost
+    Hostname 10.1.2.3
+    LocalForward 7080 localhost:7080
+    LocalForward 8080 localhost:8080
+</code></pre>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-01T16:00:00-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/2015/06/01/ssh-tips.html" data-via="m_3" data-counturl="http://mmm.github.io/2015/06/01/ssh-tips.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/cloud/2013/08/23/charmschool-local-provider.html" title="Previous Post: CharmSchool Hangout - Juju Local Provider">&laquo; CharmSchool Hangout - Juju Local Provider</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/2015/06/01/ssh-tips.html';
+        var disqus_url = 'http://mmm.github.io/2015/06/01/ssh-tips.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

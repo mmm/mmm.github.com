@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: howtos | Software, Physics, Data, Mountains]]></title>
+  <link href="http://mmm.github.io/blog/categories/howtos/atom.xml" rel="self"/>
+  <link href="http://mmm.github.io/"/>
+  <updated>2015-06-05T07:49:16-04:00</updated>
+  <id>http://mmm.github.io/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Where did the 'close-lid' action go in gnome3?]]></title>
+    <link href="http://mmm.github.io/howtos/2011/09/13/power-lid-closed-actions.html"/>
+    <updated>2011-09-13T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/09/13/power-lid-closed-actions</id>
+    <content type="html"><![CDATA[<p>Here’s a workaround… (thanks slangasek!)</p>
+
+<pre><code>gsettings set org.gnome.settings-daemon.plugins.power lid-close-ac-action 'nothing'
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Stir that memory of autotools]]></title>
+    <link href="http://mmm.github.io/howtos/2011/09/08/autotools.html"/>
+    <updated>2011-09-08T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/09/08/autotools</id>
+    <content type="html"><![CDATA[<p>Ok, never going to forget these again, dammit!</p>
+
+<pre><code>$ aclocal
+$ autoconf --force
+$ automake --add-missing --copy --force-missing
+$ ./configure
+$ OS_ARCH=amd64 make
+</code></pre>
+
+<p>or sometimes you can use</p>
+
+<pre><code>$ autoreconf --force --install
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PreSonus FireBox in Ubuntu]]></title>
+    <link href="http://mmm.github.io/howtos/2011/08/17/presonus-firebox.html"/>
+    <updated>2011-08-17T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/08/17/presonus-firebox</id>
+    <content type="html"><![CDATA[<p>Just some notes to myself for later.</p>
+
+<p>I want a little better sounding audio on screencasts so I dusted off
+the firewire soundcard I got a few years ago for recording bass tracks.</p>
+
+<p>This model 
+<a href="http://www.amazon.com/PreSonus-FireBox-Firewire-Recording-Interface/dp/B0006VYH1Q/ref=sr_1_17?s=musical-instruments&amp;ie=UTF8&amp;qid=1313592982&amp;sr=1-17">FireBox 24-bit/96kHz</a>
+from <a href="http://www.presonus.com/">PreSonus</a> 
+worked great for me on audio production stuff several years
+ago, but at the time I could give jackd and friends a realtime kernel
+to have their way with.</p>
+
+<p>Now, I don’t really have the spare hardware to dedicate to a RT audio setup…<br />
+gotta run several ubuntu server VMs for work and can’t really hand the whole
+shebang over to jack every time I wanna record something.</p>
+
+<p>Here’s my attempt to do it without realtime priorities…
+I’ll track my progress here.</p>
+
+<!--more-->
+
+<h2 id="the-quick-and-the-dirty">The quick and the dirty…</h2>
+
+<p>Starting from a Natty desktop.</p>
+
+<p>install jack</p>
+
+<pre><code># apt-get install jackd
+</code></pre>
+
+<p>when the installer asks to do realtime by default, I said no.</p>
+
+<p>Note that I installed <code>ffado-mixer-qt4 ffado-tools ffado-dbus-server</code>
+earlier trying to get this to work with pulse, without jack… but gave up.
+I don’t know if these packages effect the current setup, but they’re still
+installed</p>
+
+<p>start the jack daemon… </p>
+
+<pre><code>$ jackd -r -dfirewire
+</code></pre>
+
+<p>Connect to jackd</p>
+
+<pre><code>$ qjackctl 
+</code></pre>
+
+<p>(in the foreground so I could watch messages)</p>
+
+<p>Install something like <code>Ardour</code></p>
+
+<pre><code># apt-get install ardour
+</code></pre>
+
+<p>and wire stuff together with the qjackctl patchpanel,
+start <code>jackd</code> and go.</p>
+
+<p>I used to use a better jack patch panel in the past… have to find it.</p>
+
+<h2 id="resources">resources</h2>
+
+<pre><code>http://wiki.jon.geek.nz/index.php/Presonus_Firebox
+http://ubuntuforums.org/showthread.php?t=835477
+http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digital-Audio-Workstation
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[git-create new github repos]]></title>
+    <link href="http://mmm.github.io/howtos/2011/07/27/create-github-repos.html"/>
+    <updated>2011-07-27T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/07/27/create-github-repos</id>
+    <content type="html"><![CDATA[<p>Ok, I’m too lazy to go through the web interface every time I want to add a new github repo.
+github api to the rescue…</p>
+
+<h2 id="the-goal">The goal</h2>
+
+<p>I want</p>
+
+<pre><code>git create myrepo "my repo description"
+</code></pre>
+
+<p>to create a new github repo ‘myrepo’.</p>
+
+<!--more-->
+
+<h2 id="manually">manually</h2>
+
+<p>Grab your API Token from your github account, “Account Settings” – “Account Admin”.</p>
+
+<p>Use curl</p>
+
+<pre><code>curl -u "mmm/token:XXXXXXXX" https://github.com/api/v2/json/user/show/mmm | jsonpretty
+
+curl -X POST -u "mmm/token:XXXXXXXX" https://github.com/api/v2/json/repos/create -d "name=junk2&amp;description=morejunk2"
+</code></pre>
+
+<p>or the same thing using restclient (<code>sudo gem install rest-client</code>):</p>
+
+<pre><code>restclient get https://github.com/api/v2/json/user/show/mmm mmm token:XXXXXXXX | jsonpretty 
+
+echo '{"name":"junk3","description":"junk3 description"}' | restclient post https://github.com/api/v2/json/repos/create mmm token:XXXXXXXX
+</code></pre>
+
+<p>Github docs say you should send at least <code>name</code> but it will take any of these as POST args:</p>
+
+<ul>
+  <li><code>name</code> =&gt; name of the repository. ex: “my-repo” or “other-user/my-repo” </li>
+  <li><code>description</code> =&gt; repo description </li>
+  <li><code>homepage</code> =&gt; homepage url </li>
+  <li><code>public</code> =&gt; 1 for public, 0 for private</li>
+</ul>
+
+<h2 id="monkeypatch-git">monkeypatch git</h2>
+
+<p>I’ll use a script…</p>
+
+<pre><code>#!/usr/bin/ruby
+
+require 'rubygems'
+require 'json'
+require 'rest-client'
+
+USER = "mmm"
+TOKEN = "XXXXXXXX"
+URL = "https://github.com/api/v2/json/repos/create"
+
+def usage 
+  puts &lt;&lt;-EOS
+    usage: #{$0} &lt;name&gt; [&lt;description&gt;] [&lt;homepage&gt;] [&lt;public&gt;]
+    where:
+      name =&gt; name of the repository
+      description =&gt; repo description
+      homepage =&gt; homepage url
+      public =&gt; 1 for public, 0 for private
+  EOS
+  exit 1
+end
+ARGV.size &gt; 0 || usage
+
+params = {
+  "login" =&gt; USER,
+  "token" =&gt; TOKEN,
+  "name" =&gt; ARGV[0],
+  "description" =&gt; ARGV[1] || "",
+  "homepage" =&gt; ARGV[2] || "",
+  "public" =&gt; ARGV[3] || "1",
+}
+
+puts "creating repo: #{params.to_json}"
+
+response = RestClient.post URL, params
+
+puts response.body
+</code></pre>
+
+<p>I’ll call it <code>git-create</code> and put it in my path at <code>~/bin</code>.
+Notice that git even picks it up as a builtin so I can</p>
+
+<pre><code>git create myrepo "my repo description"
+</code></pre>
+
+<p>and it just works…</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[grrr... fix dpms on hawk]]></title>
+    <link href="http://mmm.github.io/howtos/2011/07/10/fix-hawk-screensaver.html"/>
+    <updated>2011-07-10T00:00:00-04:00</updated>
+    <id>http://mmm.github.io/howtos/2011/07/10/fix-hawk-screensaver</id>
+    <content type="html"><![CDATA[<p>From <a href="http://ubuntuforums.org/showthread.php?t=1213325">here</a></p>
+
+<pre><code>#!/usr/bin/perl
+my $cmd = q[dbus-monitor --session "type='signal',interface='org.gnome.ScreenSaver',member='SessionIdleChanged'"];
+open (IN, "$cmd |");
+while (&lt;IN&gt;) {
+    if (/^\s+boolean true/) {
+        system '~/gpufolding/gpufah.bash';
+    }
+    elsif (/^\s+boolean false/) {
+        system 'kill `pgrep gupfah.bash`';
+        system 'kill `pgrep Folding.*home`';
+    }
+}
+</code></pre>
+
+<hr />
+
+<p>From <a href="http://www.linuxquestions.org/questions/fedora-35/start-and-stop-script-with-screensaver-728498/">here</a></p>
+
+<pre><code>#!/usr/bin/perl
+#gnome
+my $cmd = "dbus-monitor --session \"type='signal',interface='org.gnome.ScreenSaver',member='SessionIdleChanged'\"";
+
+open (IN, "$cmd |");
+
+while (&lt;IN&gt;) {
+if (m/^\s+boolean true/) {
+#when screensaver activates, run the following commands
+#system("/home/eric/compiled/scripts/rtorrentstart");
+system("touch /home/asoukenka/rtorrenthasstarted");
+} elsif (m/^\s+boolean false/) {
+#when screensaver deactivates, run the following commands
+#system("kill `pgrep rtorrent`");
+system("touch /home/asoukenka/rtorrenthasbeenkilled");
+}
+}
+</code></pre>
+
+<p>and</p>
+
+<pre><code>#!/usr/bin/perl
+#requires:
+# rtorrent, screen, gnome/kde, perl
+#
+# Instructions:
+# - Properly comment the line for gnome or kde
+# - Give script execute permission (chmod +x)
+# - Run script ./&lt;scriptname&gt; **** do not use rtorrent in script name will mess up kill command
+#
+# There is a log file created by the script at /tmp/autortorrent 
+#
+#
+
+
+#gnome
+#my $cmd = "dbus-monitor --session \"type='signal',interface='org.gnome.ScreenSaver',member='SessionIdleChanged'\"";
+
+#kde
+my $cmd = "dbus-monitor --session \"type='signal',interface='org.freedesktop.ScreenSaver',member='ActiveChanged'\"";
+open (IN, "$cmd |");
+
+while (&lt;IN&gt;) {
+if (m/^\s+boolean true/) {
+#when screensaver activates, run the following commands
+system("echo \"--------------------------------------------------------------------\" &gt;&gt; /tmp/autortorrent");
+system("screen -dmS rtorrent rtorrent");
+system("echo \"started:\" &gt;&gt; /tmp/autortorrent");
+system("date &gt;&gt; /tmp/autortorrent");
+system("echo \"--------------------------------------------------------------------\" &gt;&gt; /tmp/autortorrent");
+} elsif (m/^\s+boolean false/) {
+#when screensaver deactivates, run the following commands
+system("echo \"--------------------------------------------------------------------\" &gt;&gt; /tmp/autortorrent");
+system("kill `pgrep rtorrent`");
+system("echo \"stopped:\" &gt;&gt; /tmp/autortorrent");
+system("date &gt;&gt; /tmp/autortorrent");
+#system("ps aux |grep rtorrent &gt;&gt; /tmp/autortorrent");
+system("echo \"--------------------------------------------------------------------\" &gt;&gt; /tmp/autortorrent");
+}
+}
+</code></pre>
+
+<hr />
+
+<p>from <a href="http://ubuntuforums.org/showthread.php?t=1537241">here</a></p>
+
+<pre><code>#!/bin/sh
+gnome-screensaver-command --lock
+xset dpms force off
+gnome-screensaver-command --inhibit
+exit
+</code></pre>
+
+<p>also some stuff in <a href="http://ubuntuforums.org/showthread.php?t=1358946">here</a></p>
+
+<p>Try to run gnome-screensave in no-daemon and debug mode to see what’s going on…
+according to <code>https://bugs.launchpad.net/ubuntu/+source/gnome-power-manager/+bug/193192</code></p>
+
+<hr />
+
+<p>Some inhibit stuff from <a href="http://program-nix.blogspot.com/2010/08/python-inhibiting-gnome-screensaver.html">here</a></p>
+
+<pre><code>#!/usr/bin/python
+import subprocess
+
+#run inhibition
+ss_inhibit = subprocess.Popen(["gnome-screensaver-command", "-i", "-n", 
+                               "mplayer", "-r", "video"])
+
+#run gmplayer
+player = subprocess.Popen("gmplayer")
+
+#wait for mplayer to exit
+player.wait()
+
+#kill the inhibition
+ss_inhibit.kill()
+</code></pre>
+
+<hr />
+
+<p>or from <a href="https://bbs.archlinux.org/viewtopic.php?pid=321620">here</a></p>
+
+<pre><code>dbus-send --session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=20000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Inhibit string:"MPlayer" string:"Watching video"
+</code></pre>
+
+<p>or</p>
+
+<pre><code>dbus-send --session --dest=org.freedesktop.ScreenSaver --type=method_call /ScreenSaver org.gnome.ScreenSaver.SimulateUserActivity
+dbus-send --session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=20000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Inhibit string:"MPlayer" string:"Watching video"
+gnome-screensaver-command --poke
+</code></pre>
+
+<hr />
+
+]]></content>
+  </entry>
+  
+</feed>

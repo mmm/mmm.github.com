@@ -1,0 +1,1254 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="dd if=/dev/urandom of=testfile bs=1M count=10
+sudo losetup /dev/loop0 testfile sudo cryptsetup create crypto /dev/loop0 (asks for passphrase) sudo &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/blog/page/7">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-setup-encrypted-filesystem.html">Setup Encrypted Fs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>dd if=/dev/urandom of=testfile bs=1M count=10
+sudo losetup /dev/loop0 testfile 
+
+sudo cryptsetup create crypto /dev/loop0
+</code></pre>
+
+<p>(asks for passphrase)</p>
+
+<pre><code>sudo mkfs.ext2 /dev/mapper/crypto 
+sudo mount /dev/mapper/crypto /crypt/
+
+sudo umount /crypt/
+sudo cryptsetup remove /dev/mapper/crypto 
+</code></pre>
+
+<p>works a little differently with an actual partition… guess it would be</p>
+
+<pre><code>sudo cryptsetup create crypto /dev/sdb1
+</code></pre>
+
+<p>(asks for passphrase)</p>
+
+<pre><code>sudo mkfs.ext2 /dev/mapper/crypto 
+sudo mount /dev/mapper/crypto /crypt/
+
+sudo umount /crypt/
+sudo cryptsetup remove /dev/mapper/crypto 
+</code></pre>
+
+<hr />
+
+<p>this seems to keep the video intact for the most part…  i.e.,</p>
+
+<p>cp Entourage.S06E11.HDTV.XviD-NoTV.avi ~/Documents</p>
+
+<pre><code>560  ls -al
+561  sudo losetup /dev/loop0 Entourage.S06E11.HDTV.XviD-NoTV.avi -o 10000000
+562  sudo cryptsetup create entourage /dev/loop0
+563  sudo mkfs.xfs /dev/mapper/entourage 
+564  ls /crypt/
+565  sudo mount /dev/mapper/entourage /crypt/
+566  ls /crypt/
+567  ls -al
+568  ls /crypt/
+569  ls /crypt/ -al
+570  cd /crypt/
+571  ls
+572  cp /home/mmm/Desktop/junk.odb .
+573  sudo cp /home/mmm/Desktop/junk.odb .
+574  sudo chown mmm.mmm junk.odb 
+575  ls -al
+576  cd /
+577  cd
+578  cd Documents/
+579  ls
+580  ls -al
+581  vlc Entourage.S06E11.HDTV.XviD-NoTV.avi 
+582  ls
+583  mount
+584  sudo umount /crypt/
+585  sudo cryptsetup remove /dev/mapper/entourage 
+586  sudo losetup -d /dev/loop0 
+587  sudo losetup 
+588  sudo losetup -a
+589  ls
+590  history 
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-set-mac-addr.html">Set Mac Addr</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>/etc/udev/rules.d/z25_persistent_net.rules
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-lock-user-into-screen.html">Lock a User to a Screen Session</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>set shell to screen</p>
+
+<pre><code>kurt:x:505:505::/home/kurt:/usr/bin/screen
+</code></pre>
+
+<p>with a /home/kurt/.screenrc (perms 644 root.root)</p>
+
+<pre><code>multiuser off
+escape ^Ee
+bell ''
+startup_message off
+vbell off
+### enabling scroll buffer
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+defscrollback         3000
+silencewait           15              # default: 30
+hardstatus string "%h%?"
+### logging
+logtstamp on
+logfile flush 10
+logtstamp after 300
+### create windows
+screen -t h             1       /bin/bash
+logfile /var/lib/audit/$USER
+log on
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-filter-rsnapshot.html">Filter Filetypes From Rsnapshot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>#################################################
+# rsnapshot.conf - rsnapshot configuration file #
+#################################################
+#                                               #
+# PLEASE BE AWARE OF THE FOLLOWING RULES:       #
+#                                               #
+# This file requires tabs between elements      #
+#                                               #
+# Directories require a trailing slash:         #
+#   right: /home/                               #
+#   wrong: /home                                #
+#                                               #
+#################################################
+
+#######################
+# CONFIG FILE VERSION #
+#######################
+
+config_version	1.2
+
+###########################
+# SNAPSHOT ROOT DIRECTORY #
+###########################
+
+# All snapshots will be stored under this root directory.
+#
+#snapshot_root	/.snapshots/
+snapshot_root	/mnt/array1/arch/
+
+# If no_create_root is enabled, rsnapshot will not automatically create the
+# snapshot_root directory. This is particularly useful if you are backing
+# up to removable media, such as a FireWire or USB drive.
+#
+#no_create_root	1
+
+#################################
+# EXTERNAL PROGRAM DEPENDENCIES #
+#################################
+
+# LINUX USERS:   Be sure to uncomment "cmd_cp". This gives you extra features.
+# EVERYONE ELSE: Leave "cmd_cp" commented out for compatibility.
+#
+# See the README file or the man page for more details.
+#
+#cmd_cp		/bin/cp
+
+# uncomment this to use the rm program instead of the built-in perl routine.
+#
+cmd_rm		/bin/rm
+
+# rsync must be enabled for anything to work. This is the only command that
+# must be enabled.
+#
+cmd_rsync	/usr/bin/rsync
+
+# Uncomment this to enable remote ssh backups over rsync.
+#
+cmd_ssh	/usr/local/bin/ssh
+
+# Comment this out to disable syslog support.
+#
+cmd_logger	/usr/bin/logger
+
+# Uncomment this to specify the path to "du" for disk usage checks.
+# If you have an older version of "du", you may also want to check the
+# "du_args" parameter below.
+#
+#cmd_du		/usr/bin/du
+
+# Uncomment this to specify the path to rsnapshot-diff.
+#
+#cmd_rsnapshot_diff	/usr/local/bin/rsnapshot-diff
+
+# Specify the path to a script (and any optional arguments) to run right
+# before rsnapshot syncs files
+#
+#cmd_preexec	/path/to/preexec/script
+
+# Specify the path to a script (and any optional arguments) to run right
+# after rsnapshot syncs files
+#
+#cmd_postexec	/path/to/postexec/script
+
+#########################################
+#           BACKUP INTERVALS            #
+# Must be unique and in ascending order #
+# i.e. hourly, daily, weekly, etc.      #
+#########################################
+
+#interval	hourly	6
+interval	daily	7
+interval	weekly	4
+interval	monthly	6
+
+############################################
+#              GLOBAL OPTIONS              #
+# All are optional, with sensible defaults #
+############################################
+
+# Verbose level, 1 through 5.
+# 1     Quiet           Print fatal errors only
+# 2     Default         Print errors and warnings only
+# 3     Verbose         Show equivalent shell commands being executed
+# 4     Extra Verbose   Show extra verbose information
+# 5     Debug mode      Everything
+#
+verbose		2
+
+# Same as "verbose" above, but controls the amount of data sent to the
+# logfile, if one is being used. The default is 3.
+#
+loglevel	3
+
+# If you enable this, data will be written to the file you specify. The
+# amount of data written is controlled by the "loglevel" parameter.
+#
+logfile	/var/log/rsnapshot
+
+# If enabled, rsnapshot will write a lockfile to prevent two instances
+# from running simultaneously (and messing up the snapshot_root).
+# If you enable this, make sure the lockfile directory is not world
+# writable. Otherwise anyone can prevent the program from running.
+#
+lockfile	/var/run/rsnapshot.pid
+
+# Default rsync args. All rsync commands have at least these options set.
+#
+#rsync_short_args	-a
+#rsync_long_args	--delete --numeric-ids --relative --delete-excluded
+
+# ssh has no args passed by default, but you can specify some here.
+#
+#ssh_args	-p 22
+
+# Default arguments for the "du" program (for disk space reporting).
+# The GNU version of "du" is preferred. See the man page for more details.
+# If your version of "du" doesn't support the -h flag, try -k flag instead.
+#
+#du_args	-csh
+
+# If this is enabled, rsync won't span filesystem partitions within a
+# backup point. This essentially passes the -x option to rsync.
+# The default is 0 (off).
+#
+one_fs		1
+
+# The include and exclude parameters, if enabled, simply get passed directly
+# to rsync. If you have multiple include/exclude patterns, put each one on a
+# separate line. Please look up the --include and --exclude options in the
+# rsync man page for more details on how to specify file name patterns. 
+# 
+#include	???
+#include	???
+#exclude	???
+#exclude	???
+exclude	*.zip
+exclude	*.gz
+exclude	*.tgz
+exclude	*.bz2
+exclude	/**/Videos/***
+exclude	/**/Music/***
+exclude	/**/music/***
+exclude	/**/Audio/***
+exclude	*.iso
+exclude	*.mp4
+exclude	*.mp3
+exclude	*.wav
+exclude	*.avi
+exclude	*.mov
+exclude	*.wmv
+exclude	*.flv
+exclude	*.pps
+exclude	*.dv
+exclude	*.ogg
+exclude	/**/vmware/***
+exclude	/**/.vmware/***
+exclude	/**/kvm/***
+exclude	/**/.kvm/***
+exclude	*.vmdk
+exclude	*.qcow2
+exclude	*.raw
+exclude	/**/Photos/***
+exclude	/**/photos/***
+exclude	/**/Pictures/***
+exclude	*.jpg
+exclude	/**/Downloads/***
+exclude	/**/dloads/***
+exclude	/**/rescue/***
+exclude	/**/rubygems/***
+exclude	/**/.gems/***
+exclude	/**/Metasploit/***
+exclude	/**/Eclipse/***
+
+# The include_file and exclude_file parameters, if enabled, simply get
+# passed directly to rsync. Please look up the --include-from and
+# --exclude-from options in the rsync man page for more details.
+#
+#include_file	/path/to/include/file
+#exclude_file	/path/to/exclude/file
+
+# If your version of rsync supports --link-dest, consider enable this.
+# This is the best way to support special files (FIFOs, etc) cross-platform.
+# The default is 0 (off).
+#
+link_dest	1
+
+# When sync_first is enabled, it changes the default behaviour of rsnapshot.
+# Normally, when rsnapshot is called with its lowest interval
+# (i.e.: "rsnapshot hourly"), it will sync files AND rotate the lowest
+# intervals. With sync_first enabled, "rsnapshot sync" handles the file sync,
+# and all interval calls simply rotate files. See the man page for more
+# details. The default is 0 (off).
+#
+#sync_first	0
+
+# If enabled, rsnapshot will move the oldest directory for each interval
+# to [interval_name].delete, then it will remove the lockfile and delete
+# that directory just before it exits. The default is 0 (off).
+#
+#use_lazy_deletes	0
+
+###############################
+### BACKUP POINTS / SCRIPTS ###
+###############################
+
+# LOCALHOST
+backup	root@192.168.100.2:/etc/		hawk/
+backup	root@192.168.100.2:/home/		hawk/
+backup	root@192.168.100.2:/usr/local/	hawk/
+#backup	/var/log/rsnapshot		localhost/
+#backup	/etc/passwd	localhost/
+#backup	/home/foo/My Documents/		localhost/
+#backup	/foo/bar/	localhost/	one_fs=1, rsync_short_args=-urltvpog
+#backup_script		/usr/local/bin/backup_pgsql.sh	localhost/postgres/
+
+# EXAMPLE.COM
+#backup_script	/bin/date "+ backup of example.com started at %c"	unused1
+#backup	root@example.com:/home/	example.com/	+rsync_long_args=--bwlimit=16,exclude=core
+#backup	root@example.com:/etc/	example.com/	exclude=mtab,exclude=core
+#backup_script	ssh root@example.com "mysqldump -A &gt; /var/db/dump/mysql.sql"
+#backup	root@example.com:/var/db/dump/	example.com/
+#backup_script	/bin/date "+ backup of example.com ended at %c"	unused2
+
+# CVS.SOURCEFORGE.NET
+#backup_script	/usr/local/bin/backup_rsnapshot_cvsroot.sh	rsnapshot.cvs.sourceforge.net/
+
+# RSYNC.SAMBA.ORG
+#backup	rsync://rsync.samba.org/rsyncftp/	rsync.samba.org/rsyncftp/
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-autostart-mongrel-in-slice.html">Autostart Mongrel in Slice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>/usr/local/sbin/run_mongrel_cluster_ctl.sh</p>
+
+<pre><code>#!/bin/bash
+
+export RUBYGEMS=/usr/local/rubygems
+export GEM_HOME=${RUBYGEMS}/gems
+export GEM_PATH=${RUBYGEMS}/gems
+export RUBYLIB=${RUBYGEMS}/lib
+export PATH=${RUBYGEMS}/gems/bin:${RUBYGEMS}/bin:$PATH
+
+mongrel_cluster_ctl $*
+</code></pre>
+
+<p>/etc/init.d/jsas_cluster</p>
+
+<pre><code>#!/bin/sh
+#
+# mongrel jsas cluster init script
+#
+### BEGIN INIT INFO
+# Provides:          jsas_cluster
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: init-Script for jsas mongrel_cluster
+### END INIT INFO
+
+#sudo -i -u jsas $DAEMON_CTL help
+
+set -e
+
+# Defaults
+PATH=/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin
+DAEMON_CTL=/usr/local/sbin/run_mongrel_cluster_ctl.sh
+USER=jsas
+OPTIONS=""
+
+PIDFILE="/var/run/mongrel_cluster.pid"
+
+test -f $DAEMON_CTL || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+    sudo -i -u jsas $DAEMON_CTL start
+		;;
+	stop)
+    sudo -i -u jsas $DAEMON_CTL stop
+		;;
+	force-reload|restart)
+    sudo -i -u jsas $DAEMON_CTL restart
+		;;
+	status)
+    sudo -i -u jsas $DAEMON_CTL status
+		;;
+	*)
+		log_warning_msg "Usage: /etc/init.d/jsas_cluster {start|stop|restart}"
+		log_warning_msg "  start - starts system-wide jsas_cluster service"
+		log_warning_msg "  stop  - stops system-wide jsas_cluster service"
+		log_warning_msg "  restart, force-reload - starts a new system-wide jsas_cluster service"
+		log_warning_msg "  status  - status of system-wide jsas_cluster service"
+		log_warning_msg "    system-wide jsas cluster service"
+		exit 1
+		;;
+esac
+
+exit 0
+</code></pre>
+
+<p>then update the rc scripts…</p>
+
+<pre><code>update-rc.d jsas_cluster defaults 98 02
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-add-user-osx-cli.html">Add User in Osx From the Cli</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>totally fucking ridiculous!</p>
+
+<pre><code>bipp-dcd:/Users root# niutil -create / /users/markv
+bipp-dcd:/Users root# niutil -create / /groups/markv
+bipp-dcd:/Users root# niutil -createprop / /users/markv uid 504
+bipp-dcd:/Users root# niutil -createprop / /groups/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv realname "Mark Vaughan"
+bipp-dcd:/Users root# niutil -createprop / /users/markv shell "/bin/bash"      
+bipp-dcd:/Users root# niutil -createprop / /users/markv home "/Users/markv"
+bipp-dcd:/Users root# cp -R /System/Library/User\ Template/English.lproj /Users/markv
+bipp-dcd:/Users root# chown -Rf markv:markv /Users/markv
+bipp-dcd:/Users root# passwd markv
+</code></pre>
+
+<p>also</p>
+
+<pre><code>niutil -appendprop / /groups/admin users markv
+
+niutil -list . /
+
+niutil -read / /users/markv
+
+niutil -read / /groups/admin
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/17/howto-osx-startup.html">Osx Startup Scripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-17T00:00:00-04:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>edit <code>Library/LaunchAgents/hawk.videos.sshfs.plist</code></p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;hawk.videos.sshfs&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;/usr/local/bin/sshfs-authsock&lt;/string&gt;
+                &lt;string&gt;mmm@hawk:/home/mmm/Videos&lt;/string&gt;
+                &lt;string&gt;/mnt/hawk&lt;/string&gt;
+                &lt;string&gt;-oreconnect&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;AbandonProcessGroup&lt;/key&gt;
+        &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>now, just</p>
+
+<pre><code>launchctl load ~/Library/LaunchAgents/hawk.videos.sshfs.plist
+launchctl start hawk.videos.sshfs
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/05/09/vm-build-notes.html">VM Buildout Notes for Dlb</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>added sources.list</p>
+
+<p>packages:</p>
+
+<pre><code>ruby
+rdoc ri irb
+build-essential
+ruby1.8-dev
+libapache2-mod-fcgid
+libfcgi-dev
+libxml2
+libxml2-dev
+libxslt1-dev
+sqlite3
+libsqlite3-dev
+mysql-server (had to force this for some reason ... bitching about locale not being set)
+libmysql-ruby1.8
+libdbd-mysql-ruby
+libmysqlclient15-dev
+rsync
+screen
+libopenssl-ruby
+
+
+apt-get update
+apt-get -u upgrade
+apt-get -u dist-upgrade
+</code></pre>
+
+<p>install rubygems in /usr/local</p>
+
+<p>install gems
+    rails
+    mongrel
+    mongrel_cluster
+    passenger
+    capistrano
+    capistrano-ext
+    fcgi
+    ferret
+    haml
+    hpricot
+    htmlentities
+    nokogiri
+    mechanize
+    cucumber
+    mocha
+    open4
+    runt
+    spreadsheet
+    sqlite3
+    termios
+    will_paginate</p>
+
+<pre><code>adduser --home /usr/local/dlb dlb
+</code></pre>
+
+<p>rsync <code>/usr/local/dlb</code> over to VM</p>
+
+<p>scp <code>/etc/apache2/sites-available/dlb-sites</code> over to VM</p>
+
+<p>test to get apache up</p>
+
+<p>test to get rails up</p>
+
+<p>apache config for mods-enabled:
+    ln -s ../mods-available/deflate.conf .
+    ln -s ../mods-available/deflate.load .
+    ln -s ../mods-available/file_cache.load .
+    ln -s ../mods-available/mem_cache.load .
+    ln -s ../mods-available/mem_cache.conf .
+    ln -s ../mods-available/headers.load .
+    ln -s ../mods-available/proxy_balancer.load .
+    ln -s ../mods-available/proxy.conf
+    ln -s ../mods-available/proxy_http.load .
+    ln -s ../mods-available/proxy.load .
+    ln -s ../mods-available/rewrite.load .
+    ln -s ../mods-available/include.load .
+    ln -s ../mods-available/cache.load .</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/05/09/howto-use-socat-to-forward-unix-sockets-over-ssh.html">Use Socat to Forward Unix Sockets Over Ssh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>socat TCP-LISTEN:5500 EXEC:'ssh root@proteus "socat STDIO UNIX-CONNECT:/var/run/libvirt/qemu/i-437207F5.monitor"'
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/05/09/howto-usb-keys-for-firewall.html">Use Usb Keys for Openmicroserver Firewalls</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>backup image in <code>~/etc/arch/machine-backups/korek-xxxxxxxx.tar.gz</code></p>
+
+<pre><code>ganymede:~/etc/arch/machine-backups # fdisk -l /dev/sdc
+
+Disk /dev/sdc: 2029 MB, 2029518848 bytes
+255 heads, 63 sectors/track, 246 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0xc3072e18
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1               1         208     1670728+  83  Linux
+/dev/sdc2             209         246      305235   82  Linux swap / Solaris
+ganymede:~/etc/arch/machine-backups # 
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/8/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/6/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I&#8217;m Mark&#8230; a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that&#8217;s where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering&#8230;
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here&#8217;s a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What&#8217;s this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What&#8217;s this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

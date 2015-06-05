@@ -1,1 +1,855 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="Notes from a lunch-and-learn talk. It’s a little weak without the narrative,
+but I’ll post it here for reference anyway. Agenda: config tunnels &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-01T16:00:00-04:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
+but I’ll post it here for reference anyway.</p>
+
+<p>Agenda:</p>
+
+<ul>
+  <li>config</li>
+  <li>tunnels
+    <ul>
+      <li>forward</li>
+      <li>reverse</li>
+    </ul>
+  </li>
+  <li>proxies</li>
+  <li>ssh + tmux = &lt;3
+    <ul>
+      <li>ssh, then tmux</li>
+      <li>tmux, then ssh</li>
+    </ul>
+  </li>
+</ul>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/2015/06/01/ssh-tips.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-23T13:02:00-04:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
+walks through using the new version of the juju local provider.  It’s cool!</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 3AiQhHIBQJk</div>
+</a>
+<div class="video-info">embedded youtube video 3AiQhHIBQJk</div>
+</div>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2013/08/23/charmschool-local-provider.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-12T13:02:00-04:00" pubdate data-updated="true">Jul 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
+is a little more detail on juju events…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video vPBrpMcXHN0</div>
+</a>
+<div class="video-info">embedded youtube video vPBrpMcXHN0</div>
+</div>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2013/07/12/charmschool-events-in-depth.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-28T13:02:00-04:00" pubdate data-updated="true">Jun 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
+we just sort of sat around and discussed best practices…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 08dOs3eO04M</div>
+</a>
+<div class="video-info">embedded youtube video 08dOs3eO04M</div>
+</div>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2013/06/28/charmschool-charm-best-practices.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T13:02:00-04:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I Put together a series of demo videos using juju-0.7 for oscon.</p>
+
+<p>These are really interesting in that they involve migrating environments
+between providers.  This works slightly differently on the newer juju-1.x
+series, but the idea’s still sound.</p>
+
+<p>There’s no sound on these… they’re raw video backups for demoing juju (in
+case we lost networking during the demo).</p>
+
+<p>migrate local to hp</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('Jfnxl1Kh9SY');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/Jfnxl1Kh9SY?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/Jfnxl1Kh9SY/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=Jfnxl1Kh9SY" id="Jfnxl1Kh9SY" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video Jfnxl1Kh9SY</div>
+</a>
+<div class="video-info">embedded youtube video Jfnxl1Kh9SY</div>
+</div>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2013/06/15/juju-demo-videos.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html">CharmSchool Hangout - Charming From Scratch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-05T13:02:00-04:00" pubdate data-updated="true">Jun 5<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Continuing the series of regular CharmSchool Hangouts.  In last week’s video
+we wrote a charm from scratch…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('NQmxuzdc4Zg');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=NQmxuzdc4Zg" id="NQmxuzdc4Zg" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video NQmxuzdc4Zg</div>
+</a>
+<div class="video-info">embedded youtube video NQmxuzdc4Zg</div>
+</div>
+
+<p>Starting from a simple node.js application, we put together “just enough” charm
+to get things working.  Watch for future episodes where we’ll refactor and
+refine both the application and the charm.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/05/20/charmschool-hangouts.html">CharmSchool Hangouts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-20T12:49:00-04:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We’re doing a series of regular CharmSchools on G+ hangouts.
+Last week we did an intro to juju and charming…</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('yRcqSjOGweo');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/yRcqSjOGweo?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/yRcqSjOGweo/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=yRcqSjOGweo" id="yRcqSjOGweo" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video yRcqSjOGweo</div>
+</a>
+<div class="video-info">embedded youtube video yRcqSjOGweo</div>
+</div>
+
+<p>There’re links to the whole series of charmschool hangouts in the juju
+<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
+where we also have videos and screencasts of demos, talks,  and any other charm
+schools we’ve been able to capture on video.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html">CharmSchool Video From the Openstack Summit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T12:40:00-04:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Jorge and I gave a charmschool at the ODS summit.
+The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!</p>
+
+<p>Watch it 
+<a href="http://www.openstack.org/summit/portland-2013/session-videos/presentation/juju-with-openstack-workshop">here</a>
+or </p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('YenD4oxfEa4');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/YenD4oxfEa4?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/YenD4oxfEa4/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=YenD4oxfEa4" id="YenD4oxfEa4" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video YenD4oxfEa4</div>
+</a>
+<div class="video-info">embedded youtube video YenD4oxfEa4</div>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2012/09/25/linuxplumbers-juju.html">Running the LinuxPlumbers Conference Schedule With Juju</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-25T00:00:00-04:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p class="meta">
+Written by Mark Mims and Chris Johnston
+</p>
+
+<p>Hey, so last month we ran scheduling for the 
+<a href="http://linuxplumbersconf.org">Linux Plumbers Conference</a>
+entirely on juju!</p>
+
+<p>Here’s a little background on the experience.</p>
+
+<p>Along the way, we’ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It’s a basic
+stack of services that’s only alive for 6-months or so…  but this discussion
+applies to bigger longer-running production infrastructures too, so it’s worth
+going over here.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2012/09/25/linuxplumbers-juju.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/cloud/2012/06/04/juju-at-scale.html">Scaling a 2000-node Hadoop Cluster on EC2/Ubuntu With Juju</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-04T00:00:00-04:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p class="meta">
+Written by Mark Mims and James Page
+</p>
+
+<p>Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
+lots of great stuff going on here, so we figured it’s time to start posting about it.</p>
+
+<p>First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+was get the go-ahead to spend more time/effort/money scale-testing Juju.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/cloud/2012/06/04/juju-at-scale.html">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I&#8217;m Mark&#8230; a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that&#8217;s where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering&#8230;
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here&#8217;s a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What&#8217;s this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What&#8217;s this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

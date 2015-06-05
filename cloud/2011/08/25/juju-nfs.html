@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Core Infrastructure Part 1 - Adding NFS to juju charms - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="Several features have recently landed in juju that make it easier to convert some common infrastructure-level components over and use them within &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/cloud/2011/08/25/juju-nfs.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Core Infrastructure Part 1 - Adding NFS to Juju Charms</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-25T00:00:00-04:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Several features have recently landed in juju that make 
+it easier to convert some common infrastructure-level components 
+over and use them within your stack of services.
+I figured it’s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc…  and how they
+fit into the juju ecosystem.</p>
+
+<p>We’ll start with NFS.  I’d consider that vanilla workhorse to be
+core infrastructure technology… it’s still pretty much everywhere you
+look.  Many friends keep ancient boxes around as dedicated NFS 
+fileserver appliances that are usually in fairly critical roles.
+Well, how would this fit into a sexy new juju stack of services?</p>
+
+<!--more-->
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>In this post I’ll walk through adapting a basic mediawiki
+charm to enable using nfs mounts for shared resource directories.
+The steps here should work pretty closely for a lot of different
+service charms that might benefit from a NFS hooks.</p>
+
+<p>At the end of the day, an example stack might look something like </p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<p>which will result in a mediawiki setup with <code>images</code>
+stored on an nfs server.</p>
+
+<p>As expected,</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>will scale mediawiki instances.</p>
+
+<p>Since the <code>mywiki</code>
+service is related to the <code>myimages</code> service,
+then all <code>mywiki</code> instances will share the same
+resource directory on the nfs server.  This works
+months into the deployment… we add another unit
+and the relation hooks perform the mount.</p>
+
+<p>The nfs server charm is pretty canned, it’ll take 
+config options, but has sane defaults.  There’s 
+little need to adjust anything in there.</p>
+
+<p>To adapt your charm to use a juju-managed
+NFS service, we copy two hooks from an nfs-client
+example charm and adapt to suit the needs of
+the charm we’re working on (mediawiki in this
+example).</p>
+
+<h2 id="detailed-walk-through">Detailed walk-through</h2>
+
+<p>Let’s go through this process of adapting our charms
+to use NFS mounts.</p>
+
+<h3 id="the-problem">The Problem</h3>
+
+<p>Start with a simple mediawiki deploy,</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju expose mywiki
+</code></pre>
+
+<p>With juju, it’s easy to spin up multiple mediawiki
+instances (or “service units” in juju-speak).</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>Now, since the <code>mywiki</code> service is related to the <code>mysql</code> service,
+then all these mywiki units share the same database and hence
+content.  Groovy.</p>
+
+<p>Ok, well there’s a problem.  Each wiki instance has its
+own filesystem-store for various things… images, uploads, etc.
+This is pretty common practice across different CMSes that
+results in scaling pain.
+The content in the database will point to resources that
+only exist on one of the instances.</p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p>A common solution to this
+is to just put these resource directories on a fileserver and
+share them out to each of the wiki instances using NFS.</p>
+
+<p>This, of course, isn’t limited to content management
+systems.  Just about every infrastructure has some sort of need
+for shared storage.</p>
+
+<p>Ubuntu packages for mediawiki install mediawiki’s resource
+directories with respect to <code>/var/lib/mediawiki/</code>.
+So let’s just set adapt the basic mediawiki charm to use
+an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
+
+<p>Each mediawiki
+service unit has a <code>/var/lib/mediawiki/images</code> directory
+that points to 
+up multiple mediawiki instances, they’ll all share the
+same <code>images</code> directory.</p>
+
+<h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
+
+<p>Let’s grab some code and get cranking…</p>
+
+<p>First, pull mediawiki as an example (or any charm you’re
+currently working on that might need shared storage)</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+$ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
+</code></pre>
+
+<p>This gives us</p>
+
+<pre><code>/home/mmm/charms/mediawiki
+|-- copyright
+|-- hooks
+|   |-- ...
+|   |-- db-relation-changed
+|   |-- install
+|   |-- start
+|   |-- stop
+|   |-- website-relation-changed
+|   |-- website-relation-joined
+|   `-- ...
+|-- metadata.yaml
+`-- revision
+</code></pre>
+
+<p>a bare mediawiki charm that we can use as a starting
+point to add our nfs client hooks.
+Note that even though this is an ‘nfsdemo’ branch just for this demo, 
+the real mediawiki charm should now have nfs support in the trunk.</p>
+
+<p>Now, we can copy sample nfs client hooks from</p>
+
+<pre><code>http://bazaar.launchpad.net/~mark-mims/+junk/principia-nfs-client/files/head:/hooks/
+</code></pre>
+
+<p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
+and save them as mediawiki hooks… I’d rename them to something
+that makes sense to future readers of our mediawiki charm.
+Let’s call them <code>nfs-imagestore-relation-joined</code> and 
+<code>nfs-imagestore-relation-changed</code>.</p>
+
+<h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
+
+<p>Let’s look at the
+<code>nfs-imagestore-relation-joined</code> hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+apt-get install -y nfs-common
+
+sed -i -e "s/NEED_IDMAPD.*/NEED_IDMAPD=yes/" /etc/default/nfs-common
+service idmapd restart || service idmapd start
+
+relation-set client=`hostname -f`
+</code></pre>
+
+<p>This looks pretty normal.
+It installs some stuff nfs stuff when the relation is joined…
+this is good it doesn’t really install it until it’s needed.
+Then it tells the nfs server who we are for access control.
+Ok, so no changes need to be made to get this working
+on our mediawiki service unit… we can leave it as-is.</p>
+
+<p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>Ok, when parameters used within charm hooks are likely to change
+from one service deployment to the next, they can be externalized
+into a <code>config.yaml</code> for the charm.  This also allows you to
+pass them in at deploy-time or change them throughout the lifetime
+of the service using juju cli <code>--config</code> options and <code>set</code>
+commands.  See the <a href="http://juju.ubuntu.com/docs/">juju docs</a> for
+how to do all of this.</p>
+
+<p>There are two parameters in the <code>nfs-imagestore-relation-changed</code>
+hook that are set using <code>config-get</code>:</p>
+
+<pre><code>local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+</code></pre>
+
+<p>Well, for mediawiki
+these parameters aren’t really going to change.  It’s reasonable
+to just hard-code them here as:</p>
+
+<pre><code>mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+</code></pre>
+
+<p>We could certainly just add these parameters to a <code>config.yaml</code>
+for the mediawiki charm, but in this case, they’re not really
+interesting “tweakable” aspects of the mediawiki charm, so let’s
+keep the mediawiki config simple.
+For other charms this might not be the case,
+but make that call in context.</p>
+
+<p>Now, at this point, our version of the <code>nfs-imagestore-relation-changed</code>
+hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>will run fine.  It’ll mount the <code>images</code> share and mediawiki
+will run normally.</p>
+
+<h3 id="additional-configuration">Additional configuration</h3>
+
+<p>This next step depends greatly on your particular charm/service.
+With mediawiki, the <code>images</code> directory isn’t really used until
+you tell mediawiki to turn on uploads.  This is true regardless
+of whether <code>images</code> is an nfs mount or you’re just using the
+directory on the local filesystem.</p>
+
+<p>The time to do this though is after the <code>images</code> share is mounted, 
+so putting it in the <code>nfs-imagestore-relation-changed</code> hook after
+the mount is a good place for it.</p>
+
+<pre><code>juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>So we end up with</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+
+juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>the same hook that’s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+
+<h3 id="update-charm-metadata">Update charm metadata</h3>
+
+<p>So we have hooks that should do what we’d like… 
+(I’ll developing and debugging hooks in another post).
+Next we need to update the charm metadata so juju
+knows when to fire them.</p>
+
+<p>My <code>mediawiki/metadata.yaml</code> currently looks like</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>let’s add our nfs requirement (<em>requirement</em> is a strong word… they’re
+all optional),</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+  nfs-imagestore:
+    interface: mount
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>The relation name’s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm’s metadata:</p>
+
+<pre><code>...
+provides:
+  nfs:
+    interface: mount
+...
+</code></pre>
+
+<p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
+
+<p>We can use the interface as a sanity check to insure we’re providing
+and using the right parameters when communicating with the nfs server
+service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
+
+<h3 id="spin-it-up">Spin it up</h3>
+
+<p>Let’s deploy our new charm:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<h3 id="spread-it-out">Spread it out</h3>
+
+<p>Add a few more mediawiki instances…</p>
+
+<pre><code>$ for i in {1..10}; do
+$ juju add-unit mywiki
+$ done
+</code></pre>
+
+<p>When everything’s up, these should all share the same database
+and image store.</p>
+
+<p>In real life you’d probably want to start adding mysql slaves
+to this.  Of course, in real life you’ll also add remote logging,
+monitoring, and other core infrastructure components too.
+Keep an eye out for subsequent posts in this series.</p>
+
+<h3 id="nfs-server-config">NFS server config</h3>
+
+<p>Up until now we’ve only talked about the NFS client.
+The NFS <em>server</em> charm is pretty simple.</p>
+
+<p>It lives at
+<a href="http://bazaar.launchpad.net/~juju-composers/principia/oneiric/nfs/trunk/files">lp:principia/nfs</a>
+and supports configuration options at deploy(or run)-time via</p>
+
+<pre><code>$ juju deploy --repository . --config ./mydata.yaml local:nfs mydata
+</code></pre>
+
+<p>where <code>mydata.yaml</code> looks like</p>
+
+<pre><code>mydata:
+  initial_daemon_count: 43
+  storage_root: /srv/mydata
+  export_options: rw,sync,no_root_squash,no_all_squash
+</code></pre>
+
+<h3 id="whats-left">What’s left?</h3>
+
+<p>This might not be an ideal NFS setup for your particular service.
+What are some other ways we can tweak this?</p>
+
+<p>Currently, the nfs server creates a separate share for each named service
+that attaches to it.</p>
+
+<p>We deployed mediawiki as <code>mywiki</code>, so all <code>mywiki</code> service units would
+share an export.  Well, you could deploy another mediawiki service unit
+called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
+share a different export.  The new export is created on the service when
+the first unit of a new service name joins… subsequent units of that named
+service are just connected to that new export.</p>
+
+<p>Of course, this works for entirely separate services too.  Relating a 
+<code>hadoop-master</code> service named <code>job27</code> to that same nfs service would result in 
+the <code>job27</code> units sharing a new nfs export.</p>
+
+<p>This behavior is a reasonable default, but there may be a need to do this a 
+little differently in your infrastructure.  You could change the nfs server
+charm to provide different levels of export sharing… either by some
+additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
+An nfs client might request a unique export, for backups
+say, or a named export for sharing.</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>I work on the Ubuntu juju project for Canonical.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-25T00:00:00-04:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cloud/'>cloud</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/cloud/2011/08/25/juju-nfs.html" data-via="m_3" data-counturl="http://mmm.github.io/cloud/2011/08/25/juju-nfs.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/howtos/2011/08/17/presonus-firebox.html" title="Previous Post: PreSonus FireBox in Ubuntu">&laquo; PreSonus FireBox in Ubuntu</a>
+      
+      
+        <a class="basic-alignment right" href="/cloud/2011/09/03/terasort-ganglia.html" title="Next Post: Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia">Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/cloud/2011/08/25/juju-nfs.html';
+        var disqus_url = 'http://mmm.github.io/cloud/2011/08/25/juju-nfs.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

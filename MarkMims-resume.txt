@@ -1,0 +1,291 @@
+                      Mark M. Mims, Ph.D. - Résumé
+
+
+Contact Information:
+
+Mark M. Mims, Ph.D.
+
+Email: mark.mims@gmail.com
+URL: http://www.markmims.com/
+Achievements:
+* Experienced Data Scientist
+* Developer on the Ubuntu Server Team
+* Private & Hybrid Cloud and Cloud Application Architect
+* Enterprise Experience (Chief Architect for $30MM J2EE project in
+  the Energy Industry)
+* Entrepreneurial Experience (Data Science and DevOps Consulting)
+* Ph.D. Physics - Quantum Computation
+
+
+Employment History:
+
+    Software Engineer - Ubuntu Server Team
+    Canonical Ltd. (Logan / UK)
+    2011-Present
+    
+    Building DevOps tools for Ubuntu Server.
+    
+    Part of the team working to build Juju, a new suite of DevOps tools
+    for Ubuntu Server. Developing juju charms to orchestrate various
+    services throughout the enterprise. Designing / developing APIs and
+    tools surrounding the juju DevOps stack. Integrate / test
+    deployments on LXC, bare metal-as-a-service (MaaS) as well as EC2
+    and OpenStack cloud infrastructures.
+    
+    Implement data-intensive service stacks and using Juju to capture,
+    test, and model data science pipelines.
+    
+    
+    Visiting Scholar
+    Department of Physics, Utah State University (Logan)
+    2012-Present
+    
+    Research in data management and data modeling.
+    
+    Particularly interested in data plumbing and the toolchains
+    surrounding data science pipelines and how they effect subsequent
+    results at various scales.
+    
+    Helping define curricula for data science tracks within various
+    departments in universities across the US.
+    
+    
+    Cloud Architect
+    Archethought (Austin / Boulder)
+    2010-2011
+    
+    Building private and hybrid clouds and cloud applications for
+    universities.
+    
+    Archethought is a consulting firm specializing in designing and
+    building *private and hybrid clouds* for colleges and universities
+    around the world. This helps universities take advantage of more
+    efficient Virtualization technologies, provide infrastructure as a
+    service within the university, and safely explore various emerging
+    Digital Library technologies.
+    
+    Design and Deliver all software, networking, configuration and
+    monitoring needed to set up and support a Cloud Computing System,
+    Storage Systems, and cloud-based High Performance Computing Systems.
+    Help integrate the Cloud Computing System with existing systems and
+    applications throughout the university environment. This includes a
+    web-based (Rails) Cloud Management Console with account, instance,
+    image, and storage management.
+    
+    Technology Used: Eucalyptus, AWS/EC2 API, RightAWS, Ruby, Rails,
+    Chef.
+    
+    
+    Founder / Chief Scientist
+    Agile Dynamics (Austin)
+    2005-2011
+    
+    Data Science Consulting.
+    
+    Designed and built a *data-driven decision support system* for the
+    Jamaican Ministry of Education. This USAID-sponsored project serves
+    primary and secondary educational institutions throughout the nation
+    and gives the Ministry previously unknown visibility into the state
+    of education on the Island. This application was built using Rails
+    and scales dynamically in EC2 using Chef.
+    
+    Designed the next generation of application for a company offering
+    Fleet/Inventory Tracking services. This company provides web
+    services and whitelabel web portals to track assets using their
+    proprietary GPS tracking hardware. The new design helped prepare for
+    *integration into Machine to Machine (M2M) data market*.
+    
+    Provide *ad-hoc data-munging* services to a variety of businesses.
+    Designed/built web-based bulk data importers for textbook
+    distributors to manage inventory from publishers with various
+    proprietary and standard (ONIX) formats. Designed/built web-based
+    bulk data importers for a game company wanting a portal for
+    customers to manage game content.
+    
+    Provided quantitative marketing tools and services for the
+    visualization and *modeling of social networks*. Allowed for trend
+    identification and analysis, growth rate predictions, and what-if
+    scenarios for various network and Web-2.0 businesses. This was
+    developed using Ruby/MySQL with Rails/GraphViz visualization.
+    
+    Provided environmental simulation and modeling solutions to track
+    pollutants in the Florida Everglades. Created numerical
+    *hydrodynamic mass balance models* that are used to calculate tax
+    incentives/penalties for surrounding commercial land. This was
+    developed using Java/SWT/WebStart and interfaced with a variety of
+    legacy apps and databases.
+    
+    Technology Used: Ruby, Rails, Java, SWT/JFace.
+    
+    
+    Board of Directors
+    LoneStarRuby Foundation (Austin)
+    2009-2011
+    
+    LSRF organizes an annual LoneStarRuby Conference
+    
+    
+    Chief Technology Officer
+    Rational Systems (Houston)
+    2002-2005
+    
+    Building Operations/Optimization systems for the Energy Industry.
+    
+    Directed delivery of two complete product lines, Rational Pipe(TM)
+    and Rational Catalyst(TM), from conception.
+    
+    Rational Pipe is software designed to *manage the commercial
+    activities of interstate natural gas pipelines*, including
+    contracts, CRM, tariffs, capacity release, nominations, allocations
+    and invoicing. It was the result of a 140+ man-year, joint
+    development project between Rational Systems and a major US
+    interstate natural gas pipeline, utilizing Rational's Rights-Based
+    engine.
+    
+    Chief Architect for this $30M project delivered on time and on
+    budget. Provided Technical leadership for a team of approximately
+    thirty developers and twenty testers. Directly developed components
+    across the system, including: gas flow, physical pipe, scheduling,
+    and the JMX-based system management console.
+    
+    Rational Catalyst is a business simulation and analysis framework
+    used in energy production, exploration, and gathering. It is
+    software that enables *collaborative business modeling* by
+    integrating small disparate models of various aspects of the
+    business together making model data available across the enterprise.
+    Catalyst packages data mining, revision control for both data and
+    models, and various visualization tools including configurable
+    executive dashboards into one complete package for business
+    analysis.
+    
+    Chief Architect for the Rational Catalyst team of four developers
+    and two testers. Directly developed add-in interface components for
+    Microsoft Excel 2000 using MFC/ATL/COM plugins in C++.
+    
+    Technology Used: Java, C#, C++, J2EE Design/Development, .NET,
+    Business modeling, MFC, ATL, COM, Tibco, SQLServer 2000 with
+    Analysis Services, Enterprise Hardware (Compaq/HP) running Windows
+    2000 Server, Windows 2003 Server, Red Hat 9 and Fedora Core 2-3,
+    Microsoft SharePoint, Linux.
+    
+    
+    Lead Software Architect
+    The AEgis Technologies Group, Inc. (Austin)
+    2000-2002
+    
+    Building IDEs for Simulation Engineers.
+    
+    Principal architect of AEgis' AcslXtreme(TM) product line, a suite
+    of *commercial simulation tools* based on the industry standard
+    ACSL(TM) (Advanced Continuous Simulation Language). Leader of a
+    development team responsible for refactoring and modernizing the
+    ACSL language as well as developing a complete modern development
+    environment for simulation engineers. Responsible for coordinating
+    all technical activities and artifacts throughout the lifecycle of
+    the project.
+    
+    Directly developed software components across the product line: for
+    ACSL language translation, compilation, interpretation, symbolic
+    mathematical manipulation, numerical integration and analysis,
+    numerical optimization, build management, simulation execution
+    management, communications infrastructure (using both distributing
+    and componenting technologies), and developing user interface
+    component APIs.
+    
+    Technology Used: C/C++, C#, Java, .NET, MATLAB, VB, FORTRAN, UNIX
+    and Win32 systems programming, MFC, COM/DCOM, CORBA, SOAP, HLA,
+    ANTLR, lex/yacc, UML, RUP, GoF design patterns, object-oriented
+    design, component-based design, Windows .NET, Various flavors of
+    UNIX/Linux (some components native, UI(MFC) components ported using
+    Bristol porting tools).
+    
+    
+    Software Developer
+    Wesson International, Inc., now Adacel Technologies, Ltd. (Austin)
+    1996-1998
+    
+    Building Air Traffic Control simulators.
+    
+    Responsible for creating and maintaining realistic aircraft movement
+    and intelligent pilot behavior in a multi-platform, scaleable *air
+    traffic control (ATC) simulator*.
+    
+    Integrated tower ATC, radar ATC, and flight simulators in order to
+    simultaneously train tower controllers, radar controllers, and
+    pilots. Distributed the system using CORBA and the US Defense
+    Department's High Level Architecture (HLA). Spearheaded the
+    simulator port to C++ on a POSIX-compliant kernel.
+    
+    In addition to movement and pilot intelligence in a soft real-time
+    environment, responsibilities included on-site customization for
+    systems installed in Alaska and Hong Kong, graphics programming
+    using SGI's IRIS Performer toolkit, and developing networking tools
+    to assist in distributing the simulators.
+    
+    Technology Used: C/C++, Tcl/Tk, UNIX and Win32 systems programming,
+    (soft) real-time process scheduling/event management, resource
+    conflict resolution/management, network programming using TCP/IP and
+    NetBIOS, Silicon Graphics O_2, Onyx Reality Engine, and Onyx2
+    Infinite Reality high-end graphics systems running IRIX(UNIX), i386
+    hardware running Linux, Win95, NT-4.0, and an in-house real-time OS
+    over DOS/4GW.
+    
+    
+    Instructor
+    Dept. of Physics - UT Austin (Austin)
+    1994-2000
+    
+    Physical Science I: Mechanics (AI, Instructor of Record)
+    
+    Lab for Engineering Physics I (TA)
+    
+    Lab for General Physics II (TA)
+    
+    
+    Lecturer
+    Austin Community College (Austin)
+    1995-1996
+    
+    Intro to General Physics I
+    
+    Engineering Physics I
+    
+
+Education:
+
+    Ph.D. in Physics, 2000
+    The University of Texas at Austin
+    
+    Projects:
+    * Dissertation: "Dynamical Stability of Quantum Algorithms."
+      Supervisor: E.C.G. Sudarshan Created a numerical model to
+      characterize noise in Grover's quantum search algorithm. This
+      model was then used to determine the maximum amount of noise that
+      the bare algorithm can tolerate before failing. This is useful in
+      determining exactly which emerging technologies will prove to be
+      viable for implementing quantum computers. Technology Used: C++,
+      Perl, BASH script, LaTeX, numerical solutions to ODEs,
+      randomization, various matrix calculations (using blitz++, TNT,
+      and LAPACK).
+    
+    B.S. in Physics, 1992
+    The University of Texas at Austin
+    
+    B.S. in Mathematics, 1992
+    The University of Texas at Austin
+    
+    Projects:
+    * Thesis: "Path Integration on Multiply Connected Configuration
+      Spaces." Supervisor: Ce'cile DeWitt-Morette
+    
+
+Publications:
+
+    Luis J. Boya, Mark Byrd, Mark Mims, E. C. G. Sudarshan.
+    "Geometry of n-state systems, pure and mixed". J. Phys.: Conf.
+    Ser. 87 012006. 2007.
+
+    Mark Mims. "Dynamical Stability of Quantum Algorithms".
+    Dissertation, ISBN:0-493-13630-4. The University of Texas at
+    Austin. 2000.
+

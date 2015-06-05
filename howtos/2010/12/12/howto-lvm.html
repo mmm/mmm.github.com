@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>lvm cheats and notes - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="from http://www.redhatlinux.info/2010/11/lvm-logical-volume-manager.html LVM (LOGICAL VOLUME MANAGER)
+1. TO CREATE LVM 1.fdisk /dev/sda -&gt;create 3 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/howtos/2010/12/12/howto-lvm.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Lvm Cheats and Notes</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-12T00:00:00-05:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>from http://www.redhatlinux.info/2010/11/lvm-logical-volume-manager.html</p>
+
+<p>LVM (LOGICAL VOLUME MANAGER)
+1. TO CREATE LVM</p>
+
+<pre><code>1.fdisk /dev/sda   -&gt;create 3 partitions + label to 8e
+2.partprobe
+3.fdisk -l
+4.pvcreate /dev/sda8 /dev/sda9
+5.pvdisplay /dev/sda8
+6.pvdisplay /dev/sda9
+7.vgcreate vg0 /dev/sda8 /dev/sda9
+8.vgdisplay 
+9.lvcreate -L +200M -n /dev/vg0/home1
+10.lvdisplay /dev/vg0/home1
+11.lvcreate -L +300M -n /dev/vg0/var1
+12.lvdisplay /dev/vg0/var1 
+13.mkfs.ext3 /dev/vg0/var1
+14 mkfs.ext3 /dev/vg0/home1 
+15.mkdir /home1
+16.mkdir /var1
+17.mount /dev/vg0/home1 /home1
+18.mount /dev/vg0/var1 /var1
+19.cp /etc/a* /home1
+20.cp /etc/b* /var1
+21.vim /etc/fstab 
+22.mount -a
+</code></pre>
+
+<p>TO EXTEND LVM</p>
+
+<pre><code>1.lvdisplay /dev/vg0/home1
+2.lvextend -L +200M /dev/vg0/home1
+3.ls /home1
+4.resize2fs /dev/vg0/home1
+5.ls /home1
+</code></pre>
+
+<p>TO REDUCE LVM</p>
+
+<pre><code>1. lvdisplay 
+2. umount /var1
+3. e2fsck -f /dev/vg0/var1
+4. resize2fs /dev/vg0/var1 100M
+5. lvreduce -L -100M -n /dev/vg0/var1
+6. mount /dev/vg0/var1 /var1
+7. df -h 
+</code></pre>
+
+<p>LVM SNAPSHOT</p>
+
+<pre><code>1.  lvcreate  -L 200M -s -n lv2 /dev/llc/lv1
+</code></pre>
+
+<p>TO EXTEND PV
+    1.pvcreate /dev/sda10
+    2.pvdisplay</p>
+
+<p>TO EXTEND VG
+    1.vgextend vg0 /dev/sda10
+    2.vgdisplay vg0</p>
+
+<p>TO REDUCE VG
+    1.vgreduce vg0 /dev/sda10
+    2.vgdisplay </p>
+
+<p>TO REDUCE PV
+    1.pvremove /dev/sda10
+    2.pvdisplay </p>
+
+<p>REMOVE LVM
+    1.lvdisplay 
+    2.umount /dev/vg0/home1 
+    3.umount /dev/vg0/var1
+    4.vim /etc/fstab 
+    5.lvremove /dev/vg0/home1 
+    6.lvremove /dev/vg0/var1 
+    7.lvdisplay </p>
+
+<p>REMOVE VG
+    1.vgdisplay 
+    2.vgremove /dev/vg0
+    3.vgdisplay </p>
+
+<p>REMOVE PV
+    1.pvdisplay 
+    2.pvremove /dev/sda9
+    3.pvremove /dev/sda8</p>
+
+<hr />
+
+<p>from http://www.linux-mag.com/cache/7454/1.html</p>
+
+<pre><code># fdisk -l /dev/sdb
+
+Disk /dev/sdb: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1       30400   244187968+  8e  Linux LVM
+/dev/sdb2           30401       60801   244196032+  8e  Linux LVM
+   
+
+# pvcreate /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+Physical volume "/dev/sdb1" successfully created
+Physical volume "/dev/sdb2" successfully created
+Physical volume "/dev/sdc1" successfully created
+Physical volume "/dev/sdc2" successfully created
+
+
+# pvdisplay
+
+
+# vgcreate primary_vg /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+  Volume group "primary_vg" successfully created
+
+
+# vgdisplay
+
+# vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "primary_vg" using metadata type lvm2
+  
+# lvcreate --name /dev/primary_vg/home_lv --size 450G
+  Logical volume "home_lv" created
+
+# lvdisplay
+
+# lvscan
+
+# mkfs.ext3 /dev/primary_vg/home_lv
+
+
+# lvcreate -L500M -s -n home_backup_080309 /dev/primary_vg/home_lv
+  Logical volume "home_backup_080309" created
+
+
+# lvscan
+  ACTIVE   Original '/dev/primary_vg/home_lv' [450.00 GB] inherit
+    ACTIVE   Snapshot '/dev/primary_vg/home_backup_080309' [500.00 MB] inherit
+
+
+# mkdir /mnt/backup/home_backup_080309
+# mount /dev/primary_vg/home_lv/home_backup_080309 /mnt/backup/home_backup_080309
+# mount
+/dev/hda3 on / type ext3 (rw)
+proc on /proc type proc (rw)
+sysfs on /sys type sysfs (rw)
+devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+/dev/hda1 on /boot type ext2 (rw)
+tmpfs on /dev/shm type tmpfs (rw)
+none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)
+/dev/mapper/primary_vg-home_lv on /home type ext3 (rw,data=ordered)
+/dev/mapper/primary_vg-home_backup_080309 on /mnt/backup/home_backup_080309 type ext3 (rw)
+
+# ls -s /mnt/backup/home_backup_080309/
+total 20
+16 lost+found   4 user5
+# ls -s /mnt/backup/home_backup_080309/user5
+total 74080
+    4 linux-2.6.30  74076 linux-2.6.30.tar.gz
+</code></pre>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-12T00:00:00-05:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/howtos/'>howtos</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/howtos/2010/12/12/howto-lvm.html" data-via="m_3" data-counturl="http://mmm.github.io/howtos/2010/12/12/howto-lvm.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/howtos/2010/12/02/howto-ipmi.html" title="Previous Post: ipmi stuff">&laquo; ipmi stuff</a>
+      
+      
+        <a class="basic-alignment right" href="/howtos/2011/01/07/howto-bash-history.html" title="Next Post: tweak bash history">tweak bash history &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/howtos/2010/12/12/howto-lvm.html';
+        var disqus_url = 'http://mmm.github.io/howtos/2010/12/12/howto-lvm.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

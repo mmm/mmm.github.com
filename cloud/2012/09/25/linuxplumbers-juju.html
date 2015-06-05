@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Running the LinuxPlumbers Conference Schedule with Juju - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="Written by Mark Mims and Chris Johnston Hey, so last month we ran scheduling for the Linux Plumbers Conference
+entirely on juju! Here’s a little &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Running the LinuxPlumbers Conference Schedule With Juju</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-25T00:00:00-04:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p class="meta">
+Written by Mark Mims and Chris Johnston
+</p>
+
+<p>Hey, so last month we ran scheduling for the 
+<a href="http://linuxplumbersconf.org">Linux Plumbers Conference</a>
+entirely on juju!</p>
+
+<p>Here’s a little background on the experience.</p>
+
+<p>Along the way, we’ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It’s a basic
+stack of services that’s only alive for 6-months or so…  but this discussion
+applies to bigger longer-running production infrastructures too, so it’s worth
+going over here.</p>
+
+<!--more-->
+
+<h2 id="the-app">The App</h2>
+
+<p>So <a href="https://launchpad.net/summit">summit</a> is this great django app built for
+scheduling conferences.  It’s evolved over time to handle
+<a href="uds.ubuntu.com">UDS</a>-level traffic and is currently maintained by a
+<a href="https://launchpad.net/~summit-hackers">Summit Hackers</a> team that includes
+<a href="http://www.chrisjohnston.org/">Chris Johnston</a>
+and <a href="http://mhall119.com/">Michael Hall</a>.</p>
+
+<p>Chris contacted me to help him use juju to manage summit for this year’s
+Plumbers conference.  At the time we started this, the 11.10 version of juju
+wasn’t exactly blessed for production environments, but we decided it’d be a
+great opportunity to work things out.</p>
+
+<h2 id="the-stack">The Stack</h2>
+
+<p>A typical summit stack’s got postgresql, the django app itself, and a memcached server.</p>
+
+<p><a href="/images/django-stack.png">
+<img src="/images/django-stack.png" width="198px" />
+</a></p>
+
+<p>We additionally talked about putting this all behind some sort of a head like haproxy.</p>
+
+<p><a href="/images/bigger-django-stack.png">
+<img src="/images/bigger-django-stack.png" width="334px" />
+</a></p>
+
+<p>This’d let the app scale horizontally as well as give us a stable point to
+attach an elastic-ip.  We decided to <em>not</em> do this at the time b/c we could
+most likely handle the peak conference load with a single django service-unit
+provided we slam select snippets of the site into memcached.</p>
+
+<p>This turned out to be true load-wise, but it really would’ve been a whole lot
+easier to have a nice constant haproxy node out there to tack the elastic-ip
+to.
+During development (charm, app, and theme) you want the freedom to destroy
+a service and respawn it without having to use external tools to go around and
+attach public IP addresses to the right places.  That’s a pain.  Also, if
+there’s a sensitive part of this infrastructure in production, it wouldn’t be
+postgresql, memcached, or haproxy… the app itself would be the most likely
+point of instability, so it was a mistake to attach the elastic-ip there.</p>
+
+<h2 id="the-environment">The Environment</h2>
+
+<h3 id="choice-of-cloud">choice of cloud</h3>
+
+<p>We chose to use ec2 to host the summit stack… mostly a matter of
+convenience.  The juju openstack-native provider wasn’t completed when we spun
+up the production environment for linuxplumbers and we didn’t have access to a
+stable private ubuntu cloud running the openstack-ec2-api at the time.
+All of this has subsequently landed, so we’d have more options today.</p>
+
+<h3 id="the-charms">the charms</h3>
+
+<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>’s excellent
+<a href="lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk">django charm</a>
+to create a
+<a href="https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk">summit-charm</a>
+and freely specialized it for summit.</p>
+
+<p>Note that we’re updating this charm for 12.04
+<a href="https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk">here</a>, but
+this will probably go away in the near future and we’ll just use a generic
+django charm.  It turns out we didn’t do too much here that won’t apply to
+django apps in general, but more on that another time.</p>
+
+<p>There was nothing special about our tuning of postgresql or memcached.  We just
+used the services provided by the canned charms.  These sort of peripheral
+services aren’t the kind of charms you’re likely to be making changes to or
+tweaking outside of their exposed config parameters.  I know <em>jack</em> about
+memcached, so I’ll defer to the experts in this regard.  Similarly for
+postgresql… and haproxy if we used it in this stack.</p>
+
+<p>The summit charm is a little different.  It’s something we were continuing to
+tweak during development.  Perhaps with future more generic django charm
+versions, we won’t need to tweak the charm itself… just configure it.</p>
+
+<p>We used a “local” repository for <em>all</em> charms because the charm store hadn’t
+landed when we were setting this up.  Well, now that the charm store is live,
+you can just deploy the canned charms straight from the store</p>
+
+<pre><code>`juju deploy -e summit memcached`
+</code></pre>
+
+<p>and keep the ones you want to tweak in a local repository… </p>
+
+<pre><code>`juju deploy -e summit --repository ~/charms local:summit`
+</code></pre>
+
+<p>all within the same environment.  It works out nicely.</p>
+
+<h3 id="control-environment">control environment</h3>
+
+<p>We had multiple people to manage the production summit environment.  What’s the
+best way to do that?  It turns out juju supports this pretty well right out of
+the box.  There’s an environment config for the set of ssh public keys to
+inject into everything in the environment as it starts up… you can read more
+about that on 
+<a href="http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju">askubuntu</a>.</p>
+
+<p>Note that this is only useful to configure at the beginning of the stack.  Once
+you’re up, adding keys is problematic.  I don’t even recommend trying b/c of
+the risk of getting undetermined state for the environment.  i.e., different
+nodes with different sets of keys depending on when you changed the keys relative
+to what actions you’ve performed on the environment.  It’s a problem.</p>
+
+<p>What I recommend now is actually to use <em>another</em> juju environment…  (and no,
+we’re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+“control” environment.  You bootstrap it, then set up a juju client that controls
+the main production environment.  Then set up a shared tmux session that any of
+the admins for the production environment can use:</p>
+
+<p><a href="/images/summit-control.png">
+<img src="/images/summit-control.png" width="720px" />
+</a></p>
+
+<p>Adding/changing the set of
+admin keys is then done in a single place.  This technique isn’t strictly
+necessary, but it was certainly worth it here with different admins having
+various different levels of familiarity with the tools.  I started it as a
+teaching tool, left it up because it was an easy control dashboard, and now
+recommend it because it works so well.</p>
+
+<h3 id="its-chilly-in-here">it’s chilly in here</h3>
+
+<p>Yeah, so during development you break things.  There were a couple of times
+using 11.10 juju that changes to juju core prevented a client from talking to
+an existing stack.  Aargh!  This wasn’t going to fly for production use.</p>
+
+<p>The juju team has subsequently done a <em>bunch</em> to prevent this from happening,
+but hey we needed production summit working and stable at the time.  The
+answer… freeze the code.</p>
+
+<p>Juju has an environment config option <code>juju-origin</code> to specify where to
+get the juju installed on all instances in the environment.  I branched juju
+core to <code>lp:~mark-mims/juju/running-summit</code> and just worked straight from there
+for the lifetime of the environment (still up atm).  Easy enough.</p>
+
+<p>Now the tricky part is to make sure that you’re always using the
+<code>lp:~mark-mims/juju/running-summit</code> version of the juju cli when talking to the
+production summit environment.</p>
+
+<p>I set up</p>
+
+<pre><code>#!/bin/bash
+export JUJU_BRANCH=$HOME/src/juju/running-summit
+export PATH=$JUJU_BRANCH/bin:$PATH
+export PYTHONPATH=$JUJU_BRANCH
+</code></pre>
+
+<p>which my tmuxinator config sources into every pane in my <code>summit</code> tmux session.</p>
+
+<p>This was also done on the <code>summit-control</code> instance so it’s easy to make sure
+we’re all using the right version of the juju cli to talk to the production
+environment.</p>
+
+<h3 id="backups">backups</h3>
+
+<p>The <code>juju ssh</code> subcommand to the rescue.  You can do all your standard ssh
+tricks…</p>
+
+<pre><code>juju ssh postgresql/0 'su postgres pg_dump summit' &gt; summit.dump
+</code></pre>
+
+<p>… on a cronjob.  Juju just stays out of the way and just helps out a bit with
+the addressing.  Real version pipes through bzip2 and adds timestamps of course.</p>
+
+<p>Of course snapshots are easy enough too via euca2ools, but the pgsql dumps
+themselves turned out to be more useful and easy to get to in case of a
+failover.</p>
+
+<h3 id="debugging">debugging</h3>
+
+<p>The biggest debugging activity during development was cleaning up the app’s
+theming.  The summit charm is configured to get the django app itself from
+one <a href="https://code.launchpad.net/summit">application branch</a> and the theme from a separate
+<a href="https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme">theme branch</a>.</p>
+
+<p>So… ahem… “best practice” for theme development would’ve been to
+develop/tweak the theme locally, then push to the branch.  A simple</p>
+
+<pre><code>juju set --config=summit.yaml summit/0
+</code></pre>
+
+<p>would update config for the live instances.</p>
+
+<p>Well…  some of the menus from the base template used absolute paths so it was
+simpler to cheat a bit early in the process to test it all in-place with actual
+dns names.  Had we been doing this the “right” way from the beginning we
+would’ve had much more confidence in the stack when practicing recovery and
+failover later in the cycle… we would’ve been doing it all since day one.</p>
+
+<p>Another thing we had to do was manually test memcached.  To test out caching
+we’d ssh to the memcached instance, stop the service, run memcached verbosely
+in the foreground.  Once we determined everything was working the way we
+expected, we’d kill it and restart the upstart job.</p>
+
+<p>This is a bug in the memcached charm imo… the option to temporarily run
+verbosely for debugging should totally be a config option for that service.
+It’d then be a simple matter of</p>
+
+<pre><code>juju set memcached/0 debug=true
+</code></pre>
+
+<p>and then</p>
+
+<pre><code>juju ssh memcached/0
+</code></pre>
+
+<p>to watch some logs.  Once we’re convinced it’s working the way it should</p>
+
+<pre><code>juju set memcached/0 debug=false
+</code></pre>
+
+<p>should make it performant again.</p>
+
+<p>Next time around, we should take more advantage of <code>juju set</code> config to
+update/reconfigure the app as we made changes… and generally implement a
+better set of development practices.</p>
+
+<h3 id="monitoring">monitoring</h3>
+
+<p>Sorely lacking.  “What? curl doesn’t cut it?”… um… no.</p>
+
+<h3 id="planning-for-failures">planning for failures</h3>
+
+<p>Our notion of failover for this app was just a spare set of cloud credentials
+and a tested recovery plan.</p>
+
+<p>The plan we practiced was…</p>
+
+<ul>
+  <li>bootstrap a new environment (using spare credentials if necessary)</li>
+  <li>spin up the summit stack</li>
+  <li>ssh to the new <code>postgresql/0</code> and drop the db  (Note: the postgresql charm
+should be extended to accept a config parameter of a storage url, S3 in this
+case, to slurp the db backups from)</li>
+  <li>
+    <p>restore from offsite backups… something along the lines of</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <td>cat summit-$timestamp.dump.bz2</td>
+          <td>juju ssh -e failover postgresql/0 ‘bunzip2 -c</td>
+          <td>su - postgres pgsql summit’</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>In practice, that took about 10-15minutes to recover once we started acting.
+Given the additional delay between notification and action, that could spell an
+hour or two of outtage.  That’s not so great.</p>
+
+<p>Juju makes other failover scenarios cheaper and easier to implement than they
+used to be, so why not put those into place just to be safe?  Perhaps the
+additional instance costs for hot-spares wouldn’t’ve been necessary for the
+entire 6-months of lead-time for scheduling and planning this conference, but
+they’d certainly be worth the spend during the few days of the event itself.
+Juju sort of makes it a no-brainer.  We should do more posts on this one
+issue… the game has changed here.</p>
+
+<h2 id="lessons-learned">Lessons Learned</h2>
+
+<p>What would we do differently next time?  Well, there’s a list :).</p>
+
+<ul>
+  <li>use the stable ppa… instead of freezing the code</li>
+  <li>sit the app behind haproxy</li>
+  <li>use s3fs or equivalent subordinate charm to manage backups instead of just
+sshing them off the box</li>
+  <li>better monitoring… we’ve gotten a great set of monitoring charms
+recently… thanks <a href="http://fewbar.com/">Clint</a>!</li>
+  <li>log aggregation would’ve been a little bit of overkill for this app, but next
+time might warrant it</li>
+  <li>it’s cheap to add failover with juju… just do it</li>
+  <li>maybe follow a development process a little more carefully next time around :)</li>
+  <li>we’ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-25T00:00:00-04:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cloud/'>cloud</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html" data-via="m_3" data-counturl="http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/cloud/2012/06/04/juju-at-scale.html" title="Previous Post: Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju">&laquo; Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju</a>
+      
+      
+        <a class="basic-alignment right" href="/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html" title="Next Post: CharmSchool Video from the Openstack Summit">CharmSchool Video from the Openstack Summit &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html';
+        var disqus_url = 'http://mmm.github.io/cloud/2012/09/25/linuxplumbers-juju.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

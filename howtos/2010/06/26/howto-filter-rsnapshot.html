@@ -1,0 +1,662 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>filter filetypes from rsnapshot - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="#################################################
+# rsnapshot.conf - rsnapshot configuration file &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mmm.github.io/howtos/2010/06/26/howto-filter-rsnapshot.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mmm.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Filter Filetypes From Rsnapshot</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><pre><code>#################################################
+# rsnapshot.conf - rsnapshot configuration file #
+#################################################
+#                                               #
+# PLEASE BE AWARE OF THE FOLLOWING RULES:       #
+#                                               #
+# This file requires tabs between elements      #
+#                                               #
+# Directories require a trailing slash:         #
+#   right: /home/                               #
+#   wrong: /home                                #
+#                                               #
+#################################################
+
+#######################
+# CONFIG FILE VERSION #
+#######################
+
+config_version	1.2
+
+###########################
+# SNAPSHOT ROOT DIRECTORY #
+###########################
+
+# All snapshots will be stored under this root directory.
+#
+#snapshot_root	/.snapshots/
+snapshot_root	/mnt/array1/arch/
+
+# If no_create_root is enabled, rsnapshot will not automatically create the
+# snapshot_root directory. This is particularly useful if you are backing
+# up to removable media, such as a FireWire or USB drive.
+#
+#no_create_root	1
+
+#################################
+# EXTERNAL PROGRAM DEPENDENCIES #
+#################################
+
+# LINUX USERS:   Be sure to uncomment "cmd_cp". This gives you extra features.
+# EVERYONE ELSE: Leave "cmd_cp" commented out for compatibility.
+#
+# See the README file or the man page for more details.
+#
+#cmd_cp		/bin/cp
+
+# uncomment this to use the rm program instead of the built-in perl routine.
+#
+cmd_rm		/bin/rm
+
+# rsync must be enabled for anything to work. This is the only command that
+# must be enabled.
+#
+cmd_rsync	/usr/bin/rsync
+
+# Uncomment this to enable remote ssh backups over rsync.
+#
+cmd_ssh	/usr/local/bin/ssh
+
+# Comment this out to disable syslog support.
+#
+cmd_logger	/usr/bin/logger
+
+# Uncomment this to specify the path to "du" for disk usage checks.
+# If you have an older version of "du", you may also want to check the
+# "du_args" parameter below.
+#
+#cmd_du		/usr/bin/du
+
+# Uncomment this to specify the path to rsnapshot-diff.
+#
+#cmd_rsnapshot_diff	/usr/local/bin/rsnapshot-diff
+
+# Specify the path to a script (and any optional arguments) to run right
+# before rsnapshot syncs files
+#
+#cmd_preexec	/path/to/preexec/script
+
+# Specify the path to a script (and any optional arguments) to run right
+# after rsnapshot syncs files
+#
+#cmd_postexec	/path/to/postexec/script
+
+#########################################
+#           BACKUP INTERVALS            #
+# Must be unique and in ascending order #
+# i.e. hourly, daily, weekly, etc.      #
+#########################################
+
+#interval	hourly	6
+interval	daily	7
+interval	weekly	4
+interval	monthly	6
+
+############################################
+#              GLOBAL OPTIONS              #
+# All are optional, with sensible defaults #
+############################################
+
+# Verbose level, 1 through 5.
+# 1     Quiet           Print fatal errors only
+# 2     Default         Print errors and warnings only
+# 3     Verbose         Show equivalent shell commands being executed
+# 4     Extra Verbose   Show extra verbose information
+# 5     Debug mode      Everything
+#
+verbose		2
+
+# Same as "verbose" above, but controls the amount of data sent to the
+# logfile, if one is being used. The default is 3.
+#
+loglevel	3
+
+# If you enable this, data will be written to the file you specify. The
+# amount of data written is controlled by the "loglevel" parameter.
+#
+logfile	/var/log/rsnapshot
+
+# If enabled, rsnapshot will write a lockfile to prevent two instances
+# from running simultaneously (and messing up the snapshot_root).
+# If you enable this, make sure the lockfile directory is not world
+# writable. Otherwise anyone can prevent the program from running.
+#
+lockfile	/var/run/rsnapshot.pid
+
+# Default rsync args. All rsync commands have at least these options set.
+#
+#rsync_short_args	-a
+#rsync_long_args	--delete --numeric-ids --relative --delete-excluded
+
+# ssh has no args passed by default, but you can specify some here.
+#
+#ssh_args	-p 22
+
+# Default arguments for the "du" program (for disk space reporting).
+# The GNU version of "du" is preferred. See the man page for more details.
+# If your version of "du" doesn't support the -h flag, try -k flag instead.
+#
+#du_args	-csh
+
+# If this is enabled, rsync won't span filesystem partitions within a
+# backup point. This essentially passes the -x option to rsync.
+# The default is 0 (off).
+#
+one_fs		1
+
+# The include and exclude parameters, if enabled, simply get passed directly
+# to rsync. If you have multiple include/exclude patterns, put each one on a
+# separate line. Please look up the --include and --exclude options in the
+# rsync man page for more details on how to specify file name patterns. 
+# 
+#include	???
+#include	???
+#exclude	???
+#exclude	???
+exclude	*.zip
+exclude	*.gz
+exclude	*.tgz
+exclude	*.bz2
+exclude	/**/Videos/***
+exclude	/**/Music/***
+exclude	/**/music/***
+exclude	/**/Audio/***
+exclude	*.iso
+exclude	*.mp4
+exclude	*.mp3
+exclude	*.wav
+exclude	*.avi
+exclude	*.mov
+exclude	*.wmv
+exclude	*.flv
+exclude	*.pps
+exclude	*.dv
+exclude	*.ogg
+exclude	/**/vmware/***
+exclude	/**/.vmware/***
+exclude	/**/kvm/***
+exclude	/**/.kvm/***
+exclude	*.vmdk
+exclude	*.qcow2
+exclude	*.raw
+exclude	/**/Photos/***
+exclude	/**/photos/***
+exclude	/**/Pictures/***
+exclude	*.jpg
+exclude	/**/Downloads/***
+exclude	/**/dloads/***
+exclude	/**/rescue/***
+exclude	/**/rubygems/***
+exclude	/**/.gems/***
+exclude	/**/Metasploit/***
+exclude	/**/Eclipse/***
+
+# The include_file and exclude_file parameters, if enabled, simply get
+# passed directly to rsync. Please look up the --include-from and
+# --exclude-from options in the rsync man page for more details.
+#
+#include_file	/path/to/include/file
+#exclude_file	/path/to/exclude/file
+
+# If your version of rsync supports --link-dest, consider enable this.
+# This is the best way to support special files (FIFOs, etc) cross-platform.
+# The default is 0 (off).
+#
+link_dest	1
+
+# When sync_first is enabled, it changes the default behaviour of rsnapshot.
+# Normally, when rsnapshot is called with its lowest interval
+# (i.e.: "rsnapshot hourly"), it will sync files AND rotate the lowest
+# intervals. With sync_first enabled, "rsnapshot sync" handles the file sync,
+# and all interval calls simply rotate files. See the man page for more
+# details. The default is 0 (off).
+#
+#sync_first	0
+
+# If enabled, rsnapshot will move the oldest directory for each interval
+# to [interval_name].delete, then it will remove the lockfile and delete
+# that directory just before it exits. The default is 0 (off).
+#
+#use_lazy_deletes	0
+
+###############################
+### BACKUP POINTS / SCRIPTS ###
+###############################
+
+# LOCALHOST
+backup	root@192.168.100.2:/etc/		hawk/
+backup	root@192.168.100.2:/home/		hawk/
+backup	root@192.168.100.2:/usr/local/	hawk/
+#backup	/var/log/rsnapshot		localhost/
+#backup	/etc/passwd	localhost/
+#backup	/home/foo/My Documents/		localhost/
+#backup	/foo/bar/	localhost/	one_fs=1, rsync_short_args=-urltvpog
+#backup_script		/usr/local/bin/backup_pgsql.sh	localhost/postgres/
+
+# EXAMPLE.COM
+#backup_script	/bin/date "+ backup of example.com started at %c"	unused1
+#backup	root@example.com:/home/	example.com/	+rsync_long_args=--bwlimit=16,exclude=core
+#backup	root@example.com:/etc/	example.com/	exclude=mtab,exclude=core
+#backup_script	ssh root@example.com "mysqldump -A &gt; /var/db/dump/mysql.sql"
+#backup	root@example.com:/var/db/dump/	example.com/
+#backup_script	/bin/date "+ backup of example.com ended at %c"	unused2
+
+# CVS.SOURCEFORGE.NET
+#backup_script	/usr/local/bin/backup_rsnapshot_cvsroot.sh	rsnapshot.cvs.sourceforge.net/
+
+# RSYNC.SAMBA.ORG
+#backup	rsync://rsync.samba.org/rsyncftp/	rsync.samba.org/rsyncftp/
+</code></pre>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/howtos/'>howtos</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mmm.github.io/howtos/2010/06/26/howto-filter-rsnapshot.html" data-via="m_3" data-counturl="http://mmm.github.io/howtos/2010/06/26/howto-filter-rsnapshot.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/howtos/2010/06/26/howto-autostart-mongrel-in-slice.html" title="Previous Post: autostart mongrel in slice">&laquo; autostart mongrel in slice</a>
+      
+      
+        <a class="basic-alignment right" href="/howtos/2010/06/26/howto-lock-user-into-screen.html" title="Next Post: lock a user to a screen session">lock a user to a screen session &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mmm.github.io/howtos/2010/06/26/howto-filter-rsnapshot.html';
+        var disqus_url = 'http://mmm.github.io/howtos/2010/06/26/howto-filter-rsnapshot.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
