@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://mmm.github.io/sitemap.xml 
+Sitemap: http://markmims.com/sitemap.xml 
