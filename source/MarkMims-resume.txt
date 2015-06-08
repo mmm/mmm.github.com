@@ -8,20 +8,83 @@ Mark M. Mims, Ph.D.
 Email: mark.mims@gmail.com
 URL: http://www.markmims.com/
 Achievements:
-* Experienced Data Scientist
+* Data Scientist / Data Engineer
 * Developer on the Ubuntu Server Team
 * Private & Hybrid Cloud and Cloud Application Architect
+* Entrepreneurial Experience (Data Science and DevOps Consulting)
 * Enterprise Experience (Chief Architect for $30MM J2EE project in
   the Energy Industry)
-* Entrepreneurial Experience (Data Science and DevOps Consulting)
 * Ph.D. Physics - Quantum Computation
 
 
 Employment History:
 
+    Principal Engineer
+    Silicon Valley Data Science (Mountainview)
+    2014-Present
+    
+    Data science consulting.
+    
+    
+    Visiting Scholar
+    Department of Physics, Utah State University (Logan)
+    2012-Present
+    
+    Research in data management and data modeling.
+    
+    Interested in data plumbing and the toolchains surrounding data
+    science pipelines and how they effect subsequent results at various
+    scales. Working to apply Test-Driven and Behavior-Driven Software
+    Development techniques to data science pipelines as "Sanity-Driven
+    Data Science."
+    
+    
+    Principal Data Architect
+    Infochimps, now Computer Sciences Corporation (CSC) - Big Data & Analytics (Austin / Falls-Church)
+    2013-2014
+    
+    Built managed data science pipelines for the enterprise.
+    
+    Infochimps, rebranded as CSC's Big Data and Analytics (BD&A) Group,
+    provides a wide range of fully managed data science and analytics
+    services for the enterprise. My primary accomplishment here was
+    driving work to adapt the Infochimps cloud-based products over to
+    "dedicated rack" openstack-based solutions to meet the data pipeline
+    needs of CSC's enterprise customers.
+    
+    As the Principal Data Architect, my contributions included:
+    
+    Achievements:
+    * *Product development* - Worked with a team of architects and
+      product leads to define the actual product offerings, then
+      communicate these offerings to sales and marketing teams. Helped
+      build tools to simplify pricing and hardware configuration
+    * *Solution architecture* - Brought in to pinch-hit infrastructure
+      and architecture with customers. Built service deployments for
+      large insurance and financial services organizations... including
+      quite popular telemetry based data pipelines within the insurance
+      industry
+    * *Infochimps platform architecture* - Worked alongside an
+      incredibly talented development team to refactor and adapt the
+      Infochimps architecture to integrate with other CSC acquisitions
+      and meet the data pipeline needs CSC's customer base
+    * *Development planning* - Worked with the development team to help
+      capture and translate requirements into actionable projects/tasks
+      and help schedule and prioritize these for development
+    * *Ops process development* - Helped the infochimps ops team through
+      the training, process development, and tooling needed to adapt to
+      ops challenges of hybrid public/private cloud managed services
+    * *Devops development* - Helped develop tools around RH-OSP
+      Foreman-based Openstack deployments and integrated what were
+      primarily chef-based infochimps platform component workloads
+    Ultimately responsible for all tooling and process to support
+    production rollout and lifecycle for dedicated-rack BD&A product
+    installs.
+    
+    
     Software Engineer - Ubuntu Server Team
-    Canonical Ltd. (Logan / UK)
-    2011-Present
+    Canonical Ltd. (London)
+    2011-2013
     
     Building DevOps tools for Ubuntu Server.
     
@@ -34,20 +97,6 @@ Employment History:
     
     Implement data-intensive service stacks and using Juju to capture,
     test, and model data science pipelines.
-    
-    
-    Visiting Scholar
-    Department of Physics, Utah State University (Logan)
-    2012-Present
-    
-    Research in data management and data modeling.
-    
-    Particularly interested in data plumbing and the toolchains
-    surrounding data science pipelines and how they effect subsequent
-    results at various scales.
-    
-    Helping define curricula for data science tracks within various
-    departments in universities across the US.
     
     
     Cloud Architect
@@ -170,7 +219,7 @@ Employment History:
     
     
     Lead Software Architect
-    The AEgis Technologies Group, Inc. (Austin)
+    The AEgis Technologies Group, Inc. (Austin / Huntsville)
     2000-2002
     
     Building IDEs for Simulation Engineers.
@@ -236,10 +285,6 @@ Employment History:
     1994-2000
     
     Physical Science I: Mechanics (AI, Instructor of Record)
-    
-    Lab for Engineering Physics I (TA)
-    
-    Lab for General Physics II (TA)
     
     
     Lecturer
