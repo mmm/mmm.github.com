@@ -162,14 +162,14 @@ to access the yarn console.
 
 ## Tips and Gotchas
 
-- The docker image `svds/cdh` is quite large.  I like to do a separate `docker
-  pull` from any `docker run` commands just to isolate the download.  In fact,
-  I recommend pinning the cdh version for the same reason... so `docker pull
-  svds/cdh:5.4.0` for instance, then refer to it that way throughout `docker
-  run -d --name=mycdh svds/cdh:5.4.0` and that'll insure you're not littering
-  your laptop's filesystem with docker layers from multiple cdh versions.  The
-  bare `svds/cdh` (equiv to `svds/cdh:latest`) floats with the most recent
-  cloudera versions
+- The docker image `svds/cdh` is quite large (2GB).  I like to do a separate
+  `docker pull` from any `docker run` commands just to isolate the download.
+  In fact, I recommend pinning the cdh version for the same reason... so
+  `docker pull svds/cdh:5.4.0` for instance, then refer to it that way
+  throughout `docker run -d --name=mycdh svds/cdh:5.4.0` and that'll insure
+  you're not littering your laptop's filesystem with docker layers from
+  multiple cdh versions.  The bare `svds/cdh` (equiv to `svds/cdh:latest`)
+  floats with the most recent cloudera versions
 
 - I'm using a CDH container here... but there's an HDP one on the way as well.
   Keep an eye out for it on [svds's dockerhub page](`hub.docker.com/u/svds`)
