@@ -66,19 +66,26 @@ or
 
 Ok, so `SparkPi` is all fine and dandy, but how do I run a real application?
 
-When you start up the `cdh` container, map your local host drive up and into
+let's say you build your spark project locally on your laptop in the
+`/Users/myname/mysparkproject/`.  When you build with maven or sbt, it
+typically builds and leaves jars under a `/Users/myname/mysparkproject/target/`
+directory.
+
+The idea here is to make these jars directly accessible from the cdh container.
+When you start up the `cdh` container, map this local host directory up and into
 the container
 
-    docker run -d -v target --name=mycdh svds/cdh 
+    docker run -d -v ~/mysparkproject/target:/target --name=mycdh svds/cdh 
 
-where the `-v target` option will mount the `target` directory under your
-current directory over to the container's `/target` directory.
+where the `-v target` option will make `/Users/myname/mysparkproject/target`
+available as `/target` within the container.
 
 So,
 
     sbt clean assembly
 
-leaves a jar under target, which you can run jobs from using something like
+leaves a jar under `~/mysparkproject/target`, which the container sees as
+`/target` and you can run jobs using something like
 
     docker exec -it mycdh \
       spark-submit \
@@ -88,7 +95,7 @@ leaves a jar under target, which you can run jobs from using something like
         /target/scala-2.10/My-assembly-1.0.1.20151013T155727Z.c3c961a51c.jar \
         myarg
 
-where the `--name` makes it easier to find in the midst of multiple yarn jobs.
+The `--name` arg makes it easier to find in the midst of multiple yarn jobs.
 
 
 ## Logs
@@ -139,15 +146,15 @@ for example,
 ### Ports and Docker
 
 There are a few ways to deal with accessing port `8088` of the yarn resource
-manager from outside of the docker container.  I typically use ssh for everything
-and just forward ports out to `localhost` on the host.  Most people will
-expect to access ports directly on the `docker-machine ip` address.
-
-Map that when you first spin up the container via
+manager from outside of the docker container.  I typically use ssh for
+everything and just forward ports out to `localhost` on the host.  However,
+most people will expect to access ports directly on the `docker-machine ip`
+address.  To do that, you have to map each port when you first spin up the
+`cdh` container using the `-P 8088` option
 
     docker run -d -v target -P 8088 --name=mycdh svds/cdh 
 
-Then you should be good with something like
+Then you should be good to go with something like
 
     open http://`docker-machine ip`:8088/
 
