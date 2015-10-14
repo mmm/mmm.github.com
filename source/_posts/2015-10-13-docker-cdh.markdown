@@ -66,18 +66,22 @@ or
 
 Ok, so `SparkPi` is all fine and dandy, but how do I run a real application?
 
-let's say you build your spark project locally on your laptop in the
-`/Users/myname/mysparkproject/`.  When you build with maven or sbt, it
-typically builds and leaves jars under a `/Users/myname/mysparkproject/target/`
-directory.
+Let's make up an example.  Say you build your spark project on your laptop in the
+`/Users/myname/mysparkproject/` directory.
 
-The idea here is to make these jars directly accessible from the cdh container.
-When you start up the `cdh` container, map this local host directory up and into
-the container
+When you build with maven or sbt, it typically builds and leaves jars under a
+`/Users/myname/mysparkproject/target/` directory... for sbt, it'll look like
+`/Users/myname/mysparkproject/target/scala-2.10/`.
+
+The idea here is to make these jars directly accessible from both your laptop's
+build process as well as from inside the cdh container.
+
+When you start up the `cdh` container, map this local host directory up and
+into the container
 
     docker run -d -v ~/mysparkproject/target:/target --name=mycdh svds/cdh 
 
-where the `-v target` option will make `/Users/myname/mysparkproject/target`
+where the `-v` option will make `~/mysparkproject/target`
 available as `/target` within the container.
 
 So,
