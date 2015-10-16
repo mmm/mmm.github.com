@@ -58,21 +58,8 @@ class YouTube < Liquid::Tag
         return Cache[@id]
     end
 
-    # extract video information using a REST command 
-    response = Net::HTTP.get_response("gdata.youtube.com","/feeds/api/videos/#{@id}?v=2&alt=jsonc")
-    data = response.body
-    result = JSON.parse(data)
-
-    # if the hash has 'Error' as a key, we raise an error
-    if result.has_key? 'Error'
-        puts "web service error or invalid video id"
-    end
-
-    # extract the title and description from the json string
-    @title = result["data"]["title"]
-    @description = result["data"]["description"]
-
-    puts " title #{@title}"
+    @title = "embedded youtube video #{@id}"
+    @description = "embedded youtube video #{@id}"
 
     @style = "width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/#{@id}/0.jpg) center center no-repeat;background-size:contain;position:absolute" 
     
