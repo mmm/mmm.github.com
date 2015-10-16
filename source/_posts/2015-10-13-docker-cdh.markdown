@@ -183,7 +183,7 @@ to access the yarn console.
   floats with the most recent cloudera versions
 
 - I'm using a CDH container here... but there's an HDP one on the way as well.
-  Keep an eye out for it on [svds's dockerhub page](`hub.docker.com/u/svds`)
+  Keep an eye out for it on [svds's dockerhub page](`https://hub.docker.com/u/svds`)
 
 - web consoles and forwarding ports through SSH
 
