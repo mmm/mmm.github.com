@@ -104,7 +104,7 @@ The `--name` arg makes it easier to find in the midst of multiple yarn jobs.
 
 ## Logs
 
-While a spark job is running, you can get its yarn "applictionId" from
+While a spark job is running, you can get its yarn "applicationId" from
 
     docker exec -it mycdh yarn application -list
 
