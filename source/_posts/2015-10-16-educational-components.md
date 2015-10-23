@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Educational Components"
-date: 2014-10-24 14:48
+date: 2015-10-16 17:50
 comments: true
 categories: datascience
 ---
@@ -11,6 +11,32 @@ learning.  The goal is to have something amenable to various machine learning
 techniques... mostly just to see what comes out.
 
 <!--more-->
+
+---
+
+Let's save the world... it's simple, quit your job and go teach middle-school
+math.  No, seriously.  If you have any sort of quantitative background, it's
+most likely the best way to effectively contribute to society.
+
+Well, I don't really have the kind of patience it takes to work with kids, so
+I'd like to apply a little more leverage to the situation.
+
+Ok, so
+
+## The Goal
+
+Apply AdTech to Education.
+
+
+Specifically
+
+
+
+So I've always maintained that if you have any sort of quantitative background
+and an itch to save the world, you 
+
+
+---
 
 I taught Physical Science at UT for, hell, pretty much my entire tenure in grad
 school.  During that time, I spent a lot of time and effort trying to find
