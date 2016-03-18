@@ -16,328 +16,330 @@ the sessionization of such events.
 
 <!--more-->
 
-we're in a unique position
+SVDS is a boutique...
 
-solve problems across industries
+    we're in a unique position
 
-recognize patterns along the way
+    solve problems across industries
 
-
-## Key Takeaways
-- what's needed to understand user activity
-- pipeline architectures that support this analysis
-
-<div class="notes">
-Along the way, we'll see:
-
-- commonalities across business verticals
-
-- differences due to scale
-</div>
+    recognize patterns along the way
 
 
-## Agenda { data-background="images/watch-faded.png" }
+    ## Key Takeaways
+    - what's needed to understand user activity
+    - pipeline architectures that support this analysis
 
-- Ingest Events
-- Take Action
-- Recognize Activity
+    <div class="notes">
+    Along the way, we'll see:
 
-<div class="notes">
-we dive into pipeline architectures along the way
-</div>
+    - commonalities across business verticals
 
-
-## Background
-<div class="notes">
-Some general guidelines to keep in mind
-</div>
-
-## The Power of the Query Side
-<div class="notes">
-Query-side tools are fast!
-
-use them
-</div>
-
-## Infrastructure Aspirations
-- immutable
-- lazy
-- ...
-<div class="notes">
-When building datascience pipelines, these paradigms 
-help you stay flexible and scalable
-</div>
+    - differences due to scale
+    </div>
 
 
-## Ingest Events
-<div class="notes">
-What are events and how do we catch them?
-</div>
+    ## Agenda { data-background="images/watch-faded.png" }
 
-## Device Events
-- location
-- environment
-- telemetry
-- presence
-- status (disk is full)
-- ...
-<div class="notes">
-</div>
+    - Ingest Events
+    - Take Action
+    - Recognize Activity
 
-## User Events
-- login
-- checkout
-- add friend
-- ...
-<div class="notes">
-</div>
+    <div class="notes">
+    we dive into pipeline architectures along the way
+    </div>
 
-## Device Event
-<pre><code>
-{
-  "time_utc": "1457741907.959400112",
-  "device_id": "c361-445b-b2f6-27f2eecfc217",
-  "event_type": "environmental_info",
-  "degrees_fahrenheit": "72",
-  ...
-}
-</code></pre>
 
-<div class="notes">
-there are device events
-</div>
+    ## Background
+    <div class="notes">
+    Some general guidelines to keep in mind
+    </div>
 
-## User Event
-<pre><code>
-{
-  "time_utc": "1457741907.959400112",
-  "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
-  "event_type": "login",
-  ...
-}
-</code></pre>
-<div class="notes">
-we'll mostly focus on HCI events.
+    ## The Power of the Query Side
+    <div class="notes">
+    Query-side tools are fast!
 
-they can be simple...
-</div>
+    use them
+    </div>
 
-## Flat User Event
-<pre><code>
-{
-  "time_utc": "1457741907.959400112",
-  "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
-  "event_type": "button_pressed",
-  "button_type": "one-click purchase",
-  "item_sku": "1 23456 78999 9",
-  "item_description": "Tony's Run-flat Tire",
-  "item_unit_price": ...
-  ...
-}
-</code></pre>
-<div class="notes">
-they can be more complex...
-</div>
+    ## Infrastructure Aspirations
+    - immutable
+    - lazy
+    - ...
+    <div class="notes">
+    When building datascience pipelines, these paradigms 
+    help you stay flexible and scalable
+    </div>
 
-## Complex User Event
-<pre><code>
-{
-  "time_utc": "1457741907.959400112",
-  "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
-  "event_type": "button_pressed",
-  "event_details": {
-    "button_type": "one-click purchase",
-    "puchased_items": [
-      {
-        "sku": "1 23456 78999 9",
-        "description": "Tony's Run-flat Tire",
-        "unit_price": ...
-        ...
+
+    ## Ingest Events
+    <div class="notes">
+    What are events and how do we catch them?
+    </div>
+
+    ## Device Events
+    - location
+    - environment
+    - telemetry
+    - presence
+    - status (disk is full)
+    - ...
+    <div class="notes">
+    </div>
+
+    ## User Events
+    - login
+    - checkout
+    - add friend
+    - ...
+    <div class="notes">
+    </div>
+
+    ## Device Event
+    <pre><code>
+    {
+      "time_utc": "1457741907.959400112",
+      "device_id": "c361-445b-b2f6-27f2eecfc217",
+      "event_type": "environmental_info",
+      "degrees_fahrenheit": "72",
+      ...
+    }
+    </code></pre>
+
+    <div class="notes">
+    there are device events
+    </div>
+
+    ## User Event
+    <pre><code>
+    {
+      "time_utc": "1457741907.959400112",
+      "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
+      "event_type": "login",
+      ...
+    }
+    </code></pre>
+    <div class="notes">
+    we'll mostly focus on HCI events.
+
+    they can be simple...
+    </div>
+
+    ## Flat User Event
+    <pre><code>
+    {
+      "time_utc": "1457741907.959400112",
+      "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
+      "event_type": "button_pressed",
+      "button_type": "one-click purchase",
+      "item_sku": "1 23456 78999 9",
+      "item_description": "Tony's Run-flat Tire",
+      "item_unit_price": ...
+      ...
+    }
+    </code></pre>
+    <div class="notes">
+    they can be more complex...
+    </div>
+
+    ## Complex User Event
+    <pre><code>
+    {
+      "time_utc": "1457741907.959400112",
+      "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
+      "event_type": "button_pressed",
+      "event_details": {
+        "button_type": "one-click purchase",
+        "puchased_items": [
+          {
+            "sku": "1 23456 78999 9",
+            "description": "Tony's Run-flat Tire",
+            "unit_price": ...
+            ...
+          },
+        ],
       },
-    ],
-  },
-  ...
-}
-</code></pre>
-<div class="notes">
-they can be downright ugly...
+      ...
+    }
+    </code></pre>
+    <div class="notes">
+    they can be downright ugly...
 
-There are great formats and tools, but the state of the
-art is pretty shoddy... adaptation/munging is often required
-</div>
+    There are great formats and tools, but the state of the
+    art is pretty shoddy... adaptation/munging is often required
+    </div>
 
-## { data-background="images/event-ingestion-without-streaming.svg" }
-<div class="notes">
-The Power of the Query Side
+    ## { data-background="images/event-ingestion-without-streaming.svg" }
+    <div class="notes">
+    The Power of the Query Side
 
-Tenants to live by... immutable, lazy, simple/composable, testable
-</div>
+    Tenants to live by... immutable, lazy, simple/composable, testable
+    </div>
 
-## { data-background="images/event-ingestion-without-streaming-with-filename.svg" }
+    ## { data-background="images/event-ingestion-without-streaming-with-filename.svg" }
 
-## { data-background="images/events-without-streaming-question.svg" }
+    ## { data-background="images/events-without-streaming-question.svg" }
 
-<div class="notes">
-- Flume
+    <div class="notes">
+    - Flume
 
-- Camus / Gobblin
+    - Camus / Gobblin
 
-- Spark Streaming
-</div>
+    - Spark Streaming
+    </div>
 
 
-## { data-background="images/streaming-bare.svg" }
-## { data-background="images/streaming-events-at-scale.svg" }
-## { data-background="images/streaming-events-at-scale-with-partitioning.svg" }
-<div class="notes">
-assume for now that events have a well-defined type... they generally don't
-</div>
+    ## { data-background="images/streaming-bare.svg" }
+    ## { data-background="images/streaming-events-at-scale.svg" }
+    ## { data-background="images/streaming-events-at-scale-with-partitioning.svg" }
+    <div class="notes">
+    assume for now that events have a well-defined type... they generally don't
+    </div>
 
 
 
-# { data-background="images/svds-blank-hi.png" }
-## Take Action 
+    # { data-background="images/svds-blank-hi.png" }
+    ## Take Action 
 
-## What kind of actions?
+    ## What kind of actions?
 
-- Notifications
-- Decorations
-- Routing / Gating
-- Counting
-- ...
+    - Notifications
+    - Decorations
+    - Routing / Gating
+    - Counting
+    - ...
 
-## When to take action?
+    ## When to take action?
 
-- "batch"
-- "real-time"
+    - "batch"
+    - "real-time"
 
-## { data-background="images/streaming-bare.svg" }
-<div class="notes">
-if latency is ok, it might be good enough to take action from the query side
+    ## { data-background="images/streaming-bare.svg" }
+    <div class="notes">
+    if latency is ok, it might be good enough to take action from the query side
 
-try that first
-</div>
+    try that first
+    </div>
 
-## { data-background="images/streaming-simple.svg" }
-<div class="notes">
-if lower latency is required, act directly from the streaming layer
-</div>
+    ## { data-background="images/streaming-simple.svg" }
+    <div class="notes">
+    if lower latency is required, act directly from the streaming layer
+    </div>
 
-## { data-background="images/streaming-with-notify-queues.svg" }
-<div class="notes">
-</div>
+    ## { data-background="images/streaming-with-notify-queues.svg" }
+    <div class="notes">
+    </div>
 
-## { data-background="images/streaming-two-layers.svg" }
-
-
-# { data-background="images/svds-blank-hi.png" }
-## Recognize Activity 
-
-## What's activity?
-
-Sequence of events
-
-<div class="notes">
-we talked about one event
-
-Some activity has more than one event
-
-context matters
-</div>
-
-## { data-background="images/classifying-simple.svg" }
-
-## { data-background="images/classifying-with-state.svg" }
-<div class="notes">
-add hbase to store state
-
-hbase can be joined with events by impala
-
-hbase can be queried from stream
-
-examples
-</div>
-## { data-background="images/hbase-state-credit-score.svg" }
-## { data-background="images/classifying-with-state.svg" }
-## { data-background="images/hbase-state-tracking-package.svg" }
-## { data-background="images/classifying-with-state.svg" }
-## { data-background="images/hbase-state-tracking-package-derived.svg" }
-## { data-background="images/classifying-with-state.svg" }
-
-## State
-![](images/simple-state.png)
-<div class="notes">
-from: http://tynerblain.com/blog/2007/03/21/use-case-vs-statechart/
-</div>
-
-## A Toaster
-![](images/toaster-state.png)
-<div class="notes">
-from: https://en.wikipedia.org/wiki/Finite-state_machine
-</div>
-
-## Netflix
-![](images/play-state.jpg)
-<div class="notes">
-http://people.westminstercollege.edu/faculty/ggagne/may2012/lab8/index.html
-</div>
-
-## Package State
-![](images/package-state.jpg)
-<div class="notes">
-http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-</div>
-
-## Complex Package State
-![](images/nested-package-state.jpg)
-<div class="notes">
-http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-</div>
-
-## { data-background="images/state-can-feed-forward-too.svg" }
+    ## { data-background="images/streaming-two-layers.svg" }
 
 
-# { data-background="images/svds-blank-hi.png" }
-## Best Practices
+    # { data-background="images/svds-blank-hi.png" }
+    ## Recognize Activity 
 
-## The Power of the Query Side
+    ## What's activity?
 
-## Infrastructure Aspirations
-- immutable
-- lazy
-- atomic
-    - simple
-    - composable
-    - testable
-<div class="notes">
-When building datascience pipelines, these paradigms 
-help you stay flexible and scalable
-</div>
+    Sequence of events
 
-## Automate All of the Things
-<div class="notes">
-DevOps is your friend
-</div>
+    <div class="notes">
+    we talked about one event
 
-## Test All of the Things
-<div class="notes">
-TDD/BDD is your friend
-</div>
+    Some activity has more than one event
 
-## Failure is a First Class Citizen
-<div class="notes">
-Fail fast, early, often
-</div>
+    context matters
+    </div>
+
+    ## { data-background="images/classifying-simple.svg" }
+
+    ## { data-background="images/classifying-with-state.svg" }
+    <div class="notes">
+    add hbase to store state
+
+    hbase can be joined with events by impala
+
+    hbase can be queried from stream
+
+    examples
+    </div>
+    ## { data-background="images/hbase-state-credit-score.svg" }
+    ## { data-background="images/classifying-with-state.svg" }
+    ## { data-background="images/hbase-state-tracking-package.svg" }
+    ## { data-background="images/classifying-with-state.svg" }
+    ## { data-background="images/hbase-state-tracking-package-derived.svg" }
+    ## { data-background="images/classifying-with-state.svg" }
+
+    ## State
+    ![](images/simple-state.png)
+    <div class="notes">
+    from: http://tynerblain.com/blog/2007/03/21/use-case-vs-statechart/
+    </div>
+
+    ## A Toaster
+    ![](images/toaster-state.png)
+    <div class="notes">
+    from: https://en.wikipedia.org/wiki/Finite-state_machine
+    </div>
+
+    ## Netflix
+    ![](images/play-state.jpg)
+    <div class="notes">
+    http://people.westminstercollege.edu/faculty/ggagne/may2012/lab8/index.html
+    </div>
+
+    ## Package State
+    ![](images/package-state.jpg)
+    <div class="notes">
+    http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
+    </div>
+
+    ## Complex Package State
+    ![](images/nested-package-state.jpg)
+    <div class="notes">
+    http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
+    </div>
+
+    ## { data-background="images/state-can-feed-forward-too.svg" }
 
 
-# { data-background="images/svds-blank-hi.png" }
-## Wrap-up
+    # { data-background="images/svds-blank-hi.png" }
+    ## Best Practices
 
-- Ingest Events
-- Take Action
-- Recognize Activity
+    ## The Power of the Query Side
 
-## { data-background="images/classifying-with-state.svg" }
+    ## Infrastructure Aspirations
+    - immutable
+    - lazy
+    - atomic
+        - simple
+        - composable
+        - testable
+    <div class="notes">
+    When building datascience pipelines, these paradigms 
+    help you stay flexible and scalable
+    </div>
+
+    ## Automate All of the Things
+    <div class="notes">
+    DevOps is your friend
+    </div>
+
+    ## Test All of the Things
+    <div class="notes">
+    TDD/BDD is your friend
+    </div>
+
+    ## Failure is a First Class Citizen
+    <div class="notes">
+    Fail fast, early, often
+    </div>
+
+
+    # { data-background="images/svds-blank-hi.png" }
+    ## Wrap-up
+
+    - Ingest Events
+    - Take Action
+    - Recognize Activity
+
+    ## { data-background="images/classifying-with-state.svg" }
 
 
 
