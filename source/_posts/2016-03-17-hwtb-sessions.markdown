@@ -25,17 +25,13 @@ to see commonalities across solutions.
 This talk is about some common data pipeline patterns used
 across various kinds of systems across various industries.
 
-
----
-
-## Key Takeaways
+Key Takeaways for this talk include:
 - what's needed to understand user activity
 - pipeline architectures that support this analysis
 
-Along the way, we'll see:
+Along the way, we notice:
 - commonalities across business verticals
 - differences due to scale
-
 
 ---
 
@@ -364,4 +360,9 @@ feedback from some folks.  Overall though this was a great experience and folks
 asked interesting questions at the end.  I'm not sure how it'll be published,
 but questions had to be done in a second section as I dropped connectivity
 right at the end of the speaking session.
+
+Slides are available
+[here](http://archive.markmims.com/box/talks/2016-03-12-hwtb-sessions/slides.html),
+and you can get the video straight from the
+[hadoop with the best](hadoop.with-the-best.com) site.
 
