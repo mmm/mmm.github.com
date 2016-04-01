@@ -16,62 +16,57 @@ the sessionization of such events.
 
 <!--more-->
 
-SVDS is a boutique...
+[SVDS](svds.com) is a boutique data science consulting firm.  We help folks
+with their hardest Data Strategy, Data Science, and/or Data Engineering
+problems.  In this role, we're in a unique position to solve different
+kinds of problems across various industries... and we really start
+to see commonalities across solutions.
 
-    we're in a unique position
-
-    solve problems across industries
-
-    recognize patterns along the way
-
-
-    ## Key Takeaways
-    - what's needed to understand user activity
-    - pipeline architectures that support this analysis
-
-    <div class="notes">
-    Along the way, we'll see:
-
-    - commonalities across business verticals
-
-    - differences due to scale
-    </div>
+This talk is about some common data pipeline patterns used
+across various kinds of systems across various industries.
 
 
-    ## Agenda { data-background="images/watch-faded.png" }
+---
 
-    - Ingest Events
-    - Take Action
-    - Recognize Activity
+## Key Takeaways
+- what's needed to understand user activity
+- pipeline architectures that support this analysis
 
-    <div class="notes">
-    we dive into pipeline architectures along the way
-    </div>
-
-
-    ## Background
-    <div class="notes">
-    Some general guidelines to keep in mind
-    </div>
-
-    ## The Power of the Query Side
-    <div class="notes">
-    Query-side tools are fast!
-
-    use them
-    </div>
-
-    ## Infrastructure Aspirations
-    - immutable
-    - lazy
-    - ...
-    <div class="notes">
-    When building datascience pipelines, these paradigms 
-    help you stay flexible and scalable
-    </div>
+Along the way, we'll see:
+- commonalities across business verticals
+- differences due to scale
 
 
-    ## Ingest Events
+---
+
+## Agenda
+- Ingest Events
+- Take Action
+- Recognize Activity
+
+We'll dive into pipeline architectures along the way
+
+
+---
+
+## Background
+Some general guidelines to keep in mind
+
+The Power of the Query Side
+    Query-side tools are fast! -- use them
+
+Infrastructure Aspirations
+When building datascience pipelines, these paradigms 
+help you stay flexible and scalable
+- immutable
+- lazy
+- ...
+
+
+---
+
+## Ingest Events
+
     <div class="notes">
     What are events and how do we catch them?
     </div>
@@ -196,9 +191,9 @@ SVDS is a boutique...
     </div>
 
 
+---
 
-    # { data-background="images/svds-blank-hi.png" }
-    ## Take Action 
+## Take Action 
 
     ## What kind of actions?
 
@@ -232,8 +227,9 @@ SVDS is a boutique...
     ## { data-background="images/streaming-two-layers.svg" }
 
 
-    # { data-background="images/svds-blank-hi.png" }
-    ## Recognize Activity 
+---
+
+## Recognize Activity 
 
     ## What's activity?
 
@@ -299,8 +295,9 @@ SVDS is a boutique...
     ## { data-background="images/state-can-feed-forward-too.svg" }
 
 
-    # { data-background="images/svds-blank-hi.png" }
-    ## Best Practices
+---
+
+## A Nod to Best Practices
 
     ## The Power of the Query Side
 
@@ -332,8 +329,9 @@ SVDS is a boutique...
     </div>
 
 
-    # { data-background="images/svds-blank-hi.png" }
-    ## Wrap-up
+---
+
+## Wrap-up
 
     - Ingest Events
     - Take Action
@@ -344,7 +342,7 @@ SVDS is a boutique...
 
 
 
-
+---
 
 ## The Talk Itself
 
