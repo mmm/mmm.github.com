@@ -197,12 +197,9 @@ Note, we're assuming for now that events have a well-defined type... they genera
 <a href="/images/streaming-with-notify-queues.svg">
 <img src="/images/streaming-with-notify-queues.svg" width="720px" />
 </a>
-    <div class="notes">
-    </div>
 
-    ## { data-background="images/streaming-two-layers.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/streaming-two-layers.svg">
+<img src="/images/streaming-two-layers.svg" width="720px" />
 </a>
 
 
@@ -210,9 +207,7 @@ Note, we're assuming for now that events have a well-defined type... they genera
 
 ## Recognize Activity 
 
-    ## What's activity?
-
-    Sequence of events
+What's activity?  A *Sequence of events*
 
     <div class="notes">
     we talked about one event
@@ -222,14 +217,12 @@ Note, we're assuming for now that events have a well-defined type... they genera
     context matters
     </div>
 
-    ## { data-background="images/classifying-simple.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/classifying-simple.svg">
+<img src="/images/classifying-simple.svg" width="720px" />
 </a>
 
-    ## { data-background="images/classifying-with-state.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/classifying-with-state.svg" ">
+<img src="/images/classifying-with-state.svg" " width="720px" />
 </a>
     <div class="notes">
     add hbase to store state
@@ -240,6 +233,7 @@ Note, we're assuming for now that events have a well-defined type... they genera
 
     examples
     </div>
+
     ## { data-background="images/hbase-state-credit-score.svg" }
 <a href="/images/">
 <img src="/images/" width="720px" />
