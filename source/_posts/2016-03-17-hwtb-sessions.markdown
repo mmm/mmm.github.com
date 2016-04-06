@@ -25,6 +25,7 @@ to see commonalities across solutions.
 This talk is about some common data pipeline patterns used
 across various kinds of systems across various industries.
 Key Takeaways include:
+
 - what's needed to understand user activity
 - pipeline architectures that support this analysis
 
@@ -48,6 +49,7 @@ Query-side tools are fast -- use them effectively!
 ### Infrastructure Aspirations
 When building datascience pipelines, these paradigms 
 help you stay flexible and scalable:
+
 - immutable
 - lazy
 - ...
@@ -58,6 +60,7 @@ help you stay flexible and scalable:
 What are events and how do we catch them?
 
 There are device events
+
 - location
 - environment
 - telemetry
@@ -66,6 +69,7 @@ There are device events
 - ...
 
 e.g.,
+
     {
       "time_utc": "1457741907.959400112",
       "device_id": "c361-445b-b2f6-27f2eecfc217",
@@ -76,13 +80,14 @@ e.g.,
 
 
 and user or HCI events
+
 - login
 - checkout
 - add friend
 - ...
 
 e.g.,
-    <pre><code>
+
     {
       "time_utc": "1457741907.959400112",
       "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
@@ -133,11 +138,10 @@ art is pretty shoddy... adaptation/munging is often required
 <a href="/images/event-ingestion-without-streaming.svg">
 <img src="/images/event-ingestion-without-streaming.svg"  width="720px" />
 </a>
-    <div class="notes">
-    The Power of the Query Side
 
-    Tenants to live by... immutable, lazy, simple/composable, testable
-    </div>
+The Power of the Query Side
+
+Tenants to live by... immutable, lazy, simple/composable, testable
 
 <a href="/images/event-ingestion-without-streaming-with-filename.svg">
 <img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
@@ -181,18 +185,16 @@ Note, we're assuming for now that events have a well-defined type... they genera
 <a href="/images/streaming-bare.svg">
 <img src="/images/streaming-bare.svg" width="720px" />
 </a>
-    <div class="notes">
-    if latency is ok, it might be good enough to take action from the query side
 
-    try that first
-    </div>
+if latency is ok, it might be good enough to take action from the query side
+
+try that first
 
 <a href="/images/streaming-simple.svg">
 <img src="/images/streaming-simple.svg" width="720px" />
 </a>
-    <div class="notes">
-    if lower latency is required, act directly from the streaming layer
-    </div>
+
+if lower latency is required, act directly from the streaming layer
 
 <a href="/images/streaming-with-notify-queues.svg">
 <img src="/images/streaming-with-notify-queues.svg" width="720px" />
@@ -209,13 +211,11 @@ Note, we're assuming for now that events have a well-defined type... they genera
 
 What's activity?  A *Sequence of events*
 
-    <div class="notes">
-    we talked about one event
+we talked about one event
 
-    Some activity has more than one event
+Some activity has more than one event
 
-    context matters
-    </div>
+context matters
 
 <a href="/images/classifying-simple.svg">
 <img src="/images/classifying-simple.svg" width="720px" />
@@ -224,15 +224,14 @@ What's activity?  A *Sequence of events*
 <a href="/images/classifying-with-state.svg" ">
 <img src="/images/classifying-with-state.svg" " width="720px" />
 </a>
-    <div class="notes">
-    add hbase to store state
 
-    hbase can be joined with events by impala
+add hbase to store state
 
-    hbase can be queried from stream
+hbase can be joined with events by impala
 
-    examples
-    </div>
+hbase can be queried from stream
+
+examples
 
 <a href="/images/hbase-state-credit-score.svg">
 <img src="/images/hbase-state-credit-score.svg" width="720px" />
@@ -259,7 +258,6 @@ What's activity?  A *Sequence of events*
 </a>
 
     ### State
-
         ![](images/simple-state.png)
     <a href="/images/">
     <img src="/images/" width="720px" />
@@ -319,6 +317,7 @@ Query-side tools are fast -- use them effectively!
 ### Infrastructure Aspirations
 When building datascience pipelines, these paradigms 
 help you stay flexible and scalable
+
 - immutable
 - lazy
 - atomic
