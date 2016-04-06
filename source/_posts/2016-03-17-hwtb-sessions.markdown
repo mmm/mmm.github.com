@@ -234,79 +234,78 @@ What's activity?  A *Sequence of events*
     examples
     </div>
 
-    ## { data-background="images/hbase-state-credit-score.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
-</a>
-    ## { data-background="images/classifying-with-state.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
-</a>
-    ## { data-background="images/hbase-state-tracking-package.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
-</a>
-    ## { data-background="images/classifying-with-state.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
-</a>
-    ## { data-background="images/hbase-state-tracking-package-derived.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
-</a>
-    ## { data-background="images/classifying-with-state.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/hbase-state-credit-score.svg">
+<img src="/images/hbase-state-credit-score.svg" width="720px" />
 </a>
 
-    ## State
-    ![](images/simple-state.png)
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/classifying-with-state.svg">
+<img src="/images/classifying-with-state.svg" width="720px" />
 </a>
-    <div class="notes">
-    from: http://tynerblain.com/blog/2007/03/21/use-case-vs-statechart/
-    </div>
 
-    ## A Toaster
-    ![](images/toaster-state.png)
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/hbase-state-tracking-package.svg">
+<img src="/images/hbase-state-tracking-package.svg" width="720px" />
 </a>
-    <div class="notes">
-    from: https://en.wikipedia.org/wiki/Finite-state_machine
-    </div>
 
-    ## Netflix
-    ![](images/play-state.jpg)
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/classifying-with-state.svg">
+<img src="/images/classifying-with-state.svg" width="720px" />
 </a>
-    <div class="notes">
-    http://people.westminstercollege.edu/faculty/ggagne/may2012/lab8/index.html
-    </div>
 
-    ## Package State
-    ![](images/package-state.jpg)
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/hbase-state-tracking-package-derived.svg">
+<img src="/images/hbase-state-tracking-package-derived.svg" width="720px" />
 </a>
-    <div class="notes">
-    http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-    </div>
 
-    ## Complex Package State
-<a href="/images/">
-<img src="/images/" width="720px" />
+<a href="/images/classifying-with-state.svg">
+<img src="/images/classifying-with-state.svg" width="720px" />
 </a>
-    ![](images/nested-package-state.jpg)
-    <div class="notes">
-    http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-    </div>
 
-    ## { data-background="images/state-can-feed-forward-too.svg" }
-<a href="/images/">
-<img src="/images/" width="720px" />
+    ### State
+
+        ![](images/simple-state.png)
+    <a href="/images/">
+    <img src="/images/" width="720px" />
+    </a>
+        <div class="notes">
+        from: http://tynerblain.com/blog/2007/03/21/use-case-vs-statechart/
+        </div>
+
+    ### A Toaster
+        ![](images/toaster-state.png)
+    <a href="/images/">
+    <img src="/images/" width="720px" />
+    </a>
+        <div class="notes">
+        from: https://en.wikipedia.org/wiki/Finite-state_machine
+        </div>
+
+    ### Netflix
+        ![](images/play-state.jpg)
+    <a href="/images/">
+    <img src="/images/" width="720px" />
+    </a>
+        <div class="notes">
+        http://people.westminstercollege.edu/faculty/ggagne/may2012/lab8/index.html
+        </div>
+
+    ### Package State
+        ![](images/package-state.jpg)
+    <a href="/images/">
+    <img src="/images/" width="720px" />
+    </a>
+        <div class="notes">
+        http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
+        </div>
+
+    ### Complex Package State
+    <a href="/images/">
+    <img src="/images/" width="720px" />
+    </a>
+        ![](images/nested-package-state.jpg)
+        <div class="notes">
+        http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
+        </div>
+
+<a href="/images/state-can-feed-forward-too.svg">
+<img src="/images/state-can-feed-forward-too.svg" width="720px" />
 </a>
 
 
