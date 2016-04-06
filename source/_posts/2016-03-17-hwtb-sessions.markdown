@@ -151,7 +151,6 @@ Tenants to live by... immutable, lazy, simple/composable, testable
 <img src="/images/events-without-streaming-question.svg" width="720px" />
 </a>
 
-
 <a href="/images/streaming-bare.svg">
 <img src="/images/streaming-bare.svg" width="720px" />
 </a>
