@@ -41,20 +41,6 @@ biggest differentiators.
 - Recognize Activity
 
 
-Here are some general guidelines to keep in mind:
-
-### The Power of the Query Side
-Query-side tools are fast -- use them effectively!
-
-### Infrastructure Aspirations
-When building datascience pipelines, these paradigms 
-help you stay flexible and scalable:
-
-- immutable
-- lazy
-- ...
-
-
 ## Ingest Events
 
 What are events and how do we catch them?
@@ -212,102 +198,67 @@ if lower latency is required, act directly from the streaming layer
 
 ## Recognize Activity 
 
-What's activity?  A *Sequence of events*
+What's user activity?  Usually it's a *Sequence of one or more events*
+associated with a user.  From an infrastructure standpoint, the key distinction
+is that activity is constructed from a sequence of user events... _that don't
+all fit within a single window of stream processing_.  This can either be
+because there are too many of them or because they're spread out over too long
+a period of time.
 
-we talked about one event
+Another way to think of this is that event context matters.  In order to
+recognize activity as such, you often need to capture or create user context
+(let's call it "state") in such a way that it's easily read by (and possibly
+updated from) processing in-stream.
 
-Some activity has more than one event
-
-context matters
-
-<a href="/images/classifying-simple.svg">
-<img src="/images/classifying-simple.svg" width="720px" />
+We add hbase to our standard stack, and use it to store state
+<a href="/images/classifying-with-state.svg">
+<img src="/images/classifying-with-state.svg" width="720px" />
 </a>
 
-<a href="/images/classifying-with-state.svg" ">
-<img src="/images/classifying-with-state.svg" " width="720px" />
-</a>
+which is then accessible from either stream or batch processing.  HBase is
+attractive as a fast key-value store.  Several other key-value stores could
+work here... I'll often start using one simply because it's easier to
+deploy/manage at first.  Then refine the choice of tool once more precise
+performance requirements of the state store have emerged from use.
 
-add hbase to store state
+It's important to note that you want fast key-based reads and writes.
+Full-table scans of columns are pretty much verboten in this setup.  They're
+simply too slow for value from stream.
 
-hbase can be joined with events by impala
+The usual approach is to update state in batch.  My favorite example when first
+talking to folks about this approach is to consider a user's credit score.
+Events coming into the system are routed in stream based on the associated
+user's credit score.
 
-hbase can be queried from stream
-
-examples
-
+The stream system can simply (hopefully quickly) look that up in HBase keyed
+on a user id of some sort
 <a href="/images/hbase-state-credit-score.svg">
 <img src="/images/hbase-state-credit-score.svg" width="720px" />
 </a>
+The credit score is some number calculated by scanning across all a user's
+events over the years.  It's a big, long-running, expensive computation.  Do
+that continuously in batch... just update HBase as you go.  If you do that,
+then you make that information available for decisions in stream.
 
-<a href="/images/classifying-with-state.svg">
-<img src="/images/classifying-with-state.svg" width="720px" />
-</a>
+Note that this is effectively a way to base fast-path decisions on
+information learned from slow-path computation.  A way for the system to
+quite literally _learn from the past_  :-)
 
+Another example of this is tracking a package.  The events involved are the
+various independent scans the package undergoes throughout its journey.
+
+For "state" you might just want to keep an abbreviated version of the raw
+history of each package
 <a href="/images/hbase-state-tracking-package.svg">
 <img src="/images/hbase-state-tracking-package.svg" width="720px" />
 </a>
-
-<a href="/images/classifying-with-state.svg">
-<img src="/images/classifying-with-state.svg" width="720px" />
-</a>
-
+or just some derived notion of its state
 <a href="/images/hbase-state-tracking-package-derived.svg">
 <img src="/images/hbase-state-tracking-package-derived.svg" width="720px" />
 </a>
-
-<a href="/images/classifying-with-state.svg">
-<img src="/images/classifying-with-state.svg" width="720px" />
-</a>
-
-    ### State
-        ![](images/simple-state.png)
-    <a href="/images/">
-    <img src="/images/" width="720px" />
-    </a>
-        <div class="notes">
-        from: http://tynerblain.com/blog/2007/03/21/use-case-vs-statechart/
-        </div>
-
-    ### A Toaster
-        ![](images/toaster-state.png)
-    <a href="/images/">
-    <img src="/images/" width="720px" />
-    </a>
-        <div class="notes">
-        from: https://en.wikipedia.org/wiki/Finite-state_machine
-        </div>
-
-    ### Netflix
-        ![](images/play-state.jpg)
-    <a href="/images/">
-    <img src="/images/" width="720px" />
-    </a>
-        <div class="notes">
-        http://people.westminstercollege.edu/faculty/ggagne/may2012/lab8/index.html
-        </div>
-
-    ### Package State
-        ![](images/package-state.jpg)
-    <a href="/images/">
-    <img src="/images/" width="720px" />
-    </a>
-        <div class="notes">
-        http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-        </div>
-
-    ### Complex Package State
-    <a href="/images/">
-    <img src="/images/" width="720px" />
-    </a>
-        ![](images/nested-package-state.jpg)
-        <div class="notes">
-        http://www.cse.lehigh.edu/~glennb/oose/ppt/17Activity-State-Diagrams.ppt
-        </div>
-
-<a href="/images/state-can-feed-forward-too.svg">
-<img src="/images/state-can-feed-forward-too.svg" width="720px" />
-</a>
+those derived notions of state are tough to define from a single scan in a
+warehouse somewhere... but make perfect sense when viewed in the context of the
+entire package history.
 
 
 ---
