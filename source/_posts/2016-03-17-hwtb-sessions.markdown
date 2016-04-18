@@ -135,17 +135,21 @@ art is pretty shoddy... adaptation/munging is often required
 
 ### Stages of an ingestion pipeline:
 
+The primary goal of an ingestion pipeline is to... ingest events.
+
 <a href="/images/event-ingestion-without-streaming.svg">
 <img src="/images/event-ingestion-without-streaming.svg"  width="720px" />
 </a>
 
-The Power of the Query Side
-
-Tenants to live by... immutable, lazy, simple/composable, testable
-
 <a href="/images/event-ingestion-without-streaming-with-filename.svg">
 <img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a>
+
+Get the events as raw as possible as far back as possible in a format that's 
+amenable to fast queries.  Remember, the power of the query side.
+
+Tenants to keep in mind here... build a pipeline that's immutable, lazy,
+simple/composable, and testable.
 
 <a href="/images/events-without-streaming-question.svg">
 <img src="/images/events-without-streaming-question.svg" width="720px" />
@@ -369,6 +373,9 @@ right at the end of the speaking session.
 
 Slides are available
 [here](http://archive.markmims.com/box/talks/2016-03-12-hwtb-sessions/slides.html),
-and you can get the video straight from the
-[hadoop with the best](hadoop.with-the-best.com) site.
+and you can get the video straight from the [hadoop with the
+best](hadoop.with-the-best.com) site.  Note that the slides are
+[reveal.js](https://github.com/hakimel/reveal.js/) and I make heavy use of
+two-dimensional navigation.  Slides advance downwards, topics advance to the
+right.
 
