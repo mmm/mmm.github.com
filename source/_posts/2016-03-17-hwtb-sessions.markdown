@@ -19,8 +19,8 @@ the sessionization of such events.
 [SVDS](svds.com) is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
 problems.  In this role, we're in a unique position to solve different
-kinds of problems across various industries... and we really start
-to see commonalities across solutions.
+kinds of problems across various industries... and start to recognize
+the patterns of solution that emerge.  That's what I'd like to share.
 
 This talk is about some common data pipeline patterns used
 across various kinds of systems across various industries.
@@ -29,9 +29,9 @@ Key Takeaways include:
 - what's needed to understand user activity
 - pipeline architectures that support this analysis
 
-Along the way, I'll point out commonalities across business verticals and we'll
-see how volume and latency requirements, unsurprisingly, turn out to be the
-biggest differentiators.
+Along the way, I point out commonalities across business verticals and we see
+how volume and latency requirements, unsurprisingly, turn out to be the biggest
+differentiators in solution.
 
 
 ## Agenda
@@ -156,9 +156,22 @@ simple/composable, and testable.
 Note, we're assuming for now that events have a well-defined type... they generally don't.
 
 
+---
+
 ## Take Action 
 
-### What kind of actions?
+Catching events within the system is an interesting challenge all by itself.
+However, just efficiently and faithfully capturing events isn't the end of the
+story.
+
+<a href="/images/streaming-bare.svg">
+<img src="/images/streaming-bare.svg" width="720px" />
+</a>
+
+That's sorta boring if we're not taking _action_ on events as we catch
+them.
+
+Actions such as 
 
 - Notifications
 - Decorations
@@ -166,29 +179,75 @@ Note, we're assuming for now that events have a well-defined type... they genera
 - Counting
 - ...
 
-### When to take action?
-
-- "batch"
-- "real-time"
-
-<a href="/images/streaming-bare.svg">
-<img src="/images/streaming-bare.svg" width="720px" />
-</a>
-
-if latency is ok, it might be good enough to take action from the query side
-
-try that first
+can be taken in either "batch" or "real-time" modes.
 
 <a href="/images/streaming-simple.svg">
 <img src="/images/streaming-simple.svg" width="720px" />
 </a>
 
-if lower latency is required, act directly from the streaming layer
+Unfortunately, folks have all sorts of meanings for these terms.  Let's clear
+that up and be a little more precise...
 
+For every action you intend to take, and really every data product of your
+pipeline, you need to determine the latency requirements.  What is the
+timeliness of that resulting action?  So how soon after either a.) an event was
+generated, or b.) an event was seen within the system will that resulting
+action be valid?  The answers might surprise you.
+
+Latency requirements let you make a first-pass attempt at specifying the
+_execution context_ of each action.  There are two separate execution contexts we
+talk about here... _batch_ and _stream_.
+
+- batch.  Asynchronous jobs that are potentially run against the entire body of
+  events and event histories.  These can be highly complex, computationally
+  expensive tasks that might involve a large amount of data from various
+  sources.  The implementations of these jobs can involve Spark or Hadoop
+  map-reduce code, Cascading-style frameworks, or even sql-based analysis via
+  Impala, Hive, or SparkSQL.
+
+- stream.  Jobs that are run against either an individual event or a small
+  window of events.  These are typically simple, low-computation jobs that
+  don't require context or information from other events.  These are typically
+  implemented using Spark-streaming or Storm code.
+
+
+When I say "real-time" in this talk, I mean that the action will be taken from
+within the stream execution context.
+
+It's important to realize that not all actions require "real-time" latency.
+There are plenty of actions that are perfectly valid even if they're operating
+on "stale" day-old, hour-old, 15min-old data.  Of course, this sensitivity to
+latency varies greatly by action, domain, and industry.  Also, how stale stream
+-vs- batch events are depend of the actual performance characteristics of your
+ingestion pipeline under load.  Measure all the things!
+
+An approach I particularly like is to initially act from a batch context.
+There's generally less development effort, more computational resources, more
+robustness, more flexibility, and more forgiveness involved when you're working
+in a batch execution context.  You're less likely to interrupt or congest your
+ingestion pipeline.
+
+Once you have basic actions working from the batch layer, then do some
+profiling and identify which of the actions you're working with really require
+less stale data.  _Selectively_ bring those actions or analyses forward.  Tools
+such as Spark can help tremendously with this.  It's not all fully baked yet,
+but there are ways to write spark code where the same business logic code can
+be optionally bound in either stream or batch execution contexts.  You can move
+code around based on pipeline requirements and performance!
+
+In practice, a good deal of architecting such a pipeline is all about
+preserving or protecting your stream ingestion and decision-making capabilities
+for when you really need them.
+
+A real system often involves additionally protecting and decoupling your stream
+processing from making any service API calls (sending emails for example) by
+adding kafka queues for things like outbound notifications _downstream_ of
+ingestion
 <a href="/images/streaming-with-notify-queues.svg">
 <img src="/images/streaming-with-notify-queues.svg" width="720px" />
 </a>
-
+as well as isolating your streaming system from writes to hdfs using 
+the same trick (as we saw above)
 <a href="/images/streaming-two-layers.svg">
 <img src="/images/streaming-two-layers.svg" width="720px" />
 </a>
@@ -263,14 +322,21 @@ entire package history.
 
 ---
 
-## A Nod to Best Practices
+## Wrap-up
 
-### The Power of the Query Side
+I eventually come back to our agenda:
+
+- Ingest Events
+- Take Action
+- Recognize Activity
+
+Along the way we've done a nod to some data-plumbing best practices... such as
+
+#### The Power of the Query Side
 Query-side tools are fast -- use them effectively!
 
-### Infrastructure Aspirations
-When building datascience pipelines, these paradigms 
-help you stay flexible and scalable
+#### Infrastructure Aspirations
+A datascience pipeline is
 
 - immutable
 - lazy
@@ -279,27 +345,23 @@ help you stay flexible and scalable
     - composable
     - testable
 
-### Automate All of the Things
-DevOps is your friend
+When building datascience pipelines, these paradigms 
+help you stay flexible and scalable
 
-### Test All of the Things
-TDD/BDD is your friend
+#### Automate All of the Things
+DevOps is your friend.  We're using an interesting pushbutton stack that'll be
+the topic of another blog post :-)
 
-### Failure is a First Class Citizen
-Fail fast, early, often
+#### Test All of the Things
+TDD/BDD is your friend.  Again, I'll add another post on "Sanity-Driven Data
+Science" which is my take on TDD/BDD as applied to datascience pipelines.
+
+#### Failure is a First Class Citizen
+Fail fast, early, often... along with the obligatory reference to the Netflix
+Simian Army.
+
 
 ---
-
-## Wrap-up
-
-- Ingest Events
-- Take Action
-- Recognize Activity
-
-<a href="/images/classifying-with-state.svg">
-<img src="/images/classifying-with-state.svg"  width="720px" />
-</a>
-
 
 ## The Talk Itself
 
