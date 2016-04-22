@@ -43,48 +43,25 @@ differentiators in solution.
 
 ## Ingest Events
 
-What are events and how do we catch them?
+The primary goal of an ingestion pipeline is to... ingest events.  All other
+considerations are secondary.  We walk through an example pipeline and discuss
+how that architecture changes as we adjust scaling up to handle billions of
+events a day.  We'll note along the way how general concepts of immutability
+and lazy evaluation can have large ramifications on data ingestion pipeline
+architecture.
 
-There are device events
+I start out covering typical classes of and types of events, some common event
+fields, and various ways that events are represented.  These vary _greatly_
+across current and legacy systems, and you should always expect that munging
+will be involved as you're working to ingest events from various data sources
+over time.
 
-- location
-- environment
-- telemetry
-- presence
-- status (disk is full)
-- ...
+For our sessionization examples, we're interested in user events such as
+`login`, `checkout`, `add friend`, etc.
 
-e.g.,
+These user events can be "flat"
 
-    {
-      "time_utc": "1457741907.959400112",
-      "device_id": "c361-445b-b2f6-27f2eecfc217",
-      "event_type": "environmental_info",
-      "degrees_fahrenheit": "72",
-      ...
-    }
-
-
-and user or HCI events
-
-- login
-- checkout
-- add friend
-- ...
-
-e.g.,
-
-    {
-      "time_utc": "1457741907.959400112",
-      "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
-      "event_type": "login",
-      ...
-    }
-
-We'll mostly focus on user events.
-
-User events can be "flat"
-
+```
     {
       "time_utc": "1457741907.959400112",
       "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
@@ -95,9 +72,12 @@ User events can be "flat"
       "item_unit_price": ...
       ...
     }
+```
 
-or not
+or have some structure
 
+
+```
     {
       "time_utc": "1457741907.959400112",
       "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
@@ -115,45 +95,96 @@ or not
       },
       ...
     }
+```
 
-There are great formats and tools, but the state of the
-art is pretty shoddy... adaptation/munging is often required
+and often both formats get used in the same systems in the wild so
+you have to intelligently detect or classify events rather than 
+just making blatant assumptions about them.  And yes, that _is_ 
+expensive... but it's surprisingly common.
 
-### Stages of an ingestion pipeline:
 
-The primary goal of an ingestion pipeline is to... ingest events.
+### Ingestion Pipelines
 
-<a href="/images/event-ingestion-without-streaming.svg">
-<img src="/images/event-ingestion-without-streaming.svg"  width="720px" />
-</a>
+So what do basic ingestion pipelines usually look like?
 
+Tenants to keep in mind here... build a pipeline that's immutable, lazy,
+simple/composable, and testable.  I come back to these often throughout
+the talk.
+
+With our stated goal
+of ingesting events, it should look pretty simple right?  Something along the
+lines of
 <a href="/images/event-ingestion-without-streaming-with-filename.svg">
 <img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a>
 
-Get the events as raw as possible as far back as possible in a format that's 
-amenable to fast queries.  Remember, the power of the query side.
+I introduce the "Power of the Query Side"... query-side tools are fast
+nowadays.  Tools such as Impala have really won me over.  The Ingest pipelines
+needs to Get the events as raw as possible as far back as possible in a format
+that's amenable to fast queries.  Let's state that again... it's important.
+The pipeline's core job is to get events that are as raw as possible (immutable
+processing pipeline) as far back into the system as possible (lazily evaluated
+analysis) before any expensive computation is done.  Modern query-side tools
+support these paradigms quite well.  Better performance is obtained when events
+land in query-optimized formats and are grouped into query-optimized files and
+partitions where possible
+<a href="/images/event-ingestion-without-streaming-with-filename.svg">
+<img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
+</a>
 
-Tenants to keep in mind here... build a pipeline that's immutable, lazy,
-simple/composable, and testable.
+That's simple enough and seems pretty straightforward in theory.  In practice
+you can ingest events straight into files in hdfs only up to a certain scale
+and degree of event complexity.
 
+As scale increases, an ingestion pipeline has to become effectively a dynamic
+impedance matching network.  It's the funnel that's catching events from what
+can be a highly distributed, large number of data sources and trying to slam
+all these events into a relatively small number of filesystem datanodes.
+
+What can we we do to match those separate source sizes from target sizes?
 <a href="/images/events-without-streaming-question.svg">
 <img src="/images/events-without-streaming-question.svg" width="720px" />
 </a>
+use Spark!  :-)
 
+No, but seriously, add a streaming solution in-between (I do like Spark
+Streaming here)
 <a href="/images/streaming-bare.svg">
 <img src="/images/streaming-bare.svg" width="720px" />
 </a>
-
+and use Kafka to decouple all the bits
 <a href="/images/streaming-events-at-scale.svg">
 <img src="/images/streaming-events-at-scale.svg" width="720px" />
 </a>
+in such a way that your datasources on the left, and your datanodes on the
+right can scale independently!  And independently from any stream computation
+infrastructure you might need for in-stream decisions in the future.  I go
+through that in a little more detail in the talk itself.
 
-<a href="/images/streaming-events-at-scale-with-partitioning.svg">
-<img src="/images/streaming-events-at-scale-with-partitioning.svg" width="720px" />
-</a>
+Impedance or size mismatches between data sources and data storage are really
+only one half of the story.  Note that another culprit, _event complexity_, can
+limit ingest throughput for a number of reasons.  A common example of where
+this happens is when event "types" are either poorly defined or are changing so
+much they're hard to identify.  As event complexity increases, so does the
+logic you use to group or partition the events so they're fast to query.  In
+practice this quickly grows from simple logic to full-blown event
+classification algorithms.  Often those classification algorithms have to learn
+from the body of events that've already landed.  You're making decisions on
+events in front of you based on all the events you've ever seen.  I'll bump any
+further discussion of that until we talk more about state in the "Recognize
+Activity" section later.
 
-Note, we're assuming for now that events have a well-defined type... they generally don't.
+Ingest pipelines can get complicated as you try to scale in size and
+complexity... expect it!... plan for it!  The best way is to do this is to
+build or use a toolchain that can let you add a streaming and queueing solution
+without a lot of rearchitecture or downtime.  Folks often don't try to solve
+this problem until it's already painful in production!  There're great ways
+to solve this in general.  My current fav atm uses a hybrid combination of
+Terraform, Consul, Ansible, and ClouderaManager/Ambari.
+
+Note also that we haven't talked about any real-time processing or low-latency
+business requirements here at all.  The need for a stream processing solution
+arises when we're _just_ trying to catch events at scale.
 
 
 ---
