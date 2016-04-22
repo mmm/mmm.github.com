@@ -119,8 +119,8 @@ lines of
 </a>
 
 I introduce the "Power of the Query Side"... query-side tools are fast
-nowadays.  Tools such as Impala have really won me over.  The Ingest pipelines
-needs to Get the events as raw as possible as far back as possible in a format
+nowadays.  Tools such as Impala have really won me over.  The Ingest pipeline
+needs to get the events as raw as possible as far back as possible in a format
 that's amenable to fast queries.  Let's state that again... it's important.
 The pipeline's core job is to get events that are as raw as possible (immutable
 processing pipeline) as far back into the system as possible (lazily evaluated
