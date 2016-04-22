@@ -9,7 +9,11 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="I’m loving dd-wrt… startup scripts http://www.dd-wrt.com/wiki/index.php/Startup_Scripts iptables vlans ">
+  <meta name="description" content="a1 138G root
+a2 swap
+b1 1T /opt
+c1 1.5T /usr/local
+d1 2T /home ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -116,6 +120,91 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/howtos/2011/03/02/hawk-notes.html">Hawk-notes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-02T00:00:00-08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>a1 138G root
+a2 swap
+b1 1T /opt
+c1 1.5T /usr/local
+d1 2T /home
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/02/22/howto-vlan-libvirt.html">Manual Vlans for Libvirt?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-22T00:00:00-08:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’m gonna set up hawk to configure VMs into isolated VLANs.</p>
+
+<p>most of this comes from</p>
+
+<pre><code>http://www.tolaris.com/2010/02/20/vlans-bridges-and-virtual-machines/
+</code></pre>
+
+<p>setting up br0, bt10, and br12</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2011/02/22/howto-ddwrt.html">Howto-ddwrt</a></h1>
     
     
@@ -132,7 +221,7 @@
   
 
 
-<time datetime="2011-02-22T00:00:00-05:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
+<time datetime="2011-02-22T00:00:00-08:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
         
       </p>
     
@@ -178,7 +267,7 @@
   
 
 
-<time datetime="2011-02-13T00:00:00-05:00" pubdate data-updated="true">Feb 13<span>th</span>, 2011</time>
+<time datetime="2011-02-13T00:00:00-08:00" pubdate data-updated="true">Feb 13<span>th</span>, 2011</time>
         
       </p>
     
@@ -240,7 +329,7 @@ reboot
   
 
 
-<time datetime="2011-02-05T00:00:00-05:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
+<time datetime="2011-02-05T00:00:00-08:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
         
       </p>
     
@@ -336,7 +425,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
   
 
 
-<time datetime="2011-02-04T00:00:00-05:00" pubdate data-updated="true">Feb 4<span>th</span>, 2011</time>
+<time datetime="2011-02-04T00:00:00-08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2011</time>
         
       </p>
     
@@ -435,7 +524,7 @@ $ git bzr push upstream
   
 
 
-<time datetime="2011-01-31T00:00:00-05:00" pubdate data-updated="true">Jan 31<span>st</span>, 2011</time>
+<time datetime="2011-01-31T00:00:00-08:00" pubdate data-updated="true">Jan 31<span>st</span>, 2011</time>
         
       </p>
     
@@ -490,7 +579,7 @@ git svn fetch
   
 
 
-<time datetime="2011-01-30T00:00:00-05:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
+<time datetime="2011-01-30T00:00:00-08:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
         
       </p>
     
@@ -557,7 +646,7 @@ Set 'PowerCtrl' to 'forceoff'
   
 
 
-<time datetime="2011-01-29T00:00:00-05:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
+<time datetime="2011-01-29T00:00:00-08:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
         
       </p>
     
@@ -597,7 +686,7 @@ Set 'PowerCtrl' to 'forceoff'
   
 
 
-<time datetime="2011-01-21T00:00:00-05:00" pubdate data-updated="true">Jan 21<span>st</span>, 2011</time>
+<time datetime="2011-01-21T00:00:00-08:00" pubdate data-updated="true">Jan 21<span>st</span>, 2011</time>
         
       </p>
     
@@ -652,93 +741,6 @@ Scale: 100.0
 (when exported as png w/ or w/o alpha)</p>
 
 <p>results in 5cmx5cm grids when exported directly to pdf</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/07/openssl-stuff.html">Using Openssl</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-07T00:00:00-05:00" pubdate data-updated="true">Jan 7<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>openssl req -new -newkey rsa:2048 -nodes -out star_jsas7_com.csr -keyout star_jsas7_com.key -subj "/C=JM/ST=/L=Kingston/O=Jamaica Ministry of Education/OU=IT/CN=*.jsas7.com"
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/07/howto-umask.html">Umask</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-07T00:00:00-05:00" pubdate data-updated="true">Jan 7<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ugh</p>
-
-<ul>
-  <li>
-    <p>make sure umask is not set anywhere</p>
-
-    <p>(/etc/login.defs, /etc/profile, /etc/skel/<em>, ~/.bash</em> ~/.profile)</p>
-  </li>
-  <li>
-    <p>set umask via libpam-umask.  In /etc/pam.d/common-session, </p>
-
-    <p>session optional pam_umask.so umask=002</p>
-  </li>
-</ul>
 
 </div>
   
@@ -884,6 +886,14 @@ Scale: 100.0
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
       </li>
     
@@ -895,14 +905,6 @@ Scale: 100.0
         <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
       </li>
     
-      <li class="post">
-        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -912,7 +914,7 @@ Scale: 100.0
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2016 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

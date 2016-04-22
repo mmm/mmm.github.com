@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Identifying User Activity from Streams of Raw Events - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="I had a chance to speak at an online conference last weekend,
+Hadoop With The Best.
+I had fun sharing one of my total passions… data pipelines!
+In &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:markmims.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Identifying User Activity From Streams of Raw Events</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-03-17T12:08:00-07:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I had a chance to speak at an online conference last weekend,
+<a href="http://hadoop.withthebest.com/">Hadoop With The Best</a>.
+I had fun sharing one of my total passions… data pipelines!
+In particular, some techniques for catching raw user events,
+acting on those events and understanding user activity from 
+the sessionization of such events.</p>
+
+<!--more-->
+
+<p><a href="svds.com">SVDS</a> is a boutique data science consulting firm.  We help folks
+with their hardest Data Strategy, Data Science, and/or Data Engineering
+problems.  In this role, we’re in a unique position to solve different
+kinds of problems across various industries… and start to recognize
+the patterns of solution that emerge.  That’s what I’d like to share.</p>
+
+<p>This talk is about some common data pipeline patterns used
+across various kinds of systems across various industries.
+Key Takeaways include:</p>
+
+<ul>
+  <li>what’s needed to understand user activity</li>
+  <li>pipeline architectures that support this analysis</li>
+</ul>
+
+<p>Along the way, I point out commonalities across business verticals and we see
+how volume and latency requirements, unsurprisingly, turn out to be the biggest
+differentiators in solution.</p>
+
+<h2 id="agenda">Agenda</h2>
+
+<ul>
+  <li>Ingest Events</li>
+  <li>Take Action</li>
+  <li>Recognize Activity</li>
+</ul>
+
+<h2 id="ingest-events">Ingest Events</h2>
+
+<p>The primary goal of an ingestion pipeline is to… ingest events.  All other
+considerations are secondary.  We walk through an example pipeline and discuss
+how that architecture changes as we adjust scaling up to handle billions of
+events a day.  We’ll note along the way how general concepts of immutability
+and lazy evaluation can have large ramifications on data ingestion pipeline
+architecture.</p>
+
+<p>I start out covering typical classes of and types of events, some common event
+fields, and various ways that events are represented.  These vary <em>greatly</em>
+across current and legacy systems, and you should always expect that munging
+will be involved as you’re working to ingest events from various data sources
+over time.</p>
+
+<p>For our sessionization examples, we’re interested in user events such as
+<code>login</code>, <code>checkout</code>, <code>add friend</code>, etc.</p>
+
+<p>These user events can be “flat”</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">{
+</span><span class="line">  "time_utc": "1457741907.959400112",
+</span><span class="line">  "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
+</span><span class="line">  "event_type": "button_pressed",
+</span><span class="line">  "button_type": "one-click purchase",
+</span><span class="line">  "item_sku": "1 23456 78999 9",
+</span><span class="line">  "item_description": "Tony's Run-flat Tire",
+</span><span class="line">  "item_unit_price": ...
+</span><span class="line">  ...
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>or have some structure</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">{
+</span><span class="line">  "time_utc": "1457741907.959400112",
+</span><span class="line">  "user_id": "688b60d1-c361-445b-b2f6-27f2eecfc217",
+</span><span class="line">  "event_type": "button_pressed",
+</span><span class="line">  "event_details": {
+</span><span class="line">    "button_type": "one-click purchase",
+</span><span class="line">    "puchased_items": [
+</span><span class="line">      {
+</span><span class="line">        "sku": "1 23456 78999 9",
+</span><span class="line">        "description": "Tony's Run-flat Tire",
+</span><span class="line">        "unit_price": ...
+</span><span class="line">        ...
+</span><span class="line">      },
+</span><span class="line">    ],
+</span><span class="line">  },
+</span><span class="line">  ...
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>and often both formats get used in the same systems in the wild so
+you have to intelligently detect or classify events rather than 
+just making blatant assumptions about them.  And yes, that <em>is</em> 
+expensive… but it’s surprisingly common.</p>
+
+<h3 id="ingestion-pipelines">Ingestion Pipelines</h3>
+
+<p>So what do basic ingestion pipelines usually look like?</p>
+
+<p>Tenants to keep in mind here… build a pipeline that’s immutable, lazy,
+simple/composable, and testable.  I come back to these often throughout
+the talk.</p>
+
+<p>With our stated goal
+of ingesting events, it should look pretty simple right?  Something along the
+lines of
+<a href="/images/event-ingestion-without-streaming-with-filename.svg">
+<img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
+</a></p>
+
+<p>I introduce the “Power of the Query Side”… query-side tools are fast
+nowadays.  Tools such as Impala have really won me over.  The Ingest pipeline
+needs to get the events as raw as possible as far back as possible in a format
+that’s amenable to fast queries.  Let’s state that again… it’s important.
+The pipeline’s core job is to get events that are as raw as possible (immutable
+processing pipeline) as far back into the system as possible (lazily evaluated
+analysis) before any expensive computation is done.  Modern query-side tools
+support these paradigms quite well.  Better performance is obtained when events
+land in query-optimized formats and are grouped into query-optimized files and
+partitions where possible
+<a href="/images/event-ingestion-without-streaming-with-filename.svg">
+<img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
+</a></p>
+
+<p>That’s simple enough and seems pretty straightforward in theory.  In practice
+you can ingest events straight into files in hdfs only up to a certain scale
+and degree of event complexity.</p>
+
+<p>As scale increases, an ingestion pipeline has to become effectively a dynamic
+impedance matching network.  It’s the funnel that’s catching events from what
+can be a highly distributed, large number of data sources and trying to slam
+all these events into a relatively small number of filesystem datanodes.</p>
+
+<p>What can we we do to match those separate source sizes from target sizes?
+<a href="/images/events-without-streaming-question.svg">
+<img src="/images/events-without-streaming-question.svg" width="720px" />
+</a>
+use Spark!  :-)</p>
+
+<p>No, but seriously, add a streaming solution in-between (I do like Spark
+Streaming here)
+<a href="/images/streaming-bare.svg">
+<img src="/images/streaming-bare.svg" width="720px" />
+</a>
+and use Kafka to decouple all the bits
+<a href="/images/streaming-events-at-scale.svg">
+<img src="/images/streaming-events-at-scale.svg" width="720px" />
+</a>
+in such a way that your datasources on the left, and your datanodes on the
+right can scale independently!  And independently from any stream computation
+infrastructure you might need for in-stream decisions in the future.  I go
+through that in a little more detail in the talk itself.</p>
+
+<p>Impedance or size mismatches between data sources and data storage are really
+only one half of the story.  Note that another culprit, <em>event complexity</em>, can
+limit ingest throughput for a number of reasons.  A common example of where
+this happens is when event “types” are either poorly defined or are changing so
+much they’re hard to identify.  As event complexity increases, so does the
+logic you use to group or partition the events so they’re fast to query.  In
+practice this quickly grows from simple logic to full-blown event
+classification algorithms.  Often those classification algorithms have to learn
+from the body of events that’ve already landed.  You’re making decisions on
+events in front of you based on all the events you’ve ever seen.  I’ll bump any
+further discussion of that until we talk more about state in the “Recognize
+Activity” section later.</p>
+
+<p>Ingest pipelines can get complicated as you try to scale in size and
+complexity… expect it!… plan for it!  The best way is to do this is to
+build or use a toolchain that can let you add a streaming and queueing solution
+without a lot of rearchitecture or downtime.  Folks often don’t try to solve
+this problem until it’s already painful in production!  There’re great ways
+to solve this in general.  My current fav atm uses a hybrid combination of
+Terraform, Consul, Ansible, and ClouderaManager/Ambari.</p>
+
+<p>Note also that we haven’t talked about any real-time processing or low-latency
+business requirements here at all.  The need for a stream processing solution
+arises when we’re <em>just</em> trying to catch events at scale.</p>
+
+<hr />
+
+<h2 id="take-action">Take Action</h2>
+
+<p>Catching events within the system is an interesting challenge all by itself.
+However, just efficiently and faithfully capturing events isn’t the end of the
+story.</p>
+
+<p><a href="/images/streaming-bare.svg">
+<img src="/images/streaming-bare.svg" width="720px" />
+</a></p>
+
+<p>That’s sorta boring if we’re not taking <em>action</em> on events as we catch
+them.</p>
+
+<p>Actions such as </p>
+
+<ul>
+  <li>Notifications</li>
+  <li>Decorations</li>
+  <li>Routing / Gating</li>
+  <li>Counting</li>
+  <li>…</li>
+</ul>
+
+<p>can be taken in either “batch” or “real-time” modes.</p>
+
+<p><a href="/images/streaming-simple.svg">
+<img src="/images/streaming-simple.svg" width="720px" />
+</a></p>
+
+<p>Unfortunately, folks have all sorts of meanings for these terms.  Let’s clear
+that up and be a little more precise…</p>
+
+<p>For every action you intend to take, and really every data product of your
+pipeline, you need to determine the latency requirements.  What is the
+timeliness of that resulting action?  So how soon after either a.) an event was
+generated, or b.) an event was seen within the system will that resulting
+action be valid?  The answers might surprise you.</p>
+
+<p>Latency requirements let you make a first-pass attempt at specifying the
+<em>execution context</em> of each action.  There are two separate execution contexts we
+talk about here… <em>batch</em> and <em>stream</em>.</p>
+
+<ul>
+  <li>
+    <p>batch.  Asynchronous jobs that are potentially run against the entire body of
+events and event histories.  These can be highly complex, computationally
+expensive tasks that might involve a large amount of data from various
+sources.  The implementations of these jobs can involve Spark or Hadoop
+map-reduce code, Cascading-style frameworks, or even sql-based analysis via
+Impala, Hive, or SparkSQL.</p>
+  </li>
+  <li>
+    <p>stream.  Jobs that are run against either an individual event or a small
+window of events.  These are typically simple, low-computation jobs that
+don’t require context or information from other events.  These are typically
+implemented using Spark-streaming or Storm code.</p>
+  </li>
+</ul>
+
+<p>When I say “real-time” in this talk, I mean that the action will be taken from
+within the stream execution context.</p>
+
+<p>It’s important to realize that not all actions require “real-time” latency.
+There are plenty of actions that are perfectly valid even if they’re operating
+on “stale” day-old, hour-old, 15min-old data.  Of course, this sensitivity to
+latency varies greatly by action, domain, and industry.  Also, how stale stream
+-vs- batch events are depend of the actual performance characteristics of your
+ingestion pipeline under load.  Measure all the things!</p>
+
+<p>An approach I particularly like is to initially act from a batch context.
+There’s generally less development effort, more computational resources, more
+robustness, more flexibility, and more forgiveness involved when you’re working
+in a batch execution context.  You’re less likely to interrupt or congest your
+ingestion pipeline.</p>
+
+<p>Once you have basic actions working from the batch layer, then do some
+profiling and identify which of the actions you’re working with really require
+less stale data.  <em>Selectively</em> bring those actions or analyses forward.  Tools
+such as Spark can help tremendously with this.  It’s not all fully baked yet,
+but there are ways to write spark code where the same business logic code can
+be optionally bound in either stream or batch execution contexts.  You can move
+code around based on pipeline requirements and performance!</p>
+
+<p>In practice, a good deal of architecting such a pipeline is all about
+preserving or protecting your stream ingestion and decision-making capabilities
+for when you really need them.</p>
+
+<p>A real system often involves additionally protecting and decoupling your stream
+processing from making any service API calls (sending emails for example) by
+adding kafka queues for things like outbound notifications <em>downstream</em> of
+ingestion
+<a href="/images/streaming-with-notify-queues.svg">
+<img src="/images/streaming-with-notify-queues.svg" width="720px" />
+</a>
+as well as isolating your streaming system from writes to hdfs using 
+the same trick (as we saw above)
+<a href="/images/streaming-two-layers.svg">
+<img src="/images/streaming-two-layers.svg" width="720px" />
+</a></p>
+
+<hr />
+
+<h2 id="recognize-activity">Recognize Activity</h2>
+
+<p>What’s user activity?  Usually it’s a <em>Sequence of one or more events</em>
+associated with a user.  From an infrastructure standpoint, the key distinction
+is that activity is constructed from a sequence of user events… <em>that don’t
+all fit within a single window of stream processing</em>.  This can either be
+because there are too many of them or because they’re spread out over too long
+a period of time.</p>
+
+<p>Another way to think of this is that event context matters.  In order to
+recognize activity as such, you often need to capture or create user context
+(let’s call it “state”) in such a way that it’s easily read by (and possibly
+updated from) processing in-stream.</p>
+
+<p>We add hbase to our standard stack, and use it to store state
+<a href="/images/classifying-with-state.svg">
+<img src="/images/classifying-with-state.svg" width="720px" />
+</a></p>
+
+<p>which is then accessible from either stream or batch processing.  HBase is
+attractive as a fast key-value store.  Several other key-value stores could
+work here… I’ll often start using one simply because it’s easier to
+deploy/manage at first.  Then refine the choice of tool once more precise
+performance requirements of the state store have emerged from use.</p>
+
+<p>It’s important to note that you want fast key-based reads and writes.
+Full-table scans of columns are pretty much verboten in this setup.  They’re
+simply too slow for value from stream.</p>
+
+<p>The usual approach is to update state in batch.  My favorite example when first
+talking to folks about this approach is to consider a user’s credit score.
+Events coming into the system are routed in stream based on the associated
+user’s credit score.</p>
+
+<p>The stream system can simply (hopefully quickly) look that up in HBase keyed
+on a user id of some sort
+<a href="/images/hbase-state-credit-score.svg">
+<img src="/images/hbase-state-credit-score.svg" width="720px" />
+</a>
+The credit score is some number calculated by scanning across all a user’s
+events over the years.  It’s a big, long-running, expensive computation.  Do
+that continuously in batch… just update HBase as you go.  If you do that,
+then you make that information available for decisions in stream.</p>
+
+<p>Note that this is effectively a way to base fast-path decisions on
+information learned from slow-path computation.  A way for the system to
+quite literally <em>learn from the past</em>  :-)</p>
+
+<p>Another example of this is tracking a package.  The events involved are the
+various independent scans the package undergoes throughout its journey.</p>
+
+<p>For “state” you might just want to keep an abbreviated version of the raw
+history of each package
+<a href="/images/hbase-state-tracking-package.svg">
+<img src="/images/hbase-state-tracking-package.svg" width="720px" />
+</a>
+or just some derived notion of its state
+<a href="/images/hbase-state-tracking-package-derived.svg">
+<img src="/images/hbase-state-tracking-package-derived.svg" width="720px" />
+</a>
+those derived notions of state are tough to define from a single scan in a
+warehouse somewhere… but make perfect sense when viewed in the context of the
+entire package history.</p>
+
+<hr />
+
+<h2 id="wrap-up">Wrap-up</h2>
+
+<p>I eventually come back to our agenda:</p>
+
+<ul>
+  <li>Ingest Events</li>
+  <li>Take Action</li>
+  <li>Recognize Activity</li>
+</ul>
+
+<p>Along the way we’ve done a nod to some data-plumbing best practices… such as</p>
+
+<h4 id="the-power-of-the-query-side">The Power of the Query Side</h4>
+<p>Query-side tools are fast – use them effectively!</p>
+
+<h4 id="infrastructure-aspirations">Infrastructure Aspirations</h4>
+<p>A datascience pipeline is</p>
+
+<ul>
+  <li>immutable</li>
+  <li>lazy</li>
+  <li>atomic
+    <ul>
+      <li>simple</li>
+      <li>composable</li>
+      <li>testable</li>
+    </ul>
+  </li>
+</ul>
+
+<p>When building datascience pipelines, these paradigms 
+help you stay flexible and scalable</p>
+
+<h4 id="automate-all-of-the-things">Automate All of the Things</h4>
+<p>DevOps is your friend.  We’re using an interesting pushbutton stack that’ll be
+the topic of another blog post :-)</p>
+
+<h4 id="test-all-of-the-things">Test All of the Things</h4>
+<p>TDD/BDD is your friend.  Again, I’ll add another post on “Sanity-Driven Data
+Science” which is my take on TDD/BDD as applied to datascience pipelines.</p>
+
+<h4 id="failure-is-a-first-class-citizen">Failure is a First Class Citizen</h4>
+<p>Fail fast, early, often… along with the obligatory reference to the Netflix
+Simian Army.</p>
+
+<hr />
+
+<h2 id="the-talk-itself">The Talk Itself</h2>
+
+<p>It was a somewhat challenging presentation format.  I presented a live video
+feed solo while the audience was watching live and had the ability to send
+questions in via chat… no audio from the audience.  Somewhat reminiscent of
+IRC-based presentations we used to do in Ubuntu community events… but with
+video.</p>
+
+<p>The moderator asked the audience to queue questions up until the end, but as
+anyone who’s been in a classroom with me knows, I welcome / live for
+interruptions :-) In this case, I could easily see the chat window as I
+presented so asking-questions-along-the-way is supported on that presentation
+platform.  I’d definitely ask for that in the future.</p>
+
+<p>I do prefer the fireside chat nature of adding one or two more folks into the
+feed… kinda like on-the-air hangouts… where the speaker can get audible
+feedback from some folks.  Overall though this was a great experience and folks
+asked interesting questions at the end.  I’m not sure how it’ll be published,
+but questions had to be done in a second section as I dropped connectivity
+right at the end of the speaking session.</p>
+
+<p>Slides are available
+<a href="http://archive.markmims.com/box/talks/2016-03-12-hwtb-sessions/slides.html">here</a>,
+and you can get the video straight from the <a href="hadoop.with-the-best.com">hadoop with the
+best</a> site.  Note that the slides are
+<a href="https://github.com/hakimel/reveal.js/">reveal.js</a> and I make heavy use of
+two-dimensional navigation.  Slides advance downwards, topics advance to the
+right.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-03-17T12:08:00-07:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-engineering/'>data-engineering</a>, <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/hadoop/'>hadoop</a>, <a class='category' href='/blog/categories/spark/'>spark</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html" data-via="m_3" data-counturl="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html" title="Previous Post: Develop Spark Apps on Yarn using Docker">&laquo; Develop Spark Apps on Yarn using Docker</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html';
+        var disqus_url = 'http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

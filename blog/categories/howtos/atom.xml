@@ -4,7 +4,7 @@
   <title><![CDATA[Category: howtos | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/howtos/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2015-06-08T10:19:46-04:00</updated>
+  <updated>2016-04-22T15:04:19-07:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Where did the 'close-lid' action go in gnome3?]]></title>
     <link href="http://markmims.com/howtos/2011/09/13/power-lid-closed-actions.html"/>
-    <updated>2011-09-13T00:00:00-04:00</updated>
+    <updated>2011-09-13T00:00:00-07:00</updated>
     <id>http://markmims.com/howtos/2011/09/13/power-lid-closed-actions</id>
     <content type="html"><![CDATA[<p>Here’s a workaround… (thanks slangasek!)</p>
 
@@ -29,7 +29,7 @@
   <entry>
     <title type="html"><![CDATA[Stir that memory of autotools]]></title>
     <link href="http://markmims.com/howtos/2011/09/08/autotools.html"/>
-    <updated>2011-09-08T00:00:00-04:00</updated>
+    <updated>2011-09-08T00:00:00-07:00</updated>
     <id>http://markmims.com/howtos/2011/09/08/autotools</id>
     <content type="html"><![CDATA[<p>Ok, never going to forget these again, dammit!</p>
 
@@ -51,7 +51,7 @@ $ OS_ARCH=amd64 make
   <entry>
     <title type="html"><![CDATA[PreSonus FireBox in Ubuntu]]></title>
     <link href="http://markmims.com/howtos/2011/08/17/presonus-firebox.html"/>
-    <updated>2011-08-17T00:00:00-04:00</updated>
+    <updated>2011-08-17T00:00:00-07:00</updated>
     <id>http://markmims.com/howtos/2011/08/17/presonus-firebox</id>
     <content type="html"><![CDATA[<p>Just some notes to myself for later.</p>
 
@@ -125,7 +125,7 @@ http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digi
   <entry>
     <title type="html"><![CDATA[git-create new github repos]]></title>
     <link href="http://markmims.com/howtos/2011/07/27/create-github-repos.html"/>
-    <updated>2011-07-27T00:00:00-04:00</updated>
+    <updated>2011-07-27T00:00:00-07:00</updated>
     <id>http://markmims.com/howtos/2011/07/27/create-github-repos</id>
     <content type="html"><![CDATA[<p>Ok, I’m too lazy to go through the web interface every time I want to add a new github repo.
 github api to the rescue…</p>
@@ -225,7 +225,7 @@ Notice that git even picks it up as a builtin so I can</p>
   <entry>
     <title type="html"><![CDATA[grrr... fix dpms on hawk]]></title>
     <link href="http://markmims.com/howtos/2011/07/10/fix-hawk-screensaver.html"/>
-    <updated>2011-07-10T00:00:00-04:00</updated>
+    <updated>2011-07-10T00:00:00-07:00</updated>
     <id>http://markmims.com/howtos/2011/07/10/fix-hawk-screensaver</id>
     <content type="html"><![CDATA[<p>From <a href="http://ubuntuforums.org/showthread.php?t=1213325">here</a></p>
 

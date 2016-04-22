@@ -9,8 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="dd if=/dev/urandom of=testfile bs=1M count=10
-sudo losetup /dev/loop0 testfile sudo cryptsetup create crypto /dev/loop0 (asks for passphrase) sudo &hellip;">
+  <meta name="description" content="sshfs -C mmm@hawk:/home/torrent/downloads /opt/torrent/downloads -o reconnect,uid=103,gid=107 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -117,6 +116,144 @@ sudo losetup /dev/loop0 testfile sudo cryptsetup create crypto /dev/loop0 (asks 
       
   <header>
     
+      <h1 class="entry-title"><a href="/howtos/2010/07/10/howto-torrent-in-bison.html">Torrent in Bison</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-10T00:00:00-07:00" pubdate data-updated="true">Jul 10<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>sshfs -C mmm@hawk:/home/torrent/downloads /opt/torrent/downloads -o reconnect,uid=103,gid=107
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-supermicro-ipmi.html">Supermicro Ipmi</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SuperMicro IPMI Firewall Connection Information</p>
+
+<pre><code>HTTP: 80 (TCP)
+HTTPS: 443 (TCP)
+IPMI: 623 (UDP)
+Remote console: 5900 (TCP)
+Virtual media: 623 (TCP)
+SMASH: 22 (TCP)
+WS-MAN: 8889 (TCP)
+Source: http://www.supermicro.com/manuals/other/Onboard_BMC_IPMI.pdf
+</code></pre>
+
+<p>–or–</p>
+
+<pre><code>ipmitool -I lanplus -H proteus.mgmt.inside.ttu.edu.vn -U ADMIN -P ADMIN sol info
+ipmitool -I lanplus -H proteus.mgmt.inside.ttu.edu.vn -U ADMIN -P ADMIN sol activate
+</code></pre>
+
+<hr />
+
+<p>Stop a Serial-Over-LAN session</p>
+
+<p>From an existing sol session:</p>
+
+<pre><code>~.
+</code></pre>
+
+<p>If your existing sol session is in a terminal you’ve ssh’d into, you’ll have to prepend a tilde for each ssh layer:</p>
+
+<pre><code>~~~.
+</code></pre>
+
+<p>From the SOL help:</p>
+
+<pre><code>Supported escape sequences:
+~.  - terminate connection
+~^Z - suspend ipmitool
+~^X - suspend ipmitool, but don't restore tty on restart
+~B  - send break
+~?  - this message
+~~  - send the escape character by typing it twice
+(Note that escapes are only recognized immediately after newline.)
+</code></pre>
+
+<p>Using the Serial-Over-LAN session</p>
+
+<pre><code>The serial BIOS interface is a bit brain-damaged in that it does not recognise the "F11", and "F12" key escape codes that most terminal programs send, instead you can send "Esc-!", and "Esc-@" (yes very logical, as long as the '@' key is normally typed using 'Shift-2' - as on US keyboards, not miles away from the '2' key, as on many non-US keyboards). These escapes from HP, and Dell serial BIOS' may or may not be useful:
+
+Defined As     F1     F2     F3     F4     F5     F6     F7     F8     F9     F10    F11    F12
+Keyboard Entry &lt;ESC&gt;1 &lt;ESC&gt;2 &lt;ESC&gt;3 &lt;ESC&gt;4 &lt;ESC&gt;5 &lt;ESC&gt;6 &lt;ESC&gt;7 &lt;ESC&gt;8 &lt;ESC&gt;9 &lt;ESC&gt;0 &lt;ESC&gt;! &lt;ESC&gt;@
+
+Defined As     Home   End    Insert Delete PageUp PageDn
+Keyboard Entry &lt;ESC&gt;h &lt;ESC&gt;k &lt;ESC&gt;+ &lt;ESC&gt;- &lt;ESC&gt;? &lt;ESC&gt;/
+
+Use the &lt;ESC&gt;&lt;Ctrl&gt;&lt;M&gt; key sequence for &lt;Ctrl&gt;&lt;M&gt;
+
+Use the &lt;ESC&gt;&lt;Ctrl&gt;&lt;H&gt; key sequence for &lt;Ctrl&gt;&lt;H&gt;
+
+Use the &lt;ESC&gt;&lt;Ctrl&gt;&lt;I&gt; key sequence for &lt;Ctrl&gt;&lt;I&gt;
+
+Use the &lt;ESC&gt;&lt;Ctrl&gt;&lt;J&gt; key sequence for &lt;Ctrl&gt;&lt;J&gt;
+
+Use the &lt;ESC&gt;&lt;X&gt;&lt;X&gt; key sequence for &lt;Alt&gt;&lt;x&gt;, where x is any letter key, and X is the upper case of that key
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-setup-encrypted-filesystem.html">Setup Encrypted Fs</a></h1>
     
     
@@ -133,7 +270,7 @@ sudo losetup /dev/loop0 testfile sudo cryptsetup create crypto /dev/loop0 (asks 
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -236,7 +373,7 @@ sudo cryptsetup remove /dev/mapper/crypto
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -274,7 +411,7 @@ sudo cryptsetup remove /dev/mapper/crypto
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -336,7 +473,7 @@ log on
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -621,7 +758,7 @@ backup	root@192.168.100.2:/usr/local/	hawk/
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -731,7 +868,7 @@ exit 0
   
 
 
-<time datetime="2010-06-26T00:00:00-04:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -792,7 +929,7 @@ niutil -read / /groups/admin
   
 
 
-<time datetime="2010-06-17T00:00:00-04:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+<time datetime="2010-06-17T00:00:00-07:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
         
       </p>
     
@@ -855,7 +992,7 @@ launchctl start hawk.videos.sshfs
   
 
 
-<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00-07:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -941,94 +1078,6 @@ apt-get -u dist-upgrade
     ln -s ../mods-available/rewrite.load .
     ln -s ../mods-available/include.load .
     ln -s ../mods-available/cache.load .</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/howto-use-socat-to-forward-unix-sockets-over-ssh.html">Use Socat to Forward Unix Sockets Over Ssh</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>socat TCP-LISTEN:5500 EXEC:'ssh root@proteus "socat STDIO UNIX-CONNECT:/var/run/libvirt/qemu/i-437207F5.monitor"'
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/howto-usb-keys-for-firewall.html">Use Usb Keys for Openmicroserver Firewalls</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00-04:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>backup image in <code>~/etc/arch/machine-backups/korek-xxxxxxxx.tar.gz</code></p>
-
-<pre><code>ganymede:~/etc/arch/machine-backups # fdisk -l /dev/sdc
-
-Disk /dev/sdc: 2029 MB, 2029518848 bytes
-255 heads, 63 sectors/track, 246 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-Disk identifier: 0xc3072e18
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sdc1               1         208     1670728+  83  Linux
-/dev/sdc2             209         246      305235   82  Linux swap / Solaris
-ganymede:~/etc/arch/machine-backups # 
-</code></pre>
 
 </div>
   
@@ -1174,6 +1223,14 @@ ganymede:~/etc/arch/machine-backups #
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
       </li>
     
@@ -1185,14 +1242,6 @@ ganymede:~/etc/arch/machine-backups #
         <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
       </li>
     
-      <li class="post">
-        <a href="/cloud/2013/06/28/charmschool-charm-best-practices.html">CharmSchool Hangout - Charming Best Practices</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/06/15/juju-demo-videos.html">Juju Demo Videos</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1202,7 +1251,7 @@ ganymede:~/etc/arch/machine-backups #
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2016 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

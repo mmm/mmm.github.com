@@ -1,0 +1,622 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Develop Spark Apps on Yarn using Docker - Software, Physics, Data, Mountains</title>
+  <meta name="author" content="Mark M Mims, Ph.D.">
+
+  
+  <meta name="description" content="At svds, we’ll often run spark on yarn in production. Add some artful tuning
+and this works pretty well. However, developers typically build and test &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Ubuntu:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4132881-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
+  
+    <h2>...and other random associations</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:markmims.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="http://about.me/m_3">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Develop Spark Apps on Yarn Using Docker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-13T15:07:00-07:00" pubdate data-updated="true">Oct 13<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>At svds, we’ll often run spark on yarn in production.  Add some artful tuning
+and this works pretty well.  However, developers typically build and test spark
+application in <em>standalone</em> mode… not on yarn.</p>
+
+<p>Rather than get bitten by the ideosyncracies involved in running spark on yarn
+-vs- standalone when you go to deploy, here’s a way to set up a development
+environment for spark that more closely mimics how it’s used in the wild.</p>
+
+<!--more-->
+
+<h2 id="a-simple-yarn-cluster-on-your-laptop">A simple yarn “cluster” on your laptop</h2>
+
+<p>Run a docker image for a cdh standalone instance</p>
+
+<pre><code>docker run -d --name=mycdh svds/cdh
+</code></pre>
+
+<p>when the logs</p>
+
+<pre><code>docker logs -f mycdh
+</code></pre>
+
+<p>stop going wild, you can run the usual hadoop-isms to set up a workspace</p>
+
+<pre><code>docker exec -it mycdh hadoop fs -ls /
+docker exec -it mycdh hadoop fs -mkdir -p /tmp/blah
+</code></pre>
+
+<h2 id="run-spark">Run spark</h2>
+
+<p>Then, it’s pretty straightforward to run spark against yarn</p>
+
+<pre><code>docker exec -it mycdh \
+  spark-submit \
+    --master yarn-cluster \
+    --class org.apache.spark.examples.SparkPi \
+    /usr/lib/spark/examples/lib/spark-examples-1.3.0-cdh5.4.3-hadoop2.6.0-cdh5.4.3.jar \
+    1000
+</code></pre>
+
+<p>Note that you can <em>submit</em> a spark job to run in either “yarn-client” or “yarn-cluster” modes.</p>
+
+<p>In “yarn-client” mode, the spark driver runs outside of yarn and logs to
+console and all spark executors run as yarn containers.</p>
+
+<p>In “yarn-cluster” mode, all spark executors run as yarn containers, but then
+the spark driver also runs as a yarn container.  Yarn manages all the logs.</p>
+
+<p>You can also run the spark shell so that any workers spawned run in yarn</p>
+
+<pre><code>docker exec -it mycdh spark-shell --master yarn-client
+</code></pre>
+
+<p>or</p>
+
+<pre><code>docker exec -it mycdh pyspark --master yarn-client
+</code></pre>
+
+<h2 id="your-application">Your Application</h2>
+
+<p>Ok, so <code>SparkPi</code> is all fine and dandy, but how do I run a real application?</p>
+
+<p>Let’s make up an example.  Say you build your spark project on your laptop in the
+<code>/Users/myname/mysparkproject/</code> directory.</p>
+
+<p>When you build with maven or sbt, it typically builds and leaves jars under a
+<code>/Users/myname/mysparkproject/target/</code> directory… for sbt, it’ll look like
+<code>/Users/myname/mysparkproject/target/scala-2.10/</code>.</p>
+
+<p>The idea here is to make these jars directly accessible from both your laptop’s
+build process as well as from inside the cdh container.</p>
+
+<p>When you start up the <code>cdh</code> container, map this local host directory up and
+into the container</p>
+
+<pre><code>docker run -d -v ~/mysparkproject/target:/target --name=mycdh svds/cdh 
+</code></pre>
+
+<p>where the <code>-v</code> option will make <code>~/mysparkproject/target</code>
+available as <code>/target</code> within the container.</p>
+
+<p>So,</p>
+
+<pre><code>sbt clean assembly
+</code></pre>
+
+<p>leaves a jar under <code>~/mysparkproject/target</code>, which the container sees as
+<code>/target</code> and you can run jobs using something like</p>
+
+<pre><code>docker exec -it mycdh \
+  spark-submit \
+    --master yarn-cluster \
+    --name MyFancySparkJob-name \
+    --class org.markmims.MyFancySparkJob \
+    /target/scala-2.10/My-assembly-1.0.1.20151013T155727Z.c3c961a51c.jar \
+    myarg
+</code></pre>
+
+<p>The <code>--name</code> arg makes it easier to find in the midst of multiple yarn jobs.</p>
+
+<h2 id="logs">Logs</h2>
+
+<p>While a spark job is running, you can get its yarn “applicationId” from</p>
+
+<pre><code>docker exec -it mycdh yarn application -list
+</code></pre>
+
+<p>or if it finished already just list things out with more conditions</p>
+
+<pre><code>docker exec -it mycdh yarn application -list -appStates FINISHED
+</code></pre>
+
+<p>You can dig through the yarn-consolidated logs after the job is done
+by using</p>
+
+<pre><code>docker exec -it mycdh yarn logs -applicationId &lt;applicationId&gt;
+</code></pre>
+
+<h2 id="consoles">Consoles</h2>
+
+<p>Web consoles are critical for application development.  Spend time up front
+getting ports open or forwarded correctly for all environments.  Don’t wait
+until you’re actually trying to debug something critical to figure out how to
+forward ports to see the staging UI in all environments.</p>
+
+<h3 id="yarn-resourcemanager-ui">Yarn ResourceManager UI</h3>
+
+<p>Yarn gives you quite a bit of info about the system right from the
+ResourceManager on its ip address and webgui port (usually 8088)</p>
+
+<pre><code>open http://&lt;resource-manager-ip&gt;:&lt;resource-manager-port&gt;/
+</code></pre>
+
+<h3 id="spark-staging-ui">Spark Staging UI</h3>
+
+<p>Yarn also conveniently proxies access to the spark staging UI for a given
+application.  This looks like</p>
+
+<pre><code>open http://&lt;resource-manager-ip&gt;:&lt;resource-manager-port&gt;/proxy/&lt;applicationId&gt;
+</code></pre>
+
+<p>for example,</p>
+
+<pre><code>open http://localhost:8088/proxy/application_1444330488724_0005/
+</code></pre>
+
+<h3 id="ports-and-docker">Ports and Docker</h3>
+
+<p>There are a few ways to deal with accessing port <code>8088</code> of the yarn resource
+manager from outside of the docker container.  I typically use ssh for
+everything and just forward ports out to <code>localhost</code> on the host.  However,
+most people will expect to access ports directly on the <code>docker-machine ip</code>
+address.  To do that, you have to map each port when you first spin up the
+<code>cdh</code> container using the <code>-p 8088</code> option</p>
+
+<pre><code>docker run -d -v target -p 8088 --name=mycdh svds/cdh 
+</code></pre>
+
+<p>Then you should be good to go with something like</p>
+
+<pre><code>open http://`docker-machine ip`:8088/
+</code></pre>
+
+<p>to access the yarn console.</p>
+
+<hr />
+
+<h2 id="tips-and-gotchas">Tips and Gotchas</h2>
+
+<ul>
+  <li>
+    <p>The docker image <code>svds/cdh</code> is quite large (2GB).  I like to do a separate
+<code>docker pull</code> from any <code>docker run</code> commands just to isolate the download.
+In fact, I recommend pinning the cdh version for the same reason… so
+<code>docker pull svds/cdh:5.4.0</code> for instance, then refer to it that way
+throughout <code>docker run -d --name=mycdh svds/cdh:5.4.0</code> and that’ll insure
+you’re not littering your laptop’s filesystem with docker layers from
+multiple cdh versions.  The bare <code>svds/cdh</code> (equiv to <code>svds/cdh:latest</code>)
+floats with the most recent cloudera versions</p>
+  </li>
+  <li>
+    <p>I’m using a CDH container here… but there’s an HDP one on the way as well.
+Keep an eye out for it on <a href="`https://hub.docker.com/u/svds`">svds’s dockerhub page</a></p>
+  </li>
+  <li>
+    <p>web consoles and forwarding ports through SSH</p>
+  </li>
+</ul>
+
+<h2 id="bonus">Bonus</h2>
+
+<p>Ok, so the downside here is that the image is fat.  The upside is that it lets
+you play with the full suite of CDH-based tools.  I’ve tested out (besides the
+spark variations above)</p>
+
+<h3 id="impala-shell">Impala shell</h3>
+
+<pre><code>docker exec mycdh impala-shell
+</code></pre>
+
+<h3 id="hbase-shell">HBase shell</h3>
+
+<pre><code>docker exec mycdh hbase shell
+</code></pre>
+
+<h3 id="hive">Hive</h3>
+
+<pre><code>echo "show tables;" | docker exec mycdh beeline -u jdbc:hive2://localhost:10000 -n username -p password -d org.apache.hive.jdbc.HiveDriver
+</code></pre>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mark M Mims, Ph.D.</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-13T15:07:00-07:00" pubdate data-updated="true">Oct 13<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-engineering/'>data-engineering</a>, <a class='category' href='/blog/categories/devops/'>devops</a>, <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/spark/'>spark</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html" data-via="m_3" data-counturl="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2015/06/01/ssh-tips.html" title="Previous Post: SSH Tips and Tricks">&laquo; SSH Tips and Tricks</a>
+      
+      
+        <a class="basic-alignment right" href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html" title="Next Post: Identifying User Activity from Streams of Raw Events">Identifying User Activity from Streams of Raw Events &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <section>
+    <div id='container'>
+      <div id='about-sidebar'>
+        <div id='mugshot'>
+          <img alt="Mug" src="/images/phonebooth.jpg"/>
+        </div>
+
+        <div id='bio'>
+          <p>
+            Hi, I'm Mark... a software developer and a physics geek.
+          </p>
+
+          <p>
+            <em>Data Plumbing</em> is where Data Science meets DevOps, 
+            and that's where I happily spend most of my time.
+          </p>
+
+          <p>
+            I work with a talented team of consultants at 
+            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
+            where we help clients tackle their toughest
+            data science problems.
+          </p>
+
+          <p>
+            My past experience is mostly data science, devops, and software
+            engineering...
+            both in the enterprise and as an entrepreneur.
+            I have a resume in  
+            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
+            |
+            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
+            |
+            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
+          </p>
+
+          <p>
+            I have a Ph.D. in Physics for research in Quantum Computation.
+            Here's a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
+            on Noise in Quantum Algorithms.
+          </p>
+
+
+        <dl>
+          <dt>
+            Social:
+          </dt>
+          <dd>
+            <a href="http://about.me/m_3">About.Me</a>
+          </dd>
+          <dd>
+            <a href="http://twitter.com/m_3/">Twitter</a>
+          </dd>
+          <dd>
+            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+          </dd>
+          <dd>
+            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
+          </dd>
+          <dd>
+            <a href="https://www.facebook.com/mark.mims">Facebook</a>
+          </dd>
+          <dd>
+            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+          </dd>
+          <dd>
+            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Code:
+          </dt>
+          <dd>
+            <a href="http://github.com/mmm">GitHub</a>
+          </dd>
+          <dd>
+            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
+          </dd>
+        </dl>
+
+        <br/>
+
+        <dl>
+          <dt>
+            Keys:
+          </dt>
+          <dd>
+            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+            )
+          </dd>
+          <dd>
+            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+            (
+            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+            )
+          </dd>
+        </dl>
+
+        </div>
+
+      </div>
+      <br/>
+    </div>
+    <script type='text/javascript'>
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type='text/javascript'>
+      var pageTracker = _gat._getTracker("UA-4132881-1");
+      pageTracker._initData();
+      pageTracker._trackPageview();
+    </script>
+  </section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - Mark M Mims, Ph.D. -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'markmims';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html';
+        var disqus_url = 'http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
