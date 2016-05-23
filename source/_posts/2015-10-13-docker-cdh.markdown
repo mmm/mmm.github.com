@@ -104,7 +104,7 @@ The `--name` arg makes it easier to find in the midst of multiple yarn jobs.
 
 ## Logs
 
-While a spark job is running, you can get its yarn "applictionId" from
+While a spark job is running, you can get its yarn "applicationId" from
 
     docker exec -it mycdh yarn application -list
 
@@ -154,9 +154,9 @@ manager from outside of the docker container.  I typically use ssh for
 everything and just forward ports out to `localhost` on the host.  However,
 most people will expect to access ports directly on the `docker-machine ip`
 address.  To do that, you have to map each port when you first spin up the
-`cdh` container using the `-P 8088` option
+`cdh` container using the `-p 8088` option
 
-    docker run -d -v target -P 8088 --name=mycdh svds/cdh 
+    docker run -d -v target -p 8088 --name=mycdh svds/cdh 
 
 Then you should be good to go with something like
 
