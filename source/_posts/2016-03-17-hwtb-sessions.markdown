@@ -16,6 +16,8 @@ the sessionization of such events.
 
 <!--more-->
 
+{% youtube 7geRGzrIXRI %}
+
 [SVDS](svds.com) is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
 problems.  In this role, we're in a unique position to solve different
