@@ -425,3 +425,6 @@ best](hadoop.with-the-best.com) site.  Note that the slides are
 two-dimensional navigation.  Slides advance downwards, topics advance to the
 right.
 
+Update: this post has be perdied-up (thanks Meg!) and reposted as part of our
+[svds blog](http://www.svds.com/building-pipelines-understand-user-behavior/).
+
