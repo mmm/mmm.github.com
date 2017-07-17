@@ -12,27 +12,46 @@ Mark McGrew Mims
 About
 -----
 
-I'm a Data Plumber.  I spend most days designing/tuning/fixing/banging-on data pipelines and the infrastructure behind data-intensive applications of all sorts.
+I'm a Data Plumber.  I spend most days designing/tuning/fixing/banging-on data
+pipelines and the infrastructure behind data-intensive applications of all
+sorts.
 
-Originally trained as a Physicist (Ph.D. researching how quantum computers can learn to tolerate noise and errors), I've since had an incredible career out in the world where Data Science meets DevOps and infrastructure engineering.
+Originally trained as a Physicist (Ph.D. researching how quantum computers can
+learn to tolerate noise and errors), I've since had an incredible career out in
+the world where Data Science meets DevOps and infrastructure engineering.
 
-I've been lucky enough to work for companies like Canonical, the folks behind the Ubuntu operating system, Infochimps, and now Silicon Valley Data Science.  Places where talented teams of people are innovating and leading open-source communities and the tech industry as a whole.
+I've been lucky enough to work for companies like Canonical, the folks behind
+the Ubuntu operating system, Infochimps, and now Silicon Valley Data Science.
+Places where talented teams of people are innovating and leading open-source
+communities and the tech industry as a whole.
 
-I've been a consultant for a lot of my career, which gives me great insight into a vast range of data-related problems people have as well as how to help solve these problems across industries and technology stacks.
+I've been a consultant for a lot of my career, which gives me great insight
+into a vast range of data-related problems people have as well as how to help
+solve these problems across industries and technology stacks.
 
 
 Current Passions
 ----------------
 
-- training data scientists.  I'm building a class that's essentially "Just enough data engineering" for data scientists in Berkeley's MIDS program and I can't wait to start teaching it Fall 2017
+- training data scientists.  I'm building a class that's essentially "Just
+  enough data engineering" for data scientists in Berkeley's MIDS program and I
+  can't wait to start teaching it Fall 2017
 
-- adopting test-driven methodologies into building data pipelines... keeping pipelines strongly connected to the actual problems that need to be solved
+- adopting test-driven methodologies into building data pipelines... keeping
+  pipelines strongly connected to the actual problems that need to be solved
 
 - and then pretty much anything to do with AI in infrastructure automation :-)
 
 
 Experience
 ----------
+
+2017-Present
+:   **Staff R&D Engineer** \
+    *DigitalOcean * (New York)
+
+    Helping build better cloud services for DigitalOcean users!
+
 
 2017-Present
 :   **Lecturer** - Master of Information and Data Science (MIDS) \
@@ -42,7 +61,7 @@ Experience
     course for the MIDS program.
 
 
-2014-Present
+2014-2017
 :   **Principal Engineer** \
     *Silicon Valley Data Science* (Mountain View)
 

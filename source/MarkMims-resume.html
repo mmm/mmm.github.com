@@ -6,7 +6,7 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
-  <link href="data:text/css;charset=utf-8,%0A%0Abody%20%7B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Awidth%3A%20800px%3B%0Amargin%3A%20auto%3B%0Abackground%3A%20%23FFFFFF%3B%0Apadding%3A%2010px%2010px%2010px%2010px%3B%0A%7D%0A%0Ah1%20%7B%0Afont%2Dsize%3A%2055px%3B%0Acolor%3A%20%23757575%3B%0Atext%2Dalign%3Acenter%3B%0Amargin%2Dbottom%3A15px%3B%0A%7D%0Ah1%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23757575%3B%0Acolor%3A%20%23FFFFFF%3B%0Atext%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0Ah2%20%7B%0Acolor%3A%20%23397249%3B%0A%7D%0A%0Ah2%3Abefore%20%7B%0Acontent%3A%20%22%22%3B%0Adisplay%3A%20inline%2Dblock%3B%0Amargin%2Dright%3A1%25%3B%0Awidth%3A%2016%25%3B%0Aheight%3A%2010px%3B%0Abackground%2Dcolor%3A%20%239CB770%3B%0A%7D%0Ah2%3Ahover%20%7B%0Abackground%2Dcolor%3A%20%23397249%3B%0Acolor%3A%20%23FFFFFF%3B%0Atext%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0Adt%20%7B%0Afloat%3A%20left%3B%0Aclear%3A%20left%3B%0Awidth%3A%2017%25%3B%0A%0A%7D%0Add%20%7B%0Amargin%2Dleft%3A%2017%25%3B%0A%7D%0Ap%20%7B%0Amargin%2Dtop%3A0%3B%0Amargin%2Dbottom%3A7px%3B%0A%7D%0A%0Ablockquote%20%7B%0Atext%2Dalign%3A%20center%0A%7D%0A%0Aa%20%7B%0Atext%2Ddecoration%3A%20none%3B%0Acolor%3A%20%23397249%3B%0A%7D%0Aa%3Ahover%2C%20a%3Aactive%20%7B%0Abackground%2Dcolor%3A%20%23397249%3B%0Acolor%3A%20%23FFFFFF%3B%0Atext%2Ddecoration%3A%20none%3B%0Atext%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0Ahr%20%7B%0Acolor%3A%20%23A6A6A6%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
+  <link href="data:text/css,%2F%2A%0A%20%2A%20Copyright%202013%20Christophe%2DMarie%20Duquesne%20%3Cchmd%40chmd%2Efr%3E%0A%20%2A%0A%20%2A%20CSS%20for%20making%20a%20resume%20with%20pandoc%2E%20Inspired%20by%20moderncv%2E%0A%20%2A%0A%20%2A%20This%20CSS%20document%20is%20delivered%20to%20you%20under%20the%20CC%20BY%2DSA%203%2E0%20License%2E%0A%20%2A%20https%3A%2F%2Fcreativecommons%2Eorg%2Flicenses%2Fby%2Dsa%2F3%2E0%2Fdeed%2Een%5FUS%0A%20%2A%2F%0A%0A%2F%2A%20Whole%20document%20%2A%2F%0Abody%20%7B%0A%20%20%20%20font%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20%20%20width%3A%20800px%3B%0A%20%20%20%20margin%3A%20auto%3B%0A%20%20%20%20background%3A%20%23FFFFFF%3B%0A%20%20%20%20padding%3A%2010px%2010px%2010px%2010px%3B%0A%7D%0A%0A%2F%2A%20Title%20of%20the%20resume%20%2A%2F%0Ah1%20%7B%0A%20%20%20%20font%2Dsize%3A%2055px%3B%0A%20%20%20%20color%3A%20%23757575%3B%0A%20%20%20%20text%2Dalign%3Acenter%3B%0A%20%20%20%20margin%2Dbottom%3A15px%3B%0A%7D%0Ah1%3Ahover%20%7B%0A%20%20%20%20background%2Dcolor%3A%20%23757575%3B%0A%20%20%20%20color%3A%20%23FFFFFF%3B%0A%20%20%20%20text%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0A%2F%2A%20Titles%20of%20categories%20%2A%2F%0Ah2%20%7B%0A%20%20%20%20color%3A%20%23397249%3B%0A%7D%0A%2F%2A%20There%20is%20a%20bar%20just%20before%20each%20category%20%2A%2F%0Ah2%3Abefore%20%7B%0A%20%20%20%20content%3A%20%22%22%3B%0A%20%20%20%20display%3A%20inline%2Dblock%3B%0A%20%20%20%20margin%2Dright%3A1%25%3B%0A%20%20%20%20width%3A%2016%25%3B%0A%20%20%20%20height%3A%2010px%3B%0A%20%20%20%20background%2Dcolor%3A%20%239CB770%3B%0A%7D%0Ah2%3Ahover%20%7B%0A%20%20%20%20background%2Dcolor%3A%20%23397249%3B%0A%20%20%20%20color%3A%20%23FFFFFF%3B%0A%20%20%20%20text%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0A%2F%2A%20Definitions%20%2A%2F%0Adt%20%7B%0A%20%20%20%20float%3A%20left%3B%0A%20%20%20%20clear%3A%20left%3B%0A%20%20%20%20width%3A%2017%25%3B%0A%20%20%20%20%2F%2Afont%2Dweight%3A%20bold%3B%2A%2F%0A%7D%0Add%20%7B%0A%20%20%20%20margin%2Dleft%3A%2017%25%3B%0A%7D%0Ap%20%7B%0A%20%20%20%20margin%2Dtop%3A0%3B%0A%20%20%20%20margin%2Dbottom%3A7px%3B%0A%7D%0A%0A%2F%2A%20Blockquotes%20%2A%2F%0Ablockquote%20%7B%0A%20%20%20%20text%2Dalign%3A%20center%0A%7D%0A%0A%2F%2A%20Links%20%2A%2F%0Aa%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20none%3B%0A%20%20%20%20color%3A%20%23397249%3B%0A%7D%0Aa%3Ahover%2C%20a%3Aactive%20%7B%0A%20%20%20%20background%2Dcolor%3A%20%23397249%3B%0A%20%20%20%20color%3A%20%23FFFFFF%3B%0A%20%20%20%20text%2Ddecoration%3A%20none%3B%0A%20%20%20%20text%2Dshadow%3A%201px%201px%201px%20%23333%3B%0A%7D%0A%0A%2F%2A%20Horizontal%20separators%20%2A%2F%0Ahr%20%7B%0A%20%20%20%20color%3A%20%23A6A6A6%3B%0A%7D%0A" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <h1 id="mark-mcgrew-mims">Mark McGrew Mims</h1>
@@ -28,13 +28,15 @@
 <h2 id="experience">Experience</h2>
 <dl>
 <dt>2017-Present</dt>
-<dd><p><strong>Lecturer</strong> - Master of Information and Data Science (MIDS)<br />
-<em>UC Berkeley School of Information </em> (Berkeley)</p>
+<dd><p><strong>Staff R&amp;D Engineer</strong><br /><em>DigitalOcean </em> (New York)</p>
+<p>Helping build better cloud services for DigitalOcean users!</p>
+</dd>
+<dt>2017-Present</dt>
+<dd><p><strong>Lecturer</strong> - Master of Information and Data Science (MIDS)<br /><em>UC Berkeley School of Information </em> (Berkeley)</p>
 <p>Design, develop, and teach the introductory <em>Just Enough Data Engineering</em> course for the MIDS program.</p>
 </dd>
-<dt>2014-Present</dt>
-<dd><p><strong>Principal Engineer</strong><br />
-<em>Silicon Valley Data Science</em> (Mountain View)</p>
+<dt>2014-2017</dt>
+<dd><p><strong>Principal Engineer</strong><br /><em>Silicon Valley Data Science</em> (Mountain View)</p>
 <p>Building data science pipelines for various enterprise clients.</p>
 <p>Silicon Valley Data Science is a boutique consultancy specializing in solving your toughest Data problems. We provide Data Science, Data Engineering, Architectural Advisory, and Data Strategy services to a wide range of clients across industries.</p>
 <p>As a Principal Engineer with SVDS, I typically set technical direction, provide technical guidance/mentoring, and write code to help deliver client and internal projects:</p>
@@ -47,9 +49,7 @@
 </ul>
 </dd>
 <dt>2013-2014</dt>
-<dd><p><strong>Principal Data Architect</strong><br />
-<em>Infochimps</em> (Austin)<br />
-now <em>Computer Sciences Corporation (CSC)</em> (Falls-Church)</p>
+<dd><p><strong>Principal Data Architect</strong><br /><em>Infochimps</em> (Austin)<br />now <em>Computer Sciences Corporation (CSC)</em> (Falls-Church)</p>
 <p>Building managed data science pipelines for the enterprise.</p>
 <p>Infochimps, rebranded as CSC's Big Data and Analytics (BD&amp;A) Group, provides a wide range of fully managed data science and analytics services for the enterprise. My primary accomplishment here was driving work to adapt the Infochimps cloud-based products over to &quot;dedicated rack&quot; openstack-based solutions to meet the data pipeline needs of CSC's enterprise customers.</p>
 <p>As the Principal Data Architect, my contributions included:</p>
@@ -64,29 +64,25 @@ now <em>Computer Sciences Corporation (CSC)</em> (Falls-Church)</p>
 <p>Ultimately responsible for all tooling and process to support production rollout and lifecycle for dedicated-rack BD&amp;A product installs.</p>
 </dd>
 <dt>2011-2013</dt>
-<dd><p><strong>Software Engineer</strong> - Ubuntu Server Team<br />
-<em>Canonical Ltd.</em> (London)</p>
+<dd><p><strong>Software Engineer</strong> - Ubuntu Server Team<br /><em>Canonical Ltd.</em> (London)</p>
 <p>Building DevOps tools for Ubuntu Server.</p>
 <p>Part of the team working to build Juju, a new suite of DevOps tools for Ubuntu Server. Developing juju charms to orchestrate various services throughout the enterprise. Designing / developing APIs and tools surrounding the juju DevOps stack. Integrate / test deployments on LXC, bare metal-as-a-service (MaaS) as well as EC2 and OpenStack cloud infrastructures.</p>
 <p>Implement data-intensive service stacks and using Juju to capture, test, and model data science pipelines.</p>
 </dd>
 <dt>2012-2013</dt>
-<dd><p><strong>Visiting Scholar</strong> - Department of Physics<br />
-<em>Utah State University</em> (Logan)</p>
+<dd><p><strong>Visiting Scholar</strong> - Department of Physics<br /><em>Utah State University</em> (Logan)</p>
 <p>Research in data management and data modeling.</p>
 <p>Interested in data plumbing and the toolchains surrounding data science pipelines and how they effect subsequent results at various scales. Working to apply Test-Driven and Behavior-Driven Software Development techniques to data science pipelines as &quot;Sanity-Driven Data Science.&quot;</p>
 </dd>
 <dt>2010-2011</dt>
-<dd><p><strong>Cloud Architect</strong><br />
-<em>Archethought</em> (Austin / Boulder)</p>
+<dd><p><strong>Cloud Architect</strong><br /><em>Archethought</em> (Austin / Boulder)</p>
 <p>Building private and hybrid clouds and cloud applications for universities.</p>
 <p>Archethought is a consulting firm specializing in designing and building <em>private and hybrid clouds</em> for colleges and universities around the world. This helps universities take advantage of more efficient Virtualization technologies, provide infrastructure as a service within the university, and safely explore various emerging Digital Library technologies.</p>
 <p>Design and Deliver all software, networking, configuration and monitoring needed to set up and support a Cloud Computing System, Storage Systems, and cloud-based High Performance Computing Systems. Help integrate the Cloud Computing System with existing systems and applications throughout the university environment. This includes a web-based (Rails) Cloud Management Console with account, instance, image, and storage management.</p>
 <p>Technology Used: Eucalyptus, AWS/EC2 API, RightAWS, Ruby, Rails, Chef.</p>
 </dd>
 <dt>2005-2011</dt>
-<dd><p><strong>Founder / Chief Scientist</strong><br />
-<em>Agile Dynamics</em> (Austin)</p>
+<dd><p><strong>Founder / Chief Scientist</strong><br /><em>Agile Dynamics</em> (Austin)</p>
 <p>Data Science Consulting.</p>
 <p>Designed and built a <em>data-driven decision support system</em> for the Jamaican Ministry of Education. This USAID-sponsored project serves primary and secondary educational institutions throughout the nation and gives the Ministry previously unknown visibility into the state of education on the Island. This application was built using Rails and scales dynamically in EC2 using Chef.</p>
 <p>Designed the next generation of application for a company offering Fleet/Inventory Tracking services. This company provides web services and whitelabel web portals to track assets using their proprietary GPS tracking hardware. The new design helped prepare for <em>integration into Machine to Machine (M2M) data market</em>.</p>
@@ -96,13 +92,11 @@ now <em>Computer Sciences Corporation (CSC)</em> (Falls-Church)</p>
 <p>Technology Used: Ruby, Rails, Java, SWT/JFace.</p>
 </dd>
 <dt>2009-2011</dt>
-<dd><p><strong>Board of Directors</strong><br />
-<em>LoneStarRuby Foundation</em> (Austin)</p>
+<dd><p><strong>Board of Directors</strong><br /><em>LoneStarRuby Foundation</em> (Austin)</p>
 <p>LSRF organizes an annual LoneStarRuby Conference</p>
 </dd>
 <dt>2002-2005</dt>
-<dd><p><strong>Chief Technology Officer</strong><br />
-<em>Rational Systems</em> (Houston)</p>
+<dd><p><strong>Chief Technology Officer</strong><br /><em>Rational Systems</em> (Houston)</p>
 <p>Building Operations/Optimization systems for the Energy Industry.</p>
 <p>Directed delivery of two complete product lines, Rational Pipe(TM) and Rational Catalyst(TM), from conception.</p>
 <p>Rational Pipe is software designed to <em>manage the commercial activities of interstate natural gas pipelines</em>, including contracts, CRM, tariffs, capacity release, nominations, allocations and invoicing. It was the result of a 140+ man-year, joint development project between Rational Systems and a major US interstate natural gas pipeline, utilizing Rational's Rights-Based engine.</p>
@@ -112,17 +106,14 @@ now <em>Computer Sciences Corporation (CSC)</em> (Falls-Church)</p>
 <p>Technology Used: Java, C#, C++, J2EE Design/Development, .NET, Business modeling, MFC, ATL, COM, Tibco, SQLServer 2000 with Analysis Services, Enterprise Hardware (Compaq/HP) running Windows 2000 Server, Windows 2003 Server, Red Hat 9 and Fedora Core 2-3, Microsoft SharePoint, Linux.</p>
 </dd>
 <dt>2000-2002</dt>
-<dd><p><strong>Lead Software Architect</strong><br />
-<em>The AEgis Technologies Group, Inc.</em> (Austin / Huntsville)</p>
+<dd><p><strong>Lead Software Architect</strong><br /><em>The AEgis Technologies Group, Inc.</em> (Austin / Huntsville)</p>
 <p>Building IDEs for Simulation Engineers.</p>
 <p>Principal architect of AEgis' AcslXtreme(TM) product line, a suite of <em>commercial simulation tools</em> based on the industry standard ACSL(TM) (Advanced Continuous Simulation Language). Leader of a development team responsible for refactoring and modernizing the ACSL language as well as developing a complete modern development environment for simulation engineers. Responsible for coordinating all technical activities and artifacts throughout the lifecycle of the project.</p>
 <p>Directly developed software components across the product line: for ACSL language translation, compilation, interpretation, symbolic mathematical manipulation, numerical integration and analysis, numerical optimization, build management, simulation execution management, communications infrastructure (using both distributing and componenting technologies), and developing user interface component APIs.</p>
 <p>Technology Used: C/C++, C#, Java, .NET, MATLAB, VB, FORTRAN, UNIX and Win32 systems programming, MFC, COM/DCOM, CORBA, SOAP, HLA, ANTLR, lex/yacc, UML, RUP, GoF design patterns, object-oriented design, component-based design, Windows .NET, Various flavors of UNIX/Linux (some components native, UI(MFC) components ported using Bristol porting tools).</p>
 </dd>
 <dt>1996-1998</dt>
-<dd><p><strong>Software Developer</strong><br />
-<em>Wesson International, Inc.</em> (Austin)<br />
-now <em>Adacel Technologies, Ltd.</em> (Calgary)</p>
+<dd><p><strong>Software Developer</strong><br /><em>Wesson International, Inc.</em> (Austin)<br />now <em>Adacel Technologies, Ltd.</em> (Calgary)</p>
 <p>Building Air Traffic Control simulators.</p>
 <p>Responsible for creating and maintaining realistic aircraft movement and intelligent pilot behavior in a multi-platform, scaleable <em>air traffic control (ATC) simulator</em>.</p>
 <p>Integrated tower ATC, radar ATC, and flight simulators in order to simultaneously train tower controllers, radar controllers, and pilots. Distributed the system using CORBA and the US Defense Department's High Level Architecture (HLA). Spearheaded the simulator port to C++ on a POSIX-compliant kernel.</p>
@@ -130,13 +121,11 @@ now <em>Adacel Technologies, Ltd.</em> (Calgary)</p>
 <p>Technology Used: C/C++, Tcl/Tk, UNIX and Win32 systems programming, (soft) real-time process scheduling/event management, resource conflict resolution/management, network programming using TCP/IP and NetBIOS, Silicon Graphics O_2, Onyx Reality Engine, and Onyx2 Infinite Reality high-end graphics systems running IRIX(UNIX), i386 hardware running Linux, Win95, NT-4.0, and an in-house real-time OS over DOS/4GW.</p>
 </dd>
 <dt>1994-2000</dt>
-<dd><p><strong>Instructor</strong> - Department of Physics<br />
-<em>The University of Texas</em> (Austin)</p>
+<dd><p><strong>Instructor</strong> - Department of Physics<br /><em>The University of Texas</em> (Austin)</p>
 <p>Physical Science I: Mechanics (AI, Instructor of Record)</p>
 </dd>
 <dt>1995-1996</dt>
-<dd><p><strong>Lecturer</strong> - Department of Physics<br />
-<em>Austin Community College</em> (Austin)</p>
+<dd><p><strong>Lecturer</strong> - Department of Physics<br /><em>Austin Community College</em> (Austin)</p>
 <p>Intro to General Physics I</p>
 <p>Engineering Physics I</p>
 </dd>
@@ -144,17 +133,14 @@ now <em>Adacel Technologies, Ltd.</em> (Calgary)</p>
 <h2 id="education">Education</h2>
 <dl>
 <dt>1992-2000</dt>
-<dd><p><strong>Ph.D. in Physics</strong><br />
-<em>The University of Texas at Austin</em></p>
+<dd><p><strong>Ph.D. in Physics</strong><br /><em>The University of Texas at Austin</em></p>
 <p>Dissertation: &quot;Dynamical Stability of Quantum Algorithms.&quot; Supervisor: E.C.G. Sudarshan Created a numerical model to characterize noise in Grover's quantum search algorithm. This model was then used to determine the maximum amount of noise that the bare algorithm can tolerate before failing. This is useful in determining exactly which emerging technologies will prove to be viable for implementing quantum computers. Technology Used: C++, Perl, BASH script, LaTeX, numerical solutions to ODEs, randomization, various matrix calculations (using blitz++, TNT, and LAPACK).</p>
 </dd>
 <dt>1988-1992</dt>
-<dd><strong>B.S. in Physics</strong><br />
-<em>The University of Texas at Austin</em>
+<dd><p><strong>B.S. in Physics</strong><br /><em>The University of Texas at Austin</em></p>
 </dd>
 <dt>1988-1992</dt>
-<dd><p><strong>B.S. in Mathematics</strong><br />
-<em>The University of Texas at Austin</em></p>
+<dd><p><strong>B.S. in Mathematics</strong><br /><em>The University of Texas at Austin</em></p>
 <p>Thesis: &quot;Path Integration on Multiply Connected Configuration Spaces.&quot; Supervisor: Ce'cile DeWitt-Morette</p>
 </dd>
 </dl>
@@ -163,10 +149,9 @@ now <em>Adacel Technologies, Ltd.</em> (Calgary)</p>
 <p><script type="text/javascript">
 <!--
 h='&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#x6d;&#x61;&#114;&#x6b;&#46;&#x6d;&#x69;&#x6d;&#x73;';e=n+a+h;
-document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\/'+'a'+'>');
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 // -->
-</script><noscript>mark.mims at gmail dot com</noscript> • <a href="callto:+1-512-981-6467">+1(512)981-6467</a> • <a href="http://markmims.com/">markmims.com</a><br />
-San Francisco, CA - USA</p>
+</script><noscript>mark.mims at gmail dot com</noscript> • <a href="callto:+1-512-981-6467">+1(512)981-6467</a> • <a href="http://markmims.com/">markmims.com</a><br />San Francisco, CA - USA</p>
 </blockquote>
 </body>
 </html>
