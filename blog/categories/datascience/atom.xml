@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: datascience | Software, Physics, Data, Mountains]]></title>
+  <link href="http://markmims.com/blog/categories/datascience/atom.xml" rel="self"/>
+  <link href="http://markmims.com/"/>
+  <updated>2018-07-10T10:47:29-06:00</updated>
+  <id>http://markmims.com/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Educational Components]]></title>
+    <link href="http://markmims.com/datascience/2015/10/16/educational-components.html"/>
+    <updated>2015-10-16T17:50:00-06:00</updated>
+    <id>http://markmims.com/datascience/2015/10/16/educational-components</id>
+    <content type="html"><![CDATA[<p>I’m trying to frame the most basic and naive understanding of education and
+learning.  The goal is to have something amenable to various machine learning
+techniques… mostly just to see what comes out.</p>
+
+<!--more-->
+
+<hr />
+
+<p>Let’s save the world… it’s simple, quit your job and go teach middle-school
+math.  No, seriously.  If you have any sort of quantitative background, it’s
+most likely the best way to effectively contribute to society.</p>
+
+<p>Well, I don’t really have the kind of patience it takes to work with kids, so
+I’d like to apply a little more leverage to the situation.</p>
+
+<p>Ok, so</p>
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>Apply AdTech to Education.</p>
+
+<p>Specifically</p>
+
+<p>So I’ve always maintained that if you have any sort of quantitative background
+and an itch to save the world, you </p>
+
+<hr />
+
+<p>I taught Physical Science at UT for, hell, pretty much my entire tenure in grad
+school.  During that time, I spent a lot of time and effort trying to find
+better ways of explaining things, better ways to reach people, better ways to
+connect physics concepts to my student’s everyday lives.  Ok, so maybe all I
+really did was spend my time and energy battling math anxiety, but that’s
+another discussion.</p>
+
+<p>In any case, I spent time thinking about the subject itself and how to make it
+simpler, that I never really explicitly thought about the learner, the learning
+process, variations in learning, etc etc.  I figured if you danced and sang and
+explained each thing six ways to Sunday, then you’d get something through the
+fog eventually.</p>
+
+<p>So here’s my first pass at understanding education.</p>
+
+<h2 id="activity">activity</h2>
+
+<h3 id="characteristic-functions">characteristic functions</h3>
+
+<p>A characteristic function for a set is useful in analysis when you’re trying to
+measure things about that set.  It’s a common tool used in signal processing,
+it’s used to define Lebesgue integration, used in PDEs for various transforms,
+etc.</p>
+
+<p>It’s a simple function</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+    \phi_A(x) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if } x \in A \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right.
+ %]]&gt;</script>
+
+<p>that takes a value of <code>1</code> for any domain entry that’s 
+a member of the set <code>A</code>, <code>0</code> otherwise.</p>
+
+<p>Now we can integrate a characteristic function over intervals and establish
+some notion of size of the set</p>
+
+<script type="math/tex; mode=display">
+    \mbox{size of A} = \int_A \phi_A(x) dx.
+</script>
+
+<p>Ok, so what does all this have to do with education and learning?</p>
+
+<p>Well, I’ll make an assumption that we can define learning, define learning
+activity, and also determine when a student is engaged in a learning activity
+or not at any given moment.</p>
+
+<p>Let’s define a function similar to a characteristic function
+that identifies learning activity over time.
+I.e., define <code>activity</code> as a function</p>
+
+<script type="math/tex; mode=display">
+    \alpha \colon R_+ \rightarrow [0,1]
+</script>
+
+<p>where</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+    \alpha(t) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if student is actively learning} \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right\}.
+ %]]&gt;</script>
+
+<p>This function is on (1) when learning is occurring… off (0) when not.
+There’s no accounting here for partial engagement.
+I’m also totally still being vague about what learning or learning
+activity might mean for the moment.  We’ll come back to this in a bit.</p>
+
+<p>Let’s extend the notion of activity to include content or
+subject via tagging…</p>
+
+<script type="math/tex; mode=display">
+    \alpha \colon R_+ \times \lbrace\mbox{tags}\rbrace \to [0,1],
+</script>
+
+<p>so we’re really dealing with</p>
+
+<script type="math/tex; mode=display">
+    \alpha_{\lbrace{\mbox tags}\rbrace}(t).
+</script>
+
+<h3 id="example-college-curriculum">Example: college curriculum</h3>
+
+]]></content>
+  </entry>
+  
+</feed>

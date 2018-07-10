@@ -3,7 +3,7 @@
  <title>Mark Mims</title>
  <link href="http://markmims.com/cloud-atom.xml" rel="self"/>
  <link href="http://markmims.com/"/>
- <updated>2016-04-22T15:04:15-07:00</updated>
+ <updated>2018-07-10T10:47:29-06:00</updated>
  <id>http://markmims.com/</id>
  <author>
    <name>Mark Mims</name>
@@ -13,7 +13,7 @@
  <entry>
    <title>CharmSchool Hangout - Juju Local Provider</title>
    <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
-   <updated>2013-08-23T13:02:00-07:00</updated>
+   <updated>2013-08-23T13:02:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
    <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  This week’s video
 walks through using the new version of the juju local provider.  It’s cool!&lt;/p&gt;
@@ -42,7 +42,7 @@ schools we’ve been able to capture on video.&lt;/p&gt;
  <entry>
    <title>CharmSchool Hangout - Juju Events in Depth</title>
    <link href="http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth.html"/>
-   <updated>2013-07-12T13:02:00-07:00</updated>
+   <updated>2013-07-12T13:02:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
    <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  This week’s video
 is a little more detail on juju events…&lt;/p&gt;
@@ -71,7 +71,7 @@ schools we’ve been able to capture on video.&lt;/p&gt;
  <entry>
    <title>CharmSchool Hangout - Charming Best Practices</title>
    <link href="http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
-   <updated>2013-06-28T13:02:00-07:00</updated>
+   <updated>2013-06-28T13:02:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
    <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
 we just sort of sat around and discussed best practices…&lt;/p&gt;
@@ -100,7 +100,7 @@ schools we’ve been able to capture on video.&lt;/p&gt;
  <entry>
    <title>Juju Demo Videos</title>
    <link href="http://markmims.com/cloud/2013/06/15/juju-demo-videos.html"/>
-   <updated>2013-06-15T13:02:00-07:00</updated>
+   <updated>2013-06-15T13:02:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/06/15/juju-demo-videos</id>
    <content type="html">&lt;p&gt;I Put together a series of demo videos using juju-0.7 for oscon.&lt;/p&gt;
 
@@ -153,7 +153,7 @@ case we lost networking during the demo).&lt;/p&gt;
  <entry>
    <title>CharmSchool Hangout - Charming from scratch</title>
    <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
-   <updated>2013-06-05T13:02:00-07:00</updated>
+   <updated>2013-06-05T13:02:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
    <content type="html">&lt;p&gt;Continuing the series of regular CharmSchool Hangouts.  In last week’s video
 we wrote a charm from scratch…&lt;/p&gt;
@@ -186,7 +186,7 @@ schools we’ve been able to capture on video.&lt;/p&gt;
  <entry>
    <title>CharmSchool Hangouts</title>
    <link href="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html"/>
-   <updated>2013-05-20T12:49:00-07:00</updated>
+   <updated>2013-05-20T12:49:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/05/20/charmschool-hangouts</id>
    <content type="html">&lt;p&gt;We’re doing a series of regular CharmSchools on G+ hangouts.
 Last week we did an intro to juju and charming…&lt;/p&gt;
@@ -214,7 +214,7 @@ schools we’ve been able to capture on video.&lt;/p&gt;
  <entry>
    <title>CharmSchool Video from the Openstack Summit</title>
    <link href="http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html"/>
-   <updated>2013-04-25T12:40:00-07:00</updated>
+   <updated>2013-04-25T12:40:00-06:00</updated>
    <id>http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit</id>
    <content type="html">&lt;p&gt;Jorge and I gave a charmschool at the ODS summit.
 The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!&lt;/p&gt;
@@ -241,7 +241,7 @@ or &lt;/p&gt;
  <entry>
    <title>Running the LinuxPlumbers Conference Schedule with Juju</title>
    <link href="http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html"/>
-   <updated>2012-09-25T00:00:00-07:00</updated>
+   <updated>2012-09-25T00:00:00-06:00</updated>
    <id>http://markmims.com/cloud/2012/09/25/linuxplumbers-juju</id>
    <content type="html">&lt;p class=&quot;meta&quot;&gt;
 Written by Mark Mims and Chris Johnston
@@ -554,7 +554,7 @@ time might warrant it&lt;/li&gt;
  <entry>
    <title>Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju</title>
    <link href="http://markmims.com/cloud/2012/06/04/juju-at-scale.html"/>
-   <updated>2012-06-04T00:00:00-07:00</updated>
+   <updated>2012-06-04T00:00:00-06:00</updated>
    <id>http://markmims.com/cloud/2012/06/04/juju-at-scale</id>
    <content type="html">&lt;p class=&quot;meta&quot;&gt;
 Written by Mark Mims and James Page
@@ -1033,7 +1033,7 @@ Are there transactional features in more recent versions of zk that we can use?&
  <entry>
    <title>Charm School!</title>
    <link href="http://markmims.com/cloud/2011/11/22/charm-school.html"/>
-   <updated>2011-11-22T00:00:00-08:00</updated>
+   <updated>2011-11-22T00:00:00-07:00</updated>
    <id>http://markmims.com/cloud/2011/11/22/charm-school</id>
    <content type="html">&lt;p&gt;Wanna learn more about &lt;a href=&quot;http://juju.ubuntu.com&quot;&gt;juju&lt;/a&gt;?&lt;/p&gt;
 

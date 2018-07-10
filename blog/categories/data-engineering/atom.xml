@@ -4,7 +4,7 @@
   <title><![CDATA[Category: data-engineering | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/data-engineering/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2016-04-22T15:04:19-07:00</updated>
+  <updated>2018-07-10T10:47:29-06:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Identifying User Activity from Streams of Raw Events]]></title>
     <link href="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html"/>
-    <updated>2016-03-17T12:08:00-07:00</updated>
+    <updated>2016-03-17T12:08:00-06:00</updated>
     <id>http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions</id>
     <content type="html"><![CDATA[<p>I had a chance to speak at an online conference last weekend,
 <a href="http://hadoop.withthebest.com/">Hadoop With The Best</a>.
@@ -26,6 +26,17 @@ acting on those events and understanding user activity from
 the sessionization of such events.</p>
 
 <!--more-->
+
+<p>
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('7geRGzrIXRI');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/7geRGzrIXRI?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/7geRGzrIXRI/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=7geRGzrIXRI" id="7geRGzrIXRI" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 7geRGzrIXRI</div>
+</a>
+<div class="video-info" >embedded youtube video 7geRGzrIXRI</div>
+</div>
+
+</p>
 
 <p><a href="svds.com">SVDS</a> is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
@@ -443,13 +454,16 @@ best</a> site.  Note that the slides are
 two-dimensional navigation.  Slides advance downwards, topics advance to the
 right.</p>
 
+<p>Update: this post has be perdied-up (thanks Meg!) and reposted as part of our
+<a href="http://www.svds.com/building-pipelines-understand-user-behavior/">svds blog</a>.</p>
+
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Develop Spark Apps on Yarn using Docker]]></title>
     <link href="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html"/>
-    <updated>2015-10-13T15:07:00-07:00</updated>
+    <updated>2015-10-13T15:07:00-06:00</updated>
     <id>http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh</id>
     <content type="html"><![CDATA[<p>At svds, we’ll often run spark on yarn in production.  Add some artful tuning
 and this works pretty well.  However, developers typically build and test spark

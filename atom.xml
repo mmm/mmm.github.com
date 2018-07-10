@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2016-04-22T15:04:15-07:00</updated>
+  <updated>2018-07-10T10:47:29-06:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Identifying User Activity from Streams of Raw Events]]></title>
     <link href="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html"/>
-    <updated>2016-03-17T12:08:00-07:00</updated>
+    <updated>2016-03-17T12:08:00-06:00</updated>
     <id>http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions</id>
     <content type="html"><![CDATA[<p>I had a chance to speak at an online conference last weekend,
 <a href="http://hadoop.withthebest.com/">Hadoop With The Best</a>.
@@ -26,6 +26,14 @@ acting on those events and understanding user activity from
 the sessionization of such events.</p>
 
 <!--more-->
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('7geRGzrIXRI');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/7geRGzrIXRI?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/7geRGzrIXRI/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=7geRGzrIXRI" id="7geRGzrIXRI" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 7geRGzrIXRI</div>
+</a>
+<div class="video-info">embedded youtube video 7geRGzrIXRI</div>
+</div>
 
 <p><a href="svds.com">SVDS</a> is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
@@ -466,13 +474,146 @@ best</a> site.  Note that the slides are
 two-dimensional navigation.  Slides advance downwards, topics advance to the
 right.</p>
 
+<p>Update: this post has be perdied-up (thanks Meg!) and reposted as part of our
+<a href="http://www.svds.com/building-pipelines-understand-user-behavior/">svds blog</a>.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Educational Components]]></title>
+    <link href="http://markmims.com/datascience/2015/10/16/educational-components.html"/>
+    <updated>2015-10-16T17:50:00-06:00</updated>
+    <id>http://markmims.com/datascience/2015/10/16/educational-components</id>
+    <content type="html"><![CDATA[<p>I’m trying to frame the most basic and naive understanding of education and
+learning.  The goal is to have something amenable to various machine learning
+techniques… mostly just to see what comes out.</p>
+
+<!--more-->
+
+<hr />
+
+<p>Let’s save the world… it’s simple, quit your job and go teach middle-school
+math.  No, seriously.  If you have any sort of quantitative background, it’s
+most likely the best way to effectively contribute to society.</p>
+
+<p>Well, I don’t really have the kind of patience it takes to work with kids, so
+I’d like to apply a little more leverage to the situation.</p>
+
+<p>Ok, so</p>
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>Apply AdTech to Education.</p>
+
+<p>Specifically</p>
+
+<p>So I’ve always maintained that if you have any sort of quantitative background
+and an itch to save the world, you </p>
+
+<hr />
+
+<p>I taught Physical Science at UT for, hell, pretty much my entire tenure in grad
+school.  During that time, I spent a lot of time and effort trying to find
+better ways of explaining things, better ways to reach people, better ways to
+connect physics concepts to my student’s everyday lives.  Ok, so maybe all I
+really did was spend my time and energy battling math anxiety, but that’s
+another discussion.</p>
+
+<p>In any case, I spent time thinking about the subject itself and how to make it
+simpler, that I never really explicitly thought about the learner, the learning
+process, variations in learning, etc etc.  I figured if you danced and sang and
+explained each thing six ways to Sunday, then you’d get something through the
+fog eventually.</p>
+
+<p>So here’s my first pass at understanding education.</p>
+
+<h2 id="activity">activity</h2>
+
+<h3 id="characteristic-functions">characteristic functions</h3>
+
+<p>A characteristic function for a set is useful in analysis when you’re trying to
+measure things about that set.  It’s a common tool used in signal processing,
+it’s used to define Lebesgue integration, used in PDEs for various transforms,
+etc.</p>
+
+<p>It’s a simple function</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+    \phi_A(x) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if } x \in A \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right.
+ %]]&gt;</script>
+
+<p>that takes a value of <code>1</code> for any domain entry that’s 
+a member of the set <code>A</code>, <code>0</code> otherwise.</p>
+
+<p>Now we can integrate a characteristic function over intervals and establish
+some notion of size of the set</p>
+
+<script type="math/tex; mode=display">
+    \mbox{size of A} = \int_A \phi_A(x) dx.
+</script>
+
+<p>Ok, so what does all this have to do with education and learning?</p>
+
+<p>Well, I’ll make an assumption that we can define learning, define learning
+activity, and also determine when a student is engaged in a learning activity
+or not at any given moment.</p>
+
+<p>Let’s define a function similar to a characteristic function
+that identifies learning activity over time.
+I.e., define <code>activity</code> as a function</p>
+
+<script type="math/tex; mode=display">
+    \alpha \colon R_+ \rightarrow [0,1]
+</script>
+
+<p>where</p>
+
+<script type="math/tex; mode=display">% &lt;![CDATA[
+
+    \alpha(t) = 
+      \left\{
+        \begin{array}{ll}
+          1 & \mbox{if student is actively learning} \\
+          0 & \mbox{otherwise }
+        \end{array}
+      \right\}.
+ %]]&gt;</script>
+
+<p>This function is on (1) when learning is occurring… off (0) when not.
+There’s no accounting here for partial engagement.
+I’m also totally still being vague about what learning or learning
+activity might mean for the moment.  We’ll come back to this in a bit.</p>
+
+<p>Let’s extend the notion of activity to include content or
+subject via tagging…</p>
+
+<script type="math/tex; mode=display">
+    \alpha \colon R_+ \times \lbrace\mbox{tags}\rbrace \to [0,1],
+</script>
+
+<p>so we’re really dealing with</p>
+
+<script type="math/tex; mode=display">
+    \alpha_{\lbrace{\mbox tags}\rbrace}(t).
+</script>
+
+<h3 id="example-college-curriculum">Example: college curriculum</h3>
+
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Develop Spark Apps on Yarn using Docker]]></title>
     <link href="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html"/>
-    <updated>2015-10-13T15:07:00-07:00</updated>
+    <updated>2015-10-13T15:07:00-06:00</updated>
     <id>http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh</id>
     <content type="html"><![CDATA[<p>At svds, we’ll often run spark on yarn in production.  Add some artful tuning
 and this works pretty well.  However, developers typically build and test spark
@@ -690,7 +831,7 @@ spark variations above)</p>
   <entry>
     <title type="html"><![CDATA[SSH Tips and Tricks]]></title>
     <link href="http://markmims.com/2015/06/01/ssh-tips.html"/>
-    <updated>2015-06-01T16:00:00-07:00</updated>
+    <updated>2015-06-01T16:00:00-06:00</updated>
     <id>http://markmims.com/2015/06/01/ssh-tips</id>
     <content type="html"><![CDATA[<p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
 but I’ll post it here for reference anyway.</p>
@@ -1113,7 +1254,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Local Provider]]></title>
     <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
-    <updated>2013-08-23T13:02:00-07:00</updated>
+    <updated>2013-08-23T13:02:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
 walks through using the new version of the juju local provider.  It’s cool!</p>
@@ -1138,7 +1279,7 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Events in Depth]]></title>
     <link href="http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth.html"/>
-    <updated>2013-07-12T13:02:00-07:00</updated>
+    <updated>2013-07-12T13:02:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
 is a little more detail on juju events…</p>
@@ -1163,7 +1304,7 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming Best Practices]]></title>
     <link href="http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
-    <updated>2013-06-28T13:02:00-07:00</updated>
+    <updated>2013-06-28T13:02:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
 we just sort of sat around and discussed best practices…</p>
@@ -1188,7 +1329,7 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[Juju Demo Videos]]></title>
     <link href="http://markmims.com/cloud/2013/06/15/juju-demo-videos.html"/>
-    <updated>2013-06-15T13:02:00-07:00</updated>
+    <updated>2013-06-15T13:02:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/06/15/juju-demo-videos</id>
     <content type="html"><![CDATA[<p>I Put together a series of demo videos using juju-0.7 for oscon.</p>
 
@@ -1237,7 +1378,7 @@ case we lost networking during the demo).</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming from scratch]]></title>
     <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
-    <updated>2013-06-05T13:02:00-07:00</updated>
+    <updated>2013-06-05T13:02:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week’s video
 we wrote a charm from scratch…</p>
@@ -1266,7 +1407,7 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangouts]]></title>
     <link href="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html"/>
-    <updated>2013-05-20T12:49:00-07:00</updated>
+    <updated>2013-05-20T12:49:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/05/20/charmschool-hangouts</id>
     <content type="html"><![CDATA[<p>We’re doing a series of regular CharmSchools on G+ hangouts.
 Last week we did an intro to juju and charming…</p>
@@ -1290,7 +1431,7 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Video from the Openstack Summit]]></title>
     <link href="http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html"/>
-    <updated>2013-04-25T12:40:00-07:00</updated>
+    <updated>2013-04-25T12:40:00-06:00</updated>
     <id>http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit</id>
     <content type="html"><![CDATA[<p>Jorge and I gave a charmschool at the ODS summit.
 The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!</p>
@@ -1313,7 +1454,7 @@ or </p>
   <entry>
     <title type="html"><![CDATA[Running the LinuxPlumbers Conference Schedule with Juju]]></title>
     <link href="http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html"/>
-    <updated>2012-09-25T00:00:00-07:00</updated>
+    <updated>2012-09-25T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2012/09/25/linuxplumbers-juju</id>
     <content type="html"><![CDATA[<p class="meta">
 Written by Mark Mims and Chris Johnston
@@ -1622,7 +1763,7 @@ time might warrant it</li>
   <entry>
     <title type="html"><![CDATA[Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju]]></title>
     <link href="http://markmims.com/cloud/2012/06/04/juju-at-scale.html"/>
-    <updated>2012-06-04T00:00:00-07:00</updated>
+    <updated>2012-06-04T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2012/06/04/juju-at-scale</id>
     <content type="html"><![CDATA[<p class="meta">
 Written by Mark Mims and James Page
@@ -2097,7 +2238,7 @@ Are there transactional features in more recent versions of zk that we can use?<
   <entry>
     <title type="html"><![CDATA[Charm School!]]></title>
     <link href="http://markmims.com/cloud/2011/11/22/charm-school.html"/>
-    <updated>2011-11-22T00:00:00-08:00</updated>
+    <updated>2011-11-22T00:00:00-07:00</updated>
     <id>http://markmims.com/cloud/2011/11/22/charm-school</id>
     <content type="html"><![CDATA[<p>Wanna learn more about <a href="http://juju.ubuntu.com">juju</a>?</p>
 
@@ -2136,7 +2277,7 @@ and configured if you want to get deep into the event.
   <entry>
     <title type="html"><![CDATA[Ensemble renamed to juju]]></title>
     <link href="http://markmims.com/cloud/2011/10/12/project-rename.html"/>
-    <updated>2011-10-12T00:00:00-07:00</updated>
+    <updated>2011-10-12T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2011/10/12/project-rename</id>
     <content type="html"><![CDATA[<p>Just a note that the Ubuntu Ensemble suite of DevOps tools for
 Ubuntu Server has been renamed to <code>juju</code>.</p>
@@ -2149,7 +2290,7 @@ Ubuntu Server has been renamed to <code>juju</code>.</p>
   <entry>
     <title type="html"><![CDATA[Where did the 'close-lid' action go in gnome3?]]></title>
     <link href="http://markmims.com/howtos/2011/09/13/power-lid-closed-actions.html"/>
-    <updated>2011-09-13T00:00:00-07:00</updated>
+    <updated>2011-09-13T00:00:00-06:00</updated>
     <id>http://markmims.com/howtos/2011/09/13/power-lid-closed-actions</id>
     <content type="html"><![CDATA[<p>Here’s a workaround… (thanks slangasek!)</p>
 
@@ -2162,7 +2303,7 @@ Ubuntu Server has been renamed to <code>juju</code>.</p>
   <entry>
     <title type="html"><![CDATA[Stir that memory of autotools]]></title>
     <link href="http://markmims.com/howtos/2011/09/08/autotools.html"/>
-    <updated>2011-09-08T00:00:00-07:00</updated>
+    <updated>2011-09-08T00:00:00-06:00</updated>
     <id>http://markmims.com/howtos/2011/09/08/autotools</id>
     <content type="html"><![CDATA[<p>Ok, never going to forget these again, dammit!</p>
 
@@ -2184,7 +2325,7 @@ $ OS_ARCH=amd64 make
   <entry>
     <title type="html"><![CDATA[Node.js and MongoDB on Ubuntu]]></title>
     <link href="http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu.html"/>
-    <updated>2011-09-07T00:00:00-07:00</updated>
+    <updated>2011-09-07T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu</id>
     <content type="html"><![CDATA[<p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu… 
 it was quite a new experience.
@@ -2631,7 +2772,7 @@ the more scalable the service.</p>
   <entry>
     <title type="html"><![CDATA[Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia]]></title>
     <link href="http://markmims.com/cloud/2011/09/03/terasort-ganglia.html"/>
-    <updated>2011-09-03T00:00:00-07:00</updated>
+    <updated>2011-09-03T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2011/09/03/terasort-ganglia</id>
     <content type="html"><![CDATA[<p>Here I’m using new features of
 <a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
@@ -2747,7 +2888,7 @@ services like <code>ganglia</code>.</p>
   <entry>
     <title type="html"><![CDATA[Core Infrastructure Part 1 - Adding NFS to juju charms]]></title>
     <link href="http://markmims.com/cloud/2011/08/25/juju-nfs.html"/>
-    <updated>2011-08-25T00:00:00-07:00</updated>
+    <updated>2011-08-25T00:00:00-06:00</updated>
     <id>http://markmims.com/cloud/2011/08/25/juju-nfs</id>
     <content type="html"><![CDATA[<p>Several features have recently landed in juju that make 
 it easier to convert some common infrastructure-level components 
@@ -3282,80 +3423,6 @@ say, or a named export for sharing.</p>
 <h3 id="disclaimer">Disclaimer</h3>
 
 <p>I work on the Ubuntu juju project for Canonical.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PreSonus FireBox in Ubuntu]]></title>
-    <link href="http://markmims.com/howtos/2011/08/17/presonus-firebox.html"/>
-    <updated>2011-08-17T00:00:00-07:00</updated>
-    <id>http://markmims.com/howtos/2011/08/17/presonus-firebox</id>
-    <content type="html"><![CDATA[<p>Just some notes to myself for later.</p>
-
-<p>I want a little better sounding audio on screencasts so I dusted off
-the firewire soundcard I got a few years ago for recording bass tracks.</p>
-
-<p>This model 
-<a href="http://www.amazon.com/PreSonus-FireBox-Firewire-Recording-Interface/dp/B0006VYH1Q/ref=sr_1_17?s=musical-instruments&amp;ie=UTF8&amp;qid=1313592982&amp;sr=1-17">FireBox 24-bit/96kHz</a>
-from <a href="http://www.presonus.com/">PreSonus</a> 
-worked great for me on audio production stuff several years
-ago, but at the time I could give jackd and friends a realtime kernel
-to have their way with.</p>
-
-<p>Now, I don’t really have the spare hardware to dedicate to a RT audio setup…<br />
-gotta run several ubuntu server VMs for work and can’t really hand the whole
-shebang over to jack every time I wanna record something.</p>
-
-<p>Here’s my attempt to do it without realtime priorities…
-I’ll track my progress here.</p>
-
-<!--more-->
-
-<h2 id="the-quick-and-the-dirty">The quick and the dirty…</h2>
-
-<p>Starting from a Natty desktop.</p>
-
-<p>install jack</p>
-
-<pre><code># apt-get install jackd
-</code></pre>
-
-<p>when the installer asks to do realtime by default, I said no.</p>
-
-<p>Note that I installed <code>ffado-mixer-qt4 ffado-tools ffado-dbus-server</code>
-earlier trying to get this to work with pulse, without jack… but gave up.
-I don’t know if these packages effect the current setup, but they’re still
-installed</p>
-
-<p>start the jack daemon… </p>
-
-<pre><code>$ jackd -r -dfirewire
-</code></pre>
-
-<p>Connect to jackd</p>
-
-<pre><code>$ qjackctl 
-</code></pre>
-
-<p>(in the foreground so I could watch messages)</p>
-
-<p>Install something like <code>Ardour</code></p>
-
-<pre><code># apt-get install ardour
-</code></pre>
-
-<p>and wire stuff together with the qjackctl patchpanel,
-start <code>jackd</code> and go.</p>
-
-<p>I used to use a better jack patch panel in the past… have to find it.</p>
-
-<h2 id="resources">resources</h2>
-
-<pre><code>http://wiki.jon.geek.nz/index.php/Presonus_Firebox
-http://ubuntuforums.org/showthread.php?t=835477
-http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digital-Audio-Workstation
-</code></pre>
-
 ]]></content>
   </entry>
   

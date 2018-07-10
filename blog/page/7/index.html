@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="sshfs -C mmm@hawk:/home/torrent/downloads /opt/torrent/downloads -o reconnect,uid=103,gid=107 ">
+  <meta name="description" content="password is expired? chage -I -1 -m 0 -M 99999 -E -1 username ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,7 +78,7 @@
 
 </head>
 
-<body   >
+<body    class="collapse-sidebar sidebar-footer" >
   <header role="banner"><hgroup>
   <h1><a href="/">Software, Physics, Data, Mountains</a></h1>
   
@@ -102,7 +102,7 @@
 <ul class="main-navigation">
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="http://about.me/m_3">About</a></li>
+  <li><a href="/about.html">About</a></li>
 </ul>
 
 </nav>
@@ -110,6 +110,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/07/13/howto-fix-password-expiration.html">Fix Password Expirations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-13T00:00:00-06:00" pubdate data-updated="true">Jul 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>password is expired?</p>
+
+<pre><code>chage -I -1 -m 0 -M 99999 -E -1 username
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -132,7 +172,7 @@
   
 
 
-<time datetime="2010-07-10T00:00:00-07:00" pubdate data-updated="true">Jul 10<span>th</span>, 2010</time>
+<time datetime="2010-07-10T00:00:00-06:00" pubdate data-updated="true">Jul 10<span>th</span>, 2010</time>
         
       </p>
     
@@ -170,7 +210,7 @@
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -270,7 +310,7 @@ Use the &lt;ESC&gt;&lt;X&gt;&lt;X&gt; key sequence for &lt;Alt&gt;&lt;x&gt;, whe
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -373,7 +413,7 @@ sudo cryptsetup remove /dev/mapper/crypto
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -411,7 +451,7 @@ sudo cryptsetup remove /dev/mapper/crypto
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -473,7 +513,7 @@ log on
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -758,7 +798,7 @@ backup	root@192.168.100.2:/usr/local/	hawk/
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -868,7 +908,7 @@ exit 0
   
 
 
-<time datetime="2010-06-26T00:00:00-07:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+<time datetime="2010-06-26T00:00:00-06:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
         
       </p>
     
@@ -929,7 +969,7 @@ niutil -read / /groups/admin
   
 
 
-<time datetime="2010-06-17T00:00:00-07:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+<time datetime="2010-06-17T00:00:00-06:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
         
       </p>
     
@@ -971,121 +1011,6 @@ launchctl start hawk.videos.sshfs
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/vm-build-notes.html">VM Buildout Notes for Dlb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00-07:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>added sources.list</p>
-
-<p>packages:</p>
-
-<pre><code>ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3
-libsqlite3-dev
-mysql-server (had to force this for some reason ... bitching about locale not being set)
-libmysql-ruby1.8
-libdbd-mysql-ruby
-libmysqlclient15-dev
-rsync
-screen
-libopenssl-ruby
-
-
-apt-get update
-apt-get -u upgrade
-apt-get -u dist-upgrade
-</code></pre>
-
-<p>install rubygems in /usr/local</p>
-
-<p>install gems
-    rails
-    mongrel
-    mongrel_cluster
-    passenger
-    capistrano
-    capistrano-ext
-    fcgi
-    ferret
-    haml
-    hpricot
-    htmlentities
-    nokogiri
-    mechanize
-    cucumber
-    mocha
-    open4
-    runt
-    spreadsheet
-    sqlite3
-    termios
-    will_paginate</p>
-
-<pre><code>adduser --home /usr/local/dlb dlb
-</code></pre>
-
-<p>rsync <code>/usr/local/dlb</code> over to VM</p>
-
-<p>scp <code>/etc/apache2/sites-available/dlb-sites</code> over to VM</p>
-
-<p>test to get apache up</p>
-
-<p>test to get rails up</p>
-
-<p>apache config for mods-enabled:
-    ln -s ../mods-available/deflate.conf .
-    ln -s ../mods-available/deflate.load .
-    ln -s ../mods-available/file_cache.load .
-    ln -s ../mods-available/mem_cache.load .
-    ln -s ../mods-available/mem_cache.conf .
-    ln -s ../mods-available/headers.load .
-    ln -s ../mods-available/proxy_balancer.load .
-    ln -s ../mods-available/proxy.conf
-    ln -s ../mods-available/proxy_http.load .
-    ln -s ../mods-available/proxy.load .
-    ln -s ../mods-available/rewrite.load .
-    ln -s ../mods-available/include.load .
-    ln -s ../mods-available/cache.load .</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1102,109 +1027,6 @@ apt-get -u dist-upgrade
   <section>
     <div id='container'>
       <div id='about-sidebar'>
-        <div id='mugshot'>
-          <img alt="Mug" src="/images/phonebooth.jpg"/>
-        </div>
-
-        <div id='bio'>
-          <p>
-            Hi, I&#8217;m Mark&#8230; a software developer and a physics geek.
-          </p>
-
-          <p>
-            <em>Data Plumbing</em> is where Data Science meets DevOps, 
-            and that&#8217;s where I happily spend most of my time.
-          </p>
-
-          <p>
-            I work with a talented team of consultants at 
-            <a href="http://www.svds.com/">Silicon Valley Data Science</a>,
-            where we help clients tackle their toughest
-            data science problems.
-          </p>
-
-          <p>
-            My past experience is mostly data science, devops, and software
-            engineering&#8230;
-            both in the enterprise and as an entrepreneur.
-            I have a resume in  
-            (<a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a>
-            |
-            <a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a>
-            |
-            <a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a>).
-          </p>
-
-          <p>
-            I have a Ph.D. in Physics for research in Quantum Computation.
-            Here&#8217;s a copy of my <a href="/MarkMims-dissertation.pdf">dissertation</a>
-            on Noise in Quantum Algorithms.
-          </p>
-
-
-        <dl>
-          <dt>
-            Social:
-          </dt>
-          <dd>
-            <a href="http://about.me/m_3">About.Me</a>
-          </dd>
-          <dd>
-            <a href="http://twitter.com/m_3/">Twitter</a>
-          </dd>
-          <dd>
-            <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
-          </dd>
-          <dd>
-            <a href="https://plus.google.com/102162869179154701641/">Google+</a>
-          </dd>
-          <dd>
-            <a href="https://www.facebook.com/mark.mims">Facebook</a>
-          </dd>
-          <dd>
-            <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
-          </dd>
-          <dd>
-            <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
-          </dd>
-        </dl>
-
-        <br/>
-
-        <dl>
-          <dt>
-            Code:
-          </dt>
-          <dd>
-            <a href="http://github.com/mmm">GitHub</a>
-          </dd>
-          <dd>
-            <a href="http://launchpad.net/~mark-mims/">LaunchPad</a>
-          </dd>
-        </dl>
-
-        <br/>
-
-        <dl>
-          <dt>
-            Keys:
-          </dt>
-          <dd>
-            <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
-            (
-            <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What&#8217;s this?</a>
-            )
-          </dd>
-          <dd>
-            <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
-            (
-            <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What&#8217;s this?</a>
-            )
-          </dd>
-        </dl>
-
-        </div>
-
       </div>
       <br/>
     </div>
@@ -1227,6 +1049,10 @@ apt-get -u dist-upgrade
       </li>
     
       <li class="post">
+        <a href="/datascience/2015/10/16/educational-components.html">Educational Components</a>
+      </li>
+    
+      <li class="post">
         <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
       </li>
     
@@ -1238,10 +1064,6 @@ apt-get -u dist-upgrade
         <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
-      <li class="post">
-        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1251,7 +1073,7 @@ apt-get -u dist-upgrade
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
