@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="server vlc -Ihttp --http-host :7000 -vvv ~/Videos/Entourage.S06E10.HDTV.XviD-NoTV.avi --udp-caching 1500 --sout '#standard{access=http{mime=video/x- &hellip;">
+  <meta name="description" content="Following some more stuff from This post. this was for audio to stream out ogg quality 0 vlc -I http --control http:rc --rc-host :4800 --http-host : &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,57 +110,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/01/27/howto-stream-vlc-working.html">Stream VLC (Working)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="server">server</h2>
-
-<pre><code>vlc -Ihttp --http-host :7000 -vvv ~/Videos/Entourage.S06E10.HDTV.XviD-NoTV.avi --udp-caching 1500 --sout '#standard{access=http{mime=video/x-ms-asf},mux=asf,dst:7070}'
-</code></pre>
-
-<h2 id="client">client</h2>
-
-<p>from a browser:
- - localhost:7000 is remote control
- - localhost:8080 is movie</p>
-
-<p>using vlc works fine too:
-  - open VLC
-  - open Network
-  - protocol http
-  - host localhost:8080</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -280,10 +229,6 @@ vlc opens in the background with an http interface available. vlc can be control
       </li>
     
       <li class="post">
-        <a href="/datascience/2015/10/16/educational-components.html">Educational Components</a>
-      </li>
-    
-      <li class="post">
         <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
       </li>
     
@@ -293,6 +238,10 @@ vlc opens in the background with an http interface available. vlc can be control
     
       <li class="post">
         <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
       </li>
     
   </ul>

@@ -9,16 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="added sources.list packages: ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3 &hellip;">
+  <meta name="description" content="socat TCP-LISTEN:5500 EXEC:'ssh root@proteus "socat STDIO UNIX-CONNECT:/var/run/libvirt/qemu/i-437207F5.monitor"' ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -119,121 +110,6 @@ sqlite3 &hellip;">
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/vm-build-notes.html">VM Buildout Notes for Dlb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>added sources.list</p>
-
-<p>packages:</p>
-
-<pre><code>ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3
-libsqlite3-dev
-mysql-server (had to force this for some reason ... bitching about locale not being set)
-libmysql-ruby1.8
-libdbd-mysql-ruby
-libmysqlclient15-dev
-rsync
-screen
-libopenssl-ruby
-
-
-apt-get update
-apt-get -u upgrade
-apt-get -u dist-upgrade
-</code></pre>
-
-<p>install rubygems in /usr/local</p>
-
-<p>install gems
-    rails
-    mongrel
-    mongrel_cluster
-    passenger
-    capistrano
-    capistrano-ext
-    fcgi
-    ferret
-    haml
-    hpricot
-    htmlentities
-    nokogiri
-    mechanize
-    cucumber
-    mocha
-    open4
-    runt
-    spreadsheet
-    sqlite3
-    termios
-    will_paginate</p>
-
-<pre><code>adduser --home /usr/local/dlb dlb
-</code></pre>
-
-<p>rsync <code>/usr/local/dlb</code> over to VM</p>
-
-<p>scp <code>/etc/apache2/sites-available/dlb-sites</code> over to VM</p>
-
-<p>test to get apache up</p>
-
-<p>test to get rails up</p>
-
-<p>apache config for mods-enabled:
-    ln -s ../mods-available/deflate.conf .
-    ln -s ../mods-available/deflate.load .
-    ln -s ../mods-available/file_cache.load .
-    ln -s ../mods-available/mem_cache.load .
-    ln -s ../mods-available/mem_cache.conf .
-    ln -s ../mods-available/headers.load .
-    ln -s ../mods-available/proxy_balancer.load .
-    ln -s ../mods-available/proxy.conf
-    ln -s ../mods-available/proxy_http.load .
-    ln -s ../mods-available/proxy.load .
-    ln -s ../mods-available/rewrite.load .
-    ln -s ../mods-available/include.load .
-    ln -s ../mods-available/cache.load .</p>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -822,6 +698,57 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/01/27/howto-stream-vlc-working.html">Stream VLC (Working)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="server">server</h2>
+
+<pre><code>vlc -Ihttp --http-host :7000 -vvv ~/Videos/Entourage.S06E10.HDTV.XviD-NoTV.avi --udp-caching 1500 --sout '#standard{access=http{mime=video/x-ms-asf},mux=asf,dst:7070}'
+</code></pre>
+
+<h2 id="client">client</h2>
+
+<p>from a browser:
+ - localhost:7000 is remote control
+ - localhost:8080 is movie</p>
+
+<p>using vlc works fine too:
+  - open VLC
+  - open Network
+  - protocol http
+  - host localhost:8080</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -860,10 +787,6 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
       </li>
     
       <li class="post">
-        <a href="/datascience/2015/10/16/educational-components.html">Educational Components</a>
-      </li>
-    
-      <li class="post">
         <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
       </li>
     
@@ -873,6 +796,10 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
     
       <li class="post">
         <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
       </li>
     
   </ul>
