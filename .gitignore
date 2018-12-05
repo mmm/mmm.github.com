@@ -14,3 +14,4 @@ vendor
 node_modules
 _site/
 _drafts/
+tmp
