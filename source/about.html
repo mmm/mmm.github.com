@@ -1,0 +1,101 @@
+---
+layout: default
+---
+
+<div>
+  <article>
+    <div id='bio'>
+
+      <div id='mugshot'>
+        <a href='/images/phonebooth.jpg'><img alt="Mug" src="/images/phonebooth.jpg"/></a>
+      </div>
+
+      <h3>Hi, I'm Mark...</h3>
+
+      <p>I'm a Data Plumber. I spend most days designing/tuning/fixing/banging-on data pipelines and the infrastructure behind data-intensive applications of all sorts. I love what I do!</p>
+
+      <p>Originally trained as a Physicist (Ph.D. researching how quantum computers can learn to tolerate noise and errors), I've since had an incredible career out in the world where Data Science meets DevOps and infrastructure engineering.</p>
+
+      <p>I've been lucky enough to work for companies like Canonical, the folks behind the Ubuntu operating system, Infochimps, Silicon Valley Data Science, and now DigitalOcean. Places where talented teams of people are innovating and leading open-source communities and the tech industry as a whole.</p>
+
+      <p>My passions at the moment include:</p>
+
+      <ul>
+        <li>training data scientists. I teach and helped build a "Just enough data engineering" class for data scientists in Berkeley's online Master's (MIDS) program</li>
+        <li>adopting test-driven methodologies into building data pipelines... keeping pipelines strongly connected to the actual problems that need to be solved</li>
+        <li>and I'm actually <em>paid</em> to work on AI for infrastructure automation at DO!  I know... right!? :-)</li>
+      </ul>
+
+
+      <br/>
+
+      <div class='contacts'>
+        <h3>More Info</h3>
+          Social:
+          <ul>
+            <li>
+              <a href="http://twitter.com/m_3/">Twitter</a>
+            </li>
+            <li>
+              <a href="http://www.linkedin.com/in/markmmims">LinkedIn</a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/mark.mims">Facebook</a>
+            </li>
+            <li>
+              <a href="http://about.me/m_3/">AboutMe</a>
+            </li>
+            <li>
+              <a href="mailto:mark.mims@gmail.com">mark.mims@gmail.com</a>
+            </li>
+            <li>
+              <a href="callto:+1-512-981-6467">voice:+1(512)981-6467</a>
+            </li>
+          </ul>
+
+          <br/>
+          Keys:
+          <ul>
+            <li><a href="https://keybase.io/m_3">Keybase</a></li>
+            <li>
+              <a href="/MarkMims-gpg-key.asc" title="fingerprint = C14D 0796 664C 62F9 C104  C149 F213 1D81 237F D12C">GPG public key</a>
+              (
+              <a href="http://en.wikipedia.org/wiki/GNU_Privacy_Guard" title="Gnu Privacy Guard">What's this?</a>
+              )
+            </li>
+            <li>
+              <a href="/MarkMims-ssh-key.pub" title="ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAz5dh90PDXkDp7C1V7TLJVP9CbVM9O//R5plUiHWNlcJSRkfii9uCXfbTVWBagi6Sb1MyRQvIhjwsQud+wHAqQRtC64Yg/FDGBud0nYboAuWVMb9364Fg8Lnp9raCX/vUVkboD0sfOAMQZ9/dVwDdLSSFy1xhwNLmY/DIJadSw39tfSHTjkrtafLQkMMtP+rcv9kJtQtveLu3PtYUHRE+JYgK0FxhxTOyBFkFpiKzsKimpdgDgRJadZw8uiVCEbVGH3g5D5Uwj8lmDj9o+XoLepW1qzTEg3f52MPqhfRMt1DiJk4JDVzjGDL4r9Cmkr/Rwb3oL5MRugVw39v8qncasQ== mmm@hawk">SSH public key</a>
+              (
+              <a href="http://en.wikipedia.org/wiki/Secure_Shell" title="Secure Shell">What's this?</a>
+              )
+            </li>
+          </ul>
+
+          <br/>
+          Code:
+          <ul>
+            <li><a href="http://github.com/mmm">GitHub</a></li>
+            <li><a href="http://launchpad.net/~mark-mims/">LaunchPad</a></li>
+          </ul>
+
+          <br/>
+          Resume:
+          <ul>
+            <li><a href="/MarkMims-resume.html" title="Resume for Mark Mims">html</a></li>
+            <li><a href="/MarkMims-resume.txt" title="Resume for Mark Mims">text</a></li>
+            <li><a href="/MarkMims-resume.pdf" title="Resume for Mark Mims">pdf</a></li>
+          </ul>
+      </div>
+
+    </div>
+
+    <br/>
+  </article>
+</div>
+<aside class="sidebar">
+  {% if site.blog_index_asides.size %}
+    {% include_array blog_index_asides %}
+  {% else %}
+    {% include_array default_asides %}
+  {% endif %}
+</aside>

@@ -16,6 +16,8 @@ the sessionization of such events.
 
 <!--more-->
 
+{% youtube 7geRGzrIXRI %}
+
 [SVDS](svds.com) is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
 problems.  In this role, we're in a unique position to solve different
@@ -422,4 +424,7 @@ best](hadoop.with-the-best.com) site.  Note that the slides are
 [reveal.js](https://github.com/hakimel/reveal.js/) and I make heavy use of
 two-dimensional navigation.  Slides advance downwards, topics advance to the
 right.
+
+Update: this post has be perdied-up (thanks Meg!) and reposted as part of our
+[svds blog](http://www.svds.com/building-pipelines-understand-user-behavior/).
 
