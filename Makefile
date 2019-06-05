@@ -13,6 +13,8 @@ generate:
 	@echo "--- $@ ---"
 	@$(run_rake) generate
 
+publish: deploy
+
 deploy:
 	@echo "--- $@ ---"
 	@$(run_rake) deploy
