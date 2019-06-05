@@ -21,3 +21,7 @@ publish: deploy
 deploy:
 	@echo "--- $@ ---"
 	@$(run_rake) deploy
+
+preview:
+	@echo "--- $@ ---"
+	@$(run_rake) preview
