@@ -2,7 +2,9 @@ default: list_tasks
 
 run_rake := docker run --rm -t \
 	-v `pwd`:/source \
-	-v ~/.gitconfig:/source/.gitconfig \
+	-v /home:/home \
+	-v /etc/passwd:/etc/passwd:ro \
+	-v /etc/group:/etc/group:ro \
 	--user $(shell id -u):$(shell id -g) \
 	markmims/pubdev:0.0.1 bundle exec rake
 
