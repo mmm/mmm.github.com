@@ -43,6 +43,8 @@ markdown: kramdown
 pygments: false # default python pygments have been replaced by pygments.rb
 category_feeds: true
 
+sidebar: collapse
+
 paginate: 10          # Posts per page on the blog index
 pagination_dir: blog  # Directory base for pagination URLs eg. /blog/page/2/
 recent_posts: 5       # Posts in the sidebar Recent Posts section
@@ -93,8 +95,8 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name: markmims
-disqus_show_comment_count: false
+#disqus_short_name: markmims
+#disqus_show_comment_count: false
 
 # Google Analytics
 google_analytics_tracking_id: UA-4132881-1
