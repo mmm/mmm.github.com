@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="mostly from http://open.eucalyptus.com/forum/attaching-ebs-image
-and http://www.debian-administration.org/articles/553 problem1 vtund wasn’t in sync &hellip;">
+and http://www.debian-administration.org/articles/553 problem1 vtund wasn&#8217;t in &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,7 +130,7 @@ and http://www.debian-administration.org/articles/553 problem1 vtund wasn’t in
   
 
 
-<time datetime="2011-02-05T00:00:00-07:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
+<time datetime="2011-02-05T00:00:00+00:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
         
       </p>
     
@@ -146,7 +146,7 @@ and
 
 <h2 id="problem1">problem1</h2>
 
-<p>vtund wasn’t in sync with the pid in /var/run/eucalyptus and so it “wasn’t able to bind to socket” in /var/log/syslog</p>
+<p>vtund wasn&#8217;t in sync with the pid in /var/run/eucalyptus and so it &#8220;wasn&#8217;t able to bind to socket&#8221; in /var/log/syslog</p>
 
 <hr />
 
@@ -154,13 +154,13 @@ and
 
 <p>Volume is created and available from the SC
     ps awux | grep vblade
-should return something… something running on the br0 interface… but they seem to be stuck on eth0</p>
+should return something&#8230; something running on the br0 interface&#8230; but they seem to be stuck on eth0</p>
 
 <hr />
 
 <h2 id="general-method-for-exporting-things-using-aoe">general method for exporting things using aoe</h2>
 
-<p>On the storage controller (“target” in AoE lingo)…</p>
+<p>On the storage controller (&#8220;target&#8221; in AoE lingo)&#8230;</p>
 
 <p>Load the module
     modprobe aoe</p>
@@ -170,10 +170,10 @@ should return something… something running on the br0 interface… but they se
 or for euca
     vblade 0 5 br0 /dev/vg-TldY4A../lv-hrh7uQ.. </p>
 
-<p>Then on the NC (“initiator”)…</p>
+<p>Then on the NC (&#8220;initiator&#8221;)&#8230;</p>
 
 <p>discover
-    aoe-discover (this wasn’t necessary on a NC… just worked once the target had the right device)</p>
+    aoe-discover (this wasn&#8217;t necessary on a NC&#8230; just worked once the target had the right device)</p>
 
 <p>status
     aoe-stat
@@ -182,7 +182,7 @@ or for euca
 <p>this showed a <code>e0.5</code> entry that can be treated like a regular partition</p>
 
 <p>Note: iSCSI is over TCP (layer 4?), AoE is over Ethernet (layer 2)
-so iscsi can be routed, aoe can’t (at least not without ebtables and l2 switches)
+so iscsi can be routed, aoe can&#8217;t (at least not without ebtables and l2 switches)
 aoe is designed to be used in a tighter lan environment</p>
 
 <hr />
@@ -196,7 +196,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
 
 <h2 id="vtun">vtun?</h2>
 
-<p>dunno wtf… I assume it’s something going on with tunneling traffic between SC and NC instances?</p>
+<p>dunno wtf&#8230; I assume it&#8217;s something going on with tunneling traffic between SC and NC instances?</p>
 
 </div>
 
@@ -220,7 +220,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
   
 
 
-<time datetime="2011-02-05T00:00:00-07:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
+<time datetime="2011-02-05T00:00:00+00:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -256,10 +256,9 @@ to use <code>br0</code> instead of <code>eth0</code></p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -315,28 +314,12 @@ to use <code>br0</code> instead of <code>eth0</code></p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2011/02/05/howto-debug-euca-aoe.html';
-        var disqus_url = 'http://markmims.com/howtos/2011/02/05/howto-debug-euca-aoe.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

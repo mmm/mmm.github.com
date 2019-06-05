@@ -129,7 +129,7 @@
   
 
 
-<time datetime="2011-07-12T00:00:00-06:00" pubdate data-updated="true">Jul 12<span>th</span>, 2011</time>
+<time datetime="2011-07-12T00:00:00+00:00" pubdate data-updated="true">Jul 12<span>th</span>, 2011</time>
         
       </p>
     
@@ -143,7 +143,7 @@
   <li><a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-multi-node-cluster/">Running Hadoop on Ubuntu Linux (Multi-Node Cluster)</a></li>
 </ul>
 
-<p>I’d like to run his exact examples, but this time around I’ll use 
+<p>I&#8217;d like to run his exact examples, but this time around I&#8217;ll use 
 <a href="http://juju.ubuntu.com/">juju</a> for hadoop deployment/management.</p>
 
 <!--more-->
@@ -151,7 +151,7 @@
 <hr />
 
 <p><em>Updated on 2011-11-08:</em>
-The ubuntu project “ensemble” is now known as “juju”.
+The ubuntu project &#8220;ensemble&#8221; is now known as &#8220;juju&#8221;.
 This post has been updated to reflect the new names and updates to the api.</p>
 
 <hr />
@@ -183,7 +183,7 @@ $ juju add-unit datanodes
 
 <p>(you can add/remove these later too)</p>
 
-<p>Scaling is so easy there’s no point in separate standalone -vs- multinode 
+<p>Scaling is so easy there&#8217;s no point in separate standalone -vs- multinode 
 versions of the setup.</p>
 
 <h3 id="data-and-jobs">Data and Jobs</h3>
@@ -209,20 +209,20 @@ hdfs$ tar xjvf gutenberg.tar.bz2
 <pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount -Dmapred.map.tasks=20 -Dmapred.reduce.tasks=20 gutenberg gutenberg-output
 </code></pre>
 
-<p>That’s it!</p>
+<p>That&#8217;s it!</p>
 
 <hr />
 
-<p>Now, again with some more details…</p>
+<p>Now, again with some more details&#8230;</p>
 
 <h2 id="installing-juju">Installing juju</h2>
 
-<p>Install juju client tools onto your local machine…</p>
+<p>Install juju client tools onto your local machine&#8230;</p>
 
 <pre><code># sudo apt-get install juju charm-tools
 </code></pre>
 
-<p>We’ve got the juju CLI in ports now too for Mac clients
+<p>We&#8217;ve got the juju CLI in ports now too for Mac clients
 (Homebrew is in progress).</p>
 
 <p>Now generate your environment settings with</p>
@@ -231,7 +231,7 @@ hdfs$ tar xjvf gutenberg.tar.bz2
 </code></pre>
 
 <p>and then edit <code>~/.juju/environments.yaml</code> to use your EC2 keys.
-It’ll look something like:</p>
+It&#8217;ll look something like:</p>
 
 <pre><code>environments:
   sample:
@@ -243,8 +243,8 @@ It’ll look something like:</p>
     default-series: oneiric
 </code></pre>
 
-<p>In real life you’d probably want to specify <code>default-image-type</code> to at least <code>m1.large</code> too,
-but I’ll give some examples of that in later posts.</p>
+<p>In real life you&#8217;d probably want to specify <code>default-image-type</code> to at least <code>m1.large</code> too,
+but I&#8217;ll give some examples of that in later posts.</p>
 
 <h2 id="hadoop">Hadoop</h2>
 
@@ -258,7 +258,7 @@ $ charm get hadoop-master
 $ charm get hadoop-slave
 </code></pre>
 
-<p>(optionally, you can <code>charm getall</code> but it’ll take a bit to pull all charms).</p>
+<p>(optionally, you can <code>charm getall</code> but it&#8217;ll take a bit to pull all charms).</p>
 
 <h3 id="start-the-hadoop-services">Start the Hadoop Services</h3>
 
@@ -268,7 +268,7 @@ $ charm get hadoop-slave
 </code></pre>
 
 <p>wait a minute or two for EC2 to comply.
-You’re welcome to watch the water boil with</p>
+You&#8217;re welcome to watch the water boil with</p>
 
 <pre><code>$ juju status
 </code></pre>
@@ -278,7 +278,7 @@ You’re welcome to watch the water boil with</p>
 <pre><code>$ watch -n30 juju status
 </code></pre>
 
-<p>which’ll give you output like</p>
+<p>which&#8217;ll give you output like</p>
 
 <pre><code>$ juju status
 2011-07-12 15:20:54,978 INFO Connecting to environment.
@@ -305,7 +305,7 @@ $ juju deploy --repository ~/charms local:hadoop-slave datanodes
 <p>Relations are where the juju special sauce is,
 but more about that in another post.</p>
 
-<p>You can tell everything’s happy when <code>juju status</code>
+<p>You can tell everything&#8217;s happy when <code>juju status</code>
 gives you something like (looks a bit different, but basics are the same):</p>
 
 <pre><code>$ juju status
@@ -367,7 +367,7 @@ hdfs$ tar xjvf gutenberg.tar.bz2
 <pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount gutenberg gutenberg-output
 </code></pre>
 
-<p>you might want to explicitly call out the number of jobs to use…</p>
+<p>you might want to explicitly call out the number of jobs to use&#8230;</p>
 
 <pre><code>hdfs$ hadoop jar /usr/lib/hadoop-0.20/hadoop-examples.jar wordcount -Dmapred.map.tasks=20 -Dmapred.reduce.tasks=20 gutenberg gutenberg-output
 </code></pre>
@@ -381,7 +381,7 @@ ubuntu$ tail /var/log/hadoop/hadoop-hadoop-datanode*.log
 ubuntu$ tail /var/log/hadoop/hadoop-hadoop-tasktracker*.log
 </code></pre>
 
-<p>similarly for subsequent slave nodes if you’ve spun them up</p>
+<p>similarly for subsequent slave nodes if you&#8217;ve spun them up</p>
 
 <pre><code>$ juju ssh datanodes/1
 </code></pre>
@@ -408,7 +408,7 @@ $ done
 
 <p>Wait for <code>juju status</code> to show everything in a happy state and then run your jobs.</p>
 
-<p>I was able to add slave nodes in the middle of a run… they pick up load and crank.</p>
+<p>I was able to add slave nodes in the middle of a run&#8230; they pick up load and crank.</p>
 
 <p>Check out the <code>juju status</code> output for a simple 10-slave cluster <a href="http://pastebin.com/FMF3TQEJ">here</a></p>
 
@@ -434,7 +434,7 @@ $ done
   
 
 
-<time datetime="2011-07-12T00:00:00-06:00" pubdate data-updated="true">Jul 12<span>th</span>, 2011</time>
+<time datetime="2011-07-12T00:00:00+00:00" pubdate data-updated="true">Jul 12<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -470,10 +470,9 @@ $ done
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -529,28 +528,12 @@ $ done
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/cloud/2011/07/12/hadoop-on-ubuntu.html';
-        var disqus_url = 'http://markmims.com/cloud/2011/07/12/hadoop-on-ubuntu.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

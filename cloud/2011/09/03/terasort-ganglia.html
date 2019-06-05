@@ -9,13 +9,13 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Here I’m using new features of
+  <meta name="description" content="Here I&#8217;m using new features of
 Ubuntu Server (namely juju)
 to easily deploy
 Ganglia
 alongside
 a small Hadoop cluster
-to play around with monitoring &hellip;">
+to play around with &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -135,14 +135,14 @@ to play around with monitoring &hellip;">
   
 
 
-<time datetime="2011-09-03T00:00:00-06:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2011</time>
+<time datetime="2011-09-03T00:00:00+00:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Here I’m using new features of
+<div class="entry-content"><p>Here I&#8217;m using new features of
 <a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
 (namely <a href="http://juju.ubuntu.com">juju</a>)
 to easily deploy
@@ -159,7 +159,7 @@ like
 <hr />
 
 <p><em>Updated on 2011-11-08:</em>
-The ubuntu project “ensemble” is now known as “juju”.
+The ubuntu project &#8220;ensemble&#8221; is now known as &#8220;juju&#8221;.
 This post has been updated to reflect the new names and updates to the api.</p>
 
 <hr />
@@ -199,38 +199,38 @@ hdfs$ hadoop jar hadoop-*-examples.jar terasort -Dmapred.map.tasks=100 -Dmapred.
 <pre><code>http://&lt;jobmonitor-instance-ec2-url&gt;/ganglia/
 </code></pre>
 
-<p>and see…</p>
+<p>and see&#8230;</p>
 
 <p><a href="/images/terasort-ganglia-1.png">
 <img src="/images/terasort-ganglia-1.png" width="720px" />
 </a></p>
 
-<p>and a little later as the jobs run…</p>
+<p>and a little later as the jobs run&#8230;</p>
 
 <p><a href="/images/terasort-ganglia-2.png">
 <img src="/images/terasort-ganglia-2.png" width="720px" />
 </a></p>
 
-<p>Of course, I’m just playing around with ganglia at the moment…
-For real performance, I’d change my juju config file
+<p>Of course, I&#8217;m just playing around with ganglia at the moment&#8230;
+For real performance, I&#8217;d change my juju config file
 to choose larger (and ephemeral) EC2 instances instead of
 the defaults.</p>
 
-<h2 id="a-few-details">A Few Details…</h2>
+<h2 id="a-few-details">A Few Details&#8230;</h2>
 
-<p>Let’s grab the charms necessary to reproduce this.</p>
+<p>Let&#8217;s grab the charms necessary to reproduce this.</p>
 
-<p>First, let’s install juju and set up a our charms.</p>
+<p>First, let&#8217;s install juju and set up a our charms.</p>
 
 <pre><code>$ sudo apt-get install juju charm-tools
 </code></pre>
 
-<p>Note that I’m describing all this using an Ubuntu laptop to run
-the juju cli because that’s how I roll, but you can certainly
+<p>Note that I&#8217;m describing all this using an Ubuntu laptop to run
+the juju cli because that&#8217;s how I roll, but you can certainly
 use a Mac to drive your Ubuntu services in the cloud.
-The juju CLI is already available in ports, but I’m not sure
+The juju CLI is already available in ports, but I&#8217;m not sure
 the version.  Homebrew packages are in the works.
-Windows should work too, but I don’t have a clue.</p>
+Windows should work too, but I don&#8217;t have a clue.</p>
 
 <pre><code>$ mkdir -p ~/charms/oneiric
 $ cd ~/charms/oneiric
@@ -239,16 +239,16 @@ $ charm get hadoop-slave
 $ charm get ganglia
 </code></pre>
 
-<p>That’s about all that’s really necessary to get you up and
+<p>That&#8217;s about all that&#8217;s really necessary to get you up and
 benchmarking/monitoring.</p>
 
-<p>I’ll do another post on how to adapt your own charms to use monitoring
-and the <code>monitor</code> juju interface as part of the “Core Infrastructure”
-series I’m writing for charm developers.  I’ll go over the process of
+<p>I&#8217;ll do another post on how to adapt your own charms to use monitoring
+and the <code>monitor</code> juju interface as part of the &#8220;Core Infrastructure&#8221;
+series I&#8217;m writing for charm developers.  I&#8217;ll go over the process of
 what I had to do to get the <code>hadoop-slave</code> service talking to monitoring
 services like <code>ganglia</code>.</p>
 
-<p>Until then, clone/test/enjoy… or better yet, fork/adapt/use!</p>
+<p>Until then, clone/test/enjoy&#8230; or better yet, fork/adapt/use!</p>
 
 </div>
 
@@ -272,7 +272,7 @@ services like <code>ganglia</code>.</p>
   
 
 
-<time datetime="2011-09-03T00:00:00-06:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2011</time>
+<time datetime="2011-09-03T00:00:00+00:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2011</time>
       
 
 <span class="categories">
@@ -308,10 +308,9 @@ services like <code>ganglia</code>.</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -367,28 +366,12 @@ services like <code>ganglia</code>.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/cloud/2011/09/03/terasort-ganglia.html';
-        var disqus_url = 'http://markmims.com/cloud/2011/09/03/terasort-ganglia.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

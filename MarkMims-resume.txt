@@ -1,149 +1,167 @@
-Mark McGrew Mims
-================
 
-* * * * *
+
+MARK MCGREW MIMS
+
+
+------------------------------------------------------------------------
 
 Physicist turned Software Developer, Data Scientist, then Devops
 Engineer.
 
-In love with data driven decision making and data engineering… at any
+In love with data driven decision making and data engineering... at any
 scale.
 
-* * * * *
+------------------------------------------------------------------------
+
 
 About
------
 
-I’m a Data Plumber. I spend most days designing/tuning/fixing/banging-on
+I'm a Data Plumber. I spend most days designing/tuning/fixing/banging-on
 data pipelines and the infrastructure behind data-intensive applications
 of all sorts.
 
-Originally trained as a Physicist (Ph.D. researching how quantum
-computers can learn to tolerate noise and errors), I’ve since had an
+Originally trained as a Physicist (Ph.D. researching how quantum
+computers can learn to tolerate noise and errors), I've since had an
 incredible career out in the world where Data Science meets DevOps and
 infrastructure engineering.
 
-I’ve been lucky enough to work for companies like Canonical, the folks
-behind the Ubuntu operating system, Infochimps, and now Silicon Valley
-Data Science. Places where talented teams of people are innovating and
-leading open-source communities and the tech industry as a whole.
+I've been lucky enough to work for companies like Canonical, the folks
+behind the Ubuntu operating system, Infochimps, DigitalOcean, and now
+Google. Places where talented teams of people are innovating and leading
+open-source communities and the tech industry as a whole.
 
-I’ve been a consultant for a lot of my career, which gives me great
-insight into a vast range of data-related problems people have as well
-as how to help solve these problems across industries and technology
-stacks.
 
 Current Passions
-----------------
 
--   training data scientists. I’m building a class that’s essentially
-    “Just enough data engineering” for data scientists in Berkeley’s
-    MIDS program and I can’t wait to start teaching it Fall 2017
+-   training data scientists. I teach an online class that's essentially
+    "Just enough data engineering" for data scientists in Berkeley's
+    Data Science Masters (MIDS) Program
 
--   adopting test-driven methodologies into building data pipelines…
+-   adopting test-driven methodologies into building data pipelines...
     keeping pipelines strongly connected to the actual problems that
     need to be solved
 
 -   and then pretty much anything to do with AI in infrastructure
     automation :-)
 
+
 Experience
-----------
+
+2019-Present
+
+    STAFF SOLUTIONS ARCHITECT
+    _Google_ (Boulder)
+
+    Helping users develop solutions on the Google Cloud Platform.
 
 2017-Present
-    Staff R&D Engineer  
-    DigitalOcean (New York)
 
-    Helping build better cloud services for DigitalOcean users!
+    LECTURER - Master of Information and Data Science (MIDS)
+    _UC Berkeley School of Information _ (Berkeley)
 
-2017-Present
-    Lecturer - Master of Information and Data Science (MIDS)  
-    UC Berkeley School of Information (Berkeley)
+    Designed and developed the introductory _Fundamentals of Data
+    Engineering_ course for the MIDS program.
 
-    Design, develop, and teach the introductory Just Enough Data
-    Engineering course for the MIDS program.
+    I currently teach and serve as Course Lead for this online course.
+
+2017-2019
+
+    STAFF ENGINEER - Data & Analytics
+    _DigitalOcean_ (New York)
+
+    AI-guided infrastructure at DO... Helping build better cloud
+    services for DigitalOcean users!
 
 2014-2017
-    Principal Engineer  
-    Silicon Valley Data Science (Mountain View)
 
-    Building data science pipelines for various enterprise clients.
+    PRINCIPAL ENGINEER
+    _Silicon Valley Data Science_ (Mountain View)
 
-    Silicon Valley Data Science is a boutique consultancy specializing
-    in solving your toughest Data problems. We provide Data Science,
-    Data Engineering, Architectural Advisory, and Data Strategy services
-    to a wide range of clients across industries.
+    Update: Purchased by Apple.
+
+    Built data science pipelines for enterprise clients.
+
+    Silicon Valley Data Science (SVDS) was a boutique Data Science, Data
+    Strategy, and Data Engineering consultancy. SVDS Peaked at 75+
+    employees in four offices (Mountain View, CA; Chicago, IL;
+    Bentonville, AR; London, United Kingdom). Achieved ~$40M in revenue
+    over 4+ years in operation. Customers included Nike, Sainsburys,
+    Target, Dexcom, GE, Intuit, Allant Group, PayPal, Kabam, PIMCO,
+    TiVo, Monsanto, Edmunds.com, Upsher Smith, Amadeus, Zebra, RBC, AXA
+    Global, Red Hat, Schneider Electric, Pure Storage, and others.
 
     As a Principal Engineer with SVDS, I typically set technical
-    direction, provide technical guidance/mentoring, and write code to
+    direction, provided technical guidance/mentoring, and wrote code to
     help deliver client and internal projects:
 
-    -   Data Engineering - multiple engagements in Retail and
-        Entertainment - Providing the technical underpinnings of client
+    -   _Data Engineering_ - multiple engagements in Retail and
+        Entertainment - Provided the technical underpinnings of client
         initiatives to better understand customer activity and take
-        action in an appropriate and timely manner. Solutions vary by
+        action in an appropriate and timely manner. Solutions varied by
         client, but were primarily using technologies such as
         Terraform/Ansible to automate data pipelines on AWS public cloud
         infrastructure and integrate with on-premise client datacenters,
         retail stores, etc.
 
-    -   Data Strategy - multiple engagements in Retail and Entertainment
+    -   _Data Strategy_ - multiple engagements in Retail and
+        Entertainment
 
-    -   Architectural Advisory - for client engagements across
+    -   _Architectural Advisory_ - for client engagements across
         industries
 
-    -   Speaking - conference talks and workshops (Strata, Spark Summit,
-        DataDay Austin/Seattle, Hadoop-With-The-Best, Enterprise Data
-        World)
+    -   _Speaking_ - conference talks and workshops (Strata, Spark
+        Summit, DataDay Austin/Seattle, Hadoop-With-The-Best, Enterprise
+        Data World)
 
-    -   Internal R&D Projects - spearheaded projects for data-platform
+    -   _Internal R&D Projects_ - spearheaded projects for data-platform
         and hybrid devops for data pipelines and build/maintain some of
-        our internal tooling (docker images and ansible roles for cdh
-        and cm-api development)
+        our internal tooling (terraform modules, docker images, and
+        ansible roles for cdh and cm-api development)
 
 2013-2014
-    Principal Data Architect  
-    Infochimps (Austin)  
-    now Computer Sciences Corporation (CSC) (Falls-Church)
+
+    PRINCIPAL DATA ARCHITECT
+    _Infochimps_ (Austin)
+    now _Computer Sciences Corporation (CSC)_ (Falls-Church)
 
     Building managed data science pipelines for the enterprise.
 
-    Infochimps, rebranded as CSC’s Big Data and Analytics (BD&A) Group,
+    Infochimps, rebranded as CSC's Big Data and Analytics (BD&A) Group,
     provides a wide range of fully managed data science and analytics
     services for the enterprise. My primary accomplishment here was
     driving work to adapt the Infochimps cloud-based products over to
-    “dedicated rack” openstack-based solutions to meet the data pipeline
-    needs of CSC’s enterprise customers.
+    "dedicated rack" openstack-based solutions to meet the data pipeline
+    needs of CSC's enterprise customers.
 
     As the Principal Data Architect, my contributions included:
 
-    -   Product development - Worked with a team of architects and
+    -   _Product development_ - Worked with a team of architects and
         product leads to define the actual product offerings, then
         communicate these offerings to sales and marketing teams. Helped
         build tools to simplify pricing and hardware configuration
 
-    -   Solution architecture - Brought in to pinch-hit infrastructure
+    -   _Solution architecture_ - Brought in to pinch-hit infrastructure
         and architecture with customers. Built service deployments for
-        large insurance and financial services organizations… including
-        quite popular telemetry based data pipelines within the
-        insurance industry
+        large insurance and financial services organizations...
+        including quite popular telemetry based data pipelines within
+        the insurance industry
 
-    -   Infochimps platform architecture - Worked alongside an
+    -   _Infochimps platform architecture_ - Worked alongside an
         incredibly talented development team to refactor and adapt the
         Infochimps architecture to integrate with other CSC acquisitions
-        and meet the data pipeline needs CSC’s customer base
+        and meet the data pipeline needs CSC's customer base
 
-    -   Development planning - Worked with the development team to help
-        capture and translate requirements into actionable
+    -   _Development planning_ - Worked with the development team to
+        help capture and translate requirements into actionable
         projects/tasks and help schedule and prioritize these for
         development
 
-    -   Ops process development - Helped the infochimps ops team through
-        the training, process development, and tooling needed to adapt
-        to ops challenges of hybrid public/private cloud managed
+    -   _Ops process development_ - Helped the infochimps ops team
+        through the training, process development, and tooling needed to
+        adapt to ops challenges of hybrid public/private cloud managed
         services
 
-    -   Devops - Helped develop tools around RH-OSP Foreman-based
+    -   _Devops_ - Helped develop tools around RH-OSP Foreman-based
         Openstack deployments and integrated what were primarily
         chef-based infochimps platform component workloads
 
@@ -152,8 +170,9 @@ Experience
     installs.
 
 2011-2013
-    Software Engineer - Ubuntu Server Team  
-    Canonical Ltd. (London)
+
+    SOFTWARE ENGINEER - Ubuntu Server Team
+    _Canonical Ltd._ (London)
 
     Building DevOps tools for Ubuntu Server.
 
@@ -168,26 +187,28 @@ Experience
     test, and model data science pipelines.
 
 2012-2013
-    Visiting Scholar - Department of Physics  
-    Utah State University (Logan)
+
+    VISITING SCHOLAR - Department of Physics
+    _Utah State University_ (Logan)
 
     Research in data management and data modeling.
 
     Interested in data plumbing and the toolchains surrounding data
     science pipelines and how they effect subsequent results at various
     scales. Working to apply Test-Driven and Behavior-Driven Software
-    Development techniques to data science pipelines as “Sanity-Driven
-    Data Science.”
+    Development techniques to data science pipelines as "Sanity-Driven
+    Data Science."
 
 2010-2011
-    Cloud Architect  
-    Archethought (Austin / Boulder)
+
+    CLOUD ARCHITECT
+    _Archethought_ (Austin / Boulder)
 
     Building private and hybrid clouds and cloud applications for
     universities.
 
     Archethought is a consulting firm specializing in designing and
-    building private and hybrid clouds for colleges and universities
+    building _private and hybrid clouds_ for colleges and universities
     around the world. This helps universities take advantage of more
     efficient Virtualization technologies, provide infrastructure as a
     service within the university, and safely explore various emerging
@@ -205,12 +226,13 @@ Experience
     Chef.
 
 2005-2011
-    Founder / Chief Scientist  
-    Agile Dynamics (Austin)
+
+    FOUNDER / CHIEF SCIENTIST
+    _Agile Dynamics_ (Austin)
 
     Data Science Consulting.
 
-    Designed and built a data-driven decision support system for the
+    Designed and built a _data-driven decision support system_ for the
     Jamaican Ministry of Education. This USAID-sponsored project serves
     primary and secondary educational institutions throughout the nation
     and gives the Ministry previously unknown visibility into the state
@@ -221,9 +243,9 @@ Experience
     Fleet/Inventory Tracking services. This company provides web
     services and whitelabel web portals to track assets using their
     proprietary GPS tracking hardware. The new design helped prepare for
-    integration into Machine to Machine (M2M) data market.
+    _integration into Machine to Machine (M2M) data market_.
 
-    Provide ad-hoc data-munging services to a variety of businesses.
+    Provide _ad-hoc data-munging_ services to a variety of businesses.
     Designed/built web-based bulk data importers for textbook
     distributors to manage inventory from publishers with various
     proprietary and standard (ONIX) formats. Designed/built web-based
@@ -231,14 +253,14 @@ Experience
     customers to manage game content.
 
     Provided quantitative marketing tools and services for the
-    visualization and modeling of social networks. Allowed for trend
+    visualization and _modeling of social networks_. Allowed for trend
     identification and analysis, growth rate predictions, and what-if
     scenarios for various network and Web-2.0 businesses. This was
     developed using Ruby/MySQL with Rails/GraphViz visualization.
 
     Provided environmental simulation and modeling solutions to track
-    pollutants in the Florida Everglades. Created numerical hydrodynamic
-    mass balance models that are used to calculate tax
+    pollutants in the Florida Everglades. Created numerical
+    _hydrodynamic mass balance models_ that are used to calculate tax
     incentives/penalties for surrounding commercial land. This was
     developed using Java/SWT/WebStart and interfaced with a variety of
     legacy apps and databases.
@@ -246,26 +268,29 @@ Experience
     Technology Used: Ruby, Rails, Java, SWT/JFace.
 
 2009-2011
-    Board of Directors  
-    LoneStarRuby Foundation (Austin)
+
+    BOARD OF DIRECTORS
+    _LoneStarRuby Foundation_ (Austin)
 
     LSRF organizes an annual LoneStarRuby Conference
 
 2002-2005
-    Chief Technology Officer  
-    Rational Systems (Houston)
+
+    CHIEF TECHNOLOGY OFFICER
+    _Rational Systems_ (Houston)
 
     Building Operations/Optimization systems for the Energy Industry.
 
     Directed delivery of two complete product lines, Rational Pipe(TM)
     and Rational Catalyst(TM), from conception.
 
-    Rational Pipe is software designed to manage the commercial
-    activities of interstate natural gas pipelines, including contracts,
-    CRM, tariffs, capacity release, nominations, allocations and
-    invoicing. It was the result of a 140+ man-year, joint development
-    project between Rational Systems and a major US interstate natural
-    gas pipeline, utilizing Rational’s Rights-Based engine.
+    Rational Pipe is software designed to _manage the commercial
+    activities of interstate natural gas pipelines_, including
+    contracts, CRM, tariffs, capacity release, nominations, allocations
+    and invoicing. It was the result of a 140+ man-year, joint
+    development project between Rational Systems and a major US
+    interstate natural gas pipeline, utilizing Rational's Rights-Based
+    engine.
 
     Chief Architect for this $30M project delivered on time and on
     budget. Provided Technical leadership for a team of approximately
@@ -275,12 +300,13 @@ Experience
 
     Rational Catalyst is a business simulation and analysis framework
     used in energy production, exploration, and gathering. It is
-    software that enables collaborative business modeling by integrating
-    small disparate models of various aspects of the business together
-    making model data available across the enterprise. Catalyst packages
-    data mining, revision control for both data and models, and various
-    visualization tools including configurable executive dashboards into
-    one complete package for business analysis.
+    software that enables _collaborative business modeling_ by
+    integrating small disparate models of various aspects of the
+    business together making model data available across the enterprise.
+    Catalyst packages data mining, revision control for both data and
+    models, and various visualization tools including configurable
+    executive dashboards into one complete package for business
+    analysis.
 
     Chief Architect for the Rational Catalyst team of four developers
     and two testers. Directly developed add-in interface components for
@@ -293,13 +319,14 @@ Experience
     Microsoft SharePoint, Linux.
 
 2000-2002
-    Lead Software Architect  
-    The AEgis Technologies Group, Inc. (Austin / Huntsville)
+
+    LEAD SOFTWARE ARCHITECT
+    _The AEgis Technologies Group, Inc._ (Austin / Huntsville)
 
     Building IDEs for Simulation Engineers.
 
-    Principal architect of AEgis’ AcslXtreme(TM) product line, a suite
-    of commercial simulation tools based on the industry standard
+    Principal architect of AEgis' AcslXtreme(TM) product line, a suite
+    of _commercial simulation tools_ based on the industry standard
     ACSL(TM) (Advanced Continuous Simulation Language). Leader of a
     development team responsible for refactoring and modernizing the
     ACSL language as well as developing a complete modern development
@@ -323,26 +350,27 @@ Experience
     Bristol porting tools).
 
 1996-1998
-    Software Developer  
-    Wesson International, Inc. (Austin)  
-    now Adacel Technologies, Ltd. (Calgary)
+
+    SOFTWARE DEVELOPER
+    _Wesson International, Inc._ (Austin)
+    now _Adacel Technologies, Ltd._ (Calgary)
 
     Building Air Traffic Control simulators.
 
     Responsible for creating and maintaining realistic aircraft movement
-    and intelligent pilot behavior in a multi-platform, scaleable air
-    traffic control (ATC) simulator.
+    and intelligent pilot behavior in a multi-platform, scaleable _air
+    traffic control (ATC) simulator_.
 
     Integrated tower ATC, radar ATC, and flight simulators in order to
     simultaneously train tower controllers, radar controllers, and
     pilots. Distributed the system using CORBA and the US Defense
-    Department’s High Level Architecture (HLA). Spearheaded the
+    Department's High Level Architecture (HLA). Spearheaded the
     simulator port to C++ on a POSIX-compliant kernel.
 
     In addition to movement and pilot intelligence in a soft real-time
     environment, responsibilities included on-site customization for
     systems installed in Alaska and Hong Kong, graphics programming
-    using SGI’s IRIS Performer toolkit, and developing networking tools
+    using SGI's IRIS Performer toolkit, and developing networking tools
     to assist in distributing the simulators.
 
     Technology Used: C/C++, Tcl/Tk, UNIX and Win32 systems programming,
@@ -354,29 +382,32 @@ Experience
     over DOS/4GW.
 
 1994-2000
-    Instructor - Department of Physics  
-    The University of Texas (Austin)
+
+    INSTRUCTOR - Department of Physics
+    _The University of Texas_ (Austin)
 
     Physical Science I: Mechanics (AI, Instructor of Record)
 
 1995-1996
-    Lecturer - Department of Physics  
-    Austin Community College (Austin)
+
+    LECTURER - Department of Physics
+    _Austin Community College_ (Austin)
 
     Intro to General Physics I
 
     Engineering Physics I
 
+
 Education
----------
 
 1992-2000
-    Ph.D. in Physics  
-    The University of Texas at Austin
 
-    Dissertation: “Dynamical Stability of Quantum Algorithms.”
+    PH.D. IN PHYSICS
+    _The University of Texas at Austin_
+
+    Dissertation: "Dynamical Stability of Quantum Algorithms."
     Supervisor: E.C.G. Sudarshan Created a numerical model to
-    characterize noise in Grover’s quantum search algorithm. This model
+    characterize noise in Grover's quantum search algorithm. This model
     was then used to determine the maximum amount of noise that the bare
     algorithm can tolerate before failing. This is useful in determining
     exactly which emerging technologies will prove to be viable for
@@ -385,17 +416,18 @@ Education
     matrix calculations (using blitz++, TNT, and LAPACK).
 
 1988-1992
-    B.S. in Physics  
-    The University of Texas at Austin
+    B.S. IN PHYSICS
+    _The University of Texas at Austin_
 
 1988-1992
-    B.S. in Mathematics  
-    The University of Texas at Austin
 
-    Thesis: “Path Integration on Multiply Connected Configuration
-    Spaces.” Supervisor: Ce’cile DeWitt-Morette
+    B.S. IN MATHEMATICS
+    _The University of Texas at Austin_
 
-* * * * *
+    Thesis: "Path Integration on Multiply Connected Configuration
+    Spaces." Supervisor: Ce'cile DeWitt-Morette
 
-  mark.mims@gmail.com • +1(512)981-6467 • markmims.com  
-  San Francisco, CA - USA
+------------------------------------------------------------------------
+
+  mark.mims@gmail.com • +1(512)981-6467 • markmims.com
+  Boulder, CO - USA

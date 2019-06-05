@@ -9,8 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Written by Mark Mims and James Page Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms. There’s
-lots of great stuff &hellip;">
+  <meta name="description" content="Written by Mark Mims and James Page Lately we&#8217;ve been fleshing out our testing frameworks for Juju and Juju Charms. There&#8217;s
+lots of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,7 +130,7 @@ lots of great stuff &hellip;">
   
 
 
-<time datetime="2012-06-04T00:00:00-06:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
+<time datetime="2012-06-04T00:00:00+00:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
         
       </p>
     
@@ -141,10 +141,10 @@ lots of great stuff &hellip;">
 Written by Mark Mims and James Page
 </p>
 
-<p>Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
-lots of great stuff going on here, so we figured it’s time to start posting about it.</p>
+<p>Lately we&#8217;ve been fleshing out our testing frameworks for Juju and Juju Charms.  There&#8217;s
+lots of great stuff going on here, so we figured it&#8217;s time to start posting about it.</p>
 
-<p>First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+<p>First off, the coolest thing we did during last month&#8217;s Ubuntu Developer Summit (UDS)
 was get the go-ahead to spend more time/effort/money scale-testing Juju.</p>
 
 <!--more-->
@@ -174,12 +174,12 @@ sat down over the course of
 a couple of nights at UDS to take a crack at it.
 We chose Hadoop.
 We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
-Here’re some notes on the process.</p>
+Here&#8217;re some notes on the process.</p>
 
 <h2 id="hadoop">Hadoop</h2>
 
 <p>Hadoop was a pretty obvious choice here.
-It’s a great actively-maintained
+It&#8217;s a great actively-maintained
 <a href="http://hadoop.apache.org/">project</a>
 with a large community of users.
 It scales in a somewhat known manner, and the
@@ -188,45 +188,45 @@ makes it super-simple to manage.
 There are also several known benchmarks that are pretty straightforward to get going,
 and distribute load throughout the cluster.</p>
 
-<p>There’s an entire science/art to tuning hadoop jobs to run optimally given the 
+<p>There&#8217;s an entire science/art to tuning hadoop jobs to run optimally given the 
 characteristics of a particular cluster.  Our sole goal in tuning hadoop benchmarks
 was to <em>engage</em> the entire cluster and profile juju during various activities throughout
-an actual run.  For our purposes, we’re in no hurry… a slower/longer run gives us a
+an actual run.  For our purposes, we&#8217;re in no hurry&#8230; a slower/longer run gives us a
 good profiling picture for managing the nodes themselves under load (with a sufficient
 mix of i/o -vs- cpu load).</p>
 
 <h2 id="ec2">EC2</h2>
 
-<p>Surprisingly enough, we don’t really have that many servers just lying around… so EC2 to the rescue.</p>
+<p>Surprisingly enough, we don&#8217;t really have that many servers just lying around&#8230; so EC2 to the rescue.</p>
 
-<p>Disclaimer… we’re testing our infrastructure tools here, not benchmarking hadoop in EC2.
-Some folks advocate running hadoop in a cloudy virtualized environment… while some
-folks are die-hard server huggers.  That’s actually a really interesting discussion.
-It comes down to the actual jobs/problems you’re
+<p>Disclaimer&#8230; we&#8217;re testing our infrastructure tools here, not benchmarking hadoop in EC2.
+Some folks advocate running hadoop in a cloudy virtualized environment&#8230; while some
+folks are die-hard server huggers.  That&#8217;s actually a really interesting discussion.
+It comes down to the actual jobs/problems you&#8217;re
 trying to solve and how those jobs fit in your data pipeline.
-Please note that we’re not
+Please note that we&#8217;re not
 trying to solve that problem here or even provide realistic benchmarking data to contribute
-to the discussion… we’re simply testing how our infrastructure tools perform at scale.</p>
+to the discussion&#8230; we&#8217;re simply testing how our infrastructure tools perform at scale.</p>
 
-<p>If you <em>do</em> run hadoop in EC2, Amazon’s Elastic Map Reduce service is likely to perform
+<p>If you <em>do</em> run hadoop in EC2, Amazon&#8217;s Elastic Map Reduce service is likely to perform
 better at scale in EC2 than just running hadoop itself on general purpose instances.
 Amazon can do all sorts of stuff internally to show hadoop lots of love.
-We chose not to use EMR because we’re interested in testing how juju performs
-with <em>generic</em> Ubuntu Server images, not EMR… at least for now.</p>
+We chose not to use EMR because we&#8217;re interested in testing how juju performs
+with <em>generic</em> Ubuntu Server images, not EMR&#8230; at least for now.</p>
 
 <p>Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
 ask AWS to bump up your limits.</p>
 
 <h2 id="juju">Juju</h2>
 
-<p>We started scale testing from a fresh branch of juju trunk… what gets deployed to
-the PPA nightly… this freed us up to experiment with live changes to add instrumentation,
+<p>We started scale testing from a fresh branch of juju trunk&#8230; what gets deployed to
+the PPA nightly&#8230; this freed us up to experiment with live changes to add instrumentation,
 profiling information, and randomly mess with code as necessary.  This also locks in 
 the branch of juju that the scale testing environment uses.</p>
 
 <p>As usual, juju will keep track of the state of our infrastructure going forward and
 we can make changes as necessary via juju commands.  To bootstrap and spin up the
-initial environment we’ll just use shell scripts wrapping juju commands.</p>
+initial environment we&#8217;ll just use shell scripts wrapping juju commands.</p>
 
 <h3 id="spinning-up-a-cluster">Spinning up a cluster</h3>
 
@@ -236,9 +236,9 @@ a simple <a href="https://gist.github.com/2050525">rails stack</a>
 or a more realistic HA <a href="https://gist.github.com/1406018">wiki stack</a>.</p>
 
 <p>The hadoop scripts for EC2 will get a little more complex as we grow simply because
-we don’t want AWS to think we’re a DoS attack… we’ll pace ourselves during spinup.</p>
+we don&#8217;t want AWS to think we&#8217;re a DoS attack&#8230; we&#8217;ll pace ourselves during spinup.</p>
 
-<p>From the hadoop charm’s readme, the basic steps to spinning up a simple combined
+<p>From the hadoop charm&#8217;s readme, the basic steps to spinning up a simple combined
 hdfs and mapreduce cluster are:</p>
 
 <pre><code>juju bootstrap
@@ -286,8 +286,8 @@ echo "done"
 
 <h3 id="configuring-hadoop">Configuring Hadoop</h3>
 
-<p>Note that we’re specifying constraints to tell juju to use different sized ec2 instances for
-different juju services.  We’d like an m1.large for the
+<p>Note that we&#8217;re specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We&#8217;d like an m1.large for the
 hadoop master</p>
 
 <pre><code>juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
@@ -298,7 +298,7 @@ hadoop master</p>
 <pre><code>juju deploy ... --constraints "instance-type=m1.medium" ... hadoop-slave
 </code></pre>
 
-<p>Note that we’ll also pass config files to specify different heap sizes for the different memory footprints</p>
+<p>Note that we&#8217;ll also pass config files to specify different heap sizes for the different memory footprints</p>
 
 <pre><code>juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
 </code></pre>
@@ -345,11 +345,11 @@ hadoop-slave:
 </code></pre>
 
 <p>Note also that we also have our juju environment configured to use
-instance-store images… juju defaults to ebs-rooted images, but that’s
+instance-store images&#8230; juju defaults to ebs-rooted images, but that&#8217;s
 not a great idea with hdfs.  You specify this by adding a <code>default-image-id</code>
 into your <code>~/.juju/environments.yaml</code> file.
 This gave each of our instances an extra ~400G local drive
-on <code>/mnt</code>… hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
+on <code>/mnt</code>&#8230; hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
 in the config above.</p>
 
 <h2 id="nodes-and-100-nodes">40 nodes and 100 nodes</h2>
@@ -362,10 +362,10 @@ our account limits to allow for 100+ nodes.</p>
 
 <p>Once we had permission from Amazon to spin up 500 nodes on our account,
 we initially just naively spun
-up 500 instances… and quickly got throttled.</p>
+up 500 instances&#8230; and quickly got throttled.</p>
 
-<p>No particular surprise, we’re not specifying multiplicity in the ec2 api,
-nor are we using an auto scaling group… we must look like a DoS attack.</p>
+<p>No particular surprise, we&#8217;re not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group&#8230; we must look like a DoS attack.</p>
 
 <p>The order was eventually fulfilled, and juju waited around for it.
 Everything ran as expected, it just took about an hour and 15 minutes
@@ -406,7 +406,7 @@ and ran terasort with no problems</p>
 - pass these along all the way to the ec2 api... don't expand these into multiple api calls
 </code></pre>
 
-<p>We’ll add those to the list of things to do.</p>
+<p>We&#8217;ll add those to the list of things to do.</p>
 
 <h2 id="nodes-1">1000 nodes</h2>
 
@@ -485,7 +485,7 @@ exit 0
 </code></pre>
 
 <p>We experimented with more clever ways of doing the spinup
-(too little coffee at this point of the night)…
+(too little coffee at this point of the night)&#8230;
 but the real fix is to get juju to take
 advantage of multiplicity in api calls.
 Until then, timed batches work just fine.</p>
@@ -532,15 +532,15 @@ between each batch until we got near 2000 slaves.</p>
 </a></p>
 
 <p>but was stopped early b/c waiting for the job to complete
-would’ve just been silly at this point.  With our naive job
-config, we’re considerably past the point of diminishing
-returns for adding nodes to the actual terasort, and we’d
+would&#8217;ve just been silly at this point.  With our naive job
+config, we&#8217;re considerably past the point of diminishing
+returns for adding nodes to the actual terasort, and we&#8217;d
 captured the profiling info we needed at this point.</p>
 
 <p>Juju spun up 1972 slaves in just over seven hours total.
 Profiling showed that juju was spending a <em>lot</em> of time
 serializing stuff into zookeeper nodes using yaml.  It
-looks like python’s yaml implementation is python, and
+looks like python&#8217;s yaml implementation is python, and
 not just wrapping libyaml.  We tested a smaller run replacing
 the internal yaml serialization with json.. 
 Wham!  two orders of magnitude faster.  No particular surprise.</p>
@@ -550,28 +550,28 @@ Wham!  two orders of magnitude faster.  No particular surprise.</p>
 <p>Ok, so at the end of the day, what did we learn here?</p>
 
 <p>What we did here is the way developing for performance at scale
-should be done… start with a naive, flexible approach
+should be done&#8230; start with a naive, flexible approach
 and then spend time and effort obtaining real profiling
 information.  Follow that with optimization decisions that actually
-make a difference.  Otherwise it’s all just a crapshoot
+make a difference.  Otherwise it&#8217;s all just a crapshoot
 based on where developers think the bottlenecks might be.</p>
 
 <p>Things to do to juju as a result of these tests:</p>
 
 <ul>
-  <li>streamline our implementation of ‘-n’ options
+  <li>streamline our implementation of &#8216;-n&#8217; options
     <ul>
       <li>the client should pass the multiplicity to the provisioning agent</li>
       <li>the provisioning agent should pass the multiplicity to the EC2 api</li>
     </ul>
   </li>
-  <li>don’t use yaml to marshall data in and out of zookeeper</li>
+  <li>don&#8217;t use yaml to marshall data in and out of zookeeper</li>
   <li>replace per-instance security groups with per-instance firewalls</li>
 </ul>
 
-<h2 id="whats-next">What’s Next?</h2>
+<h2 id="whats-next">What&#8217;s Next?</h2>
 
-<p>So that’s a big enough bite for one round of scale testing.</p>
+<p>So that&#8217;s a big enough bite for one round of scale testing.</p>
 
 <p>Next up:</p>
 
@@ -592,7 +592,7 @@ of services?</li>
 
 <ul>
   <li>
-    <p>find some better test jobs!  benchmarks are boring… perhaps we can use
+    <p>find some better test jobs!  benchmarks are boring&#8230; perhaps we can use
 this compute time to mine educational data or cure cancer or something?</p>
   </li>
   <li>
@@ -600,7 +600,7 @@ this compute time to mine educational data or cure cancer or something?</p>
 Are there transactional features in more recent versions of zk that we can use?</p>
   </li>
   <li>
-    <p>use spot instances on ec2.  This is harder because you’ve gotta incorporate price monitoring.</p>
+    <p>use spot instances on ec2.  This is harder because you&#8217;ve gotta incorporate price monitoring.</p>
   </li>
 </ul>
 
@@ -626,7 +626,7 @@ Are there transactional features in more recent versions of zk that we can use?<
   
 
 
-<time datetime="2012-06-04T00:00:00-06:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
+<time datetime="2012-06-04T00:00:00+00:00" pubdate data-updated="true">Jun 4<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -662,10 +662,9 @@ Are there transactional features in more recent versions of zk that we can use?<
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -721,28 +720,12 @@ Are there transactional features in more recent versions of zk that we can use?<
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/cloud/2012/06/04/juju-at-scale.html';
-        var disqus_url = 'http://markmims.com/cloud/2012/06/04/juju-at-scale.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

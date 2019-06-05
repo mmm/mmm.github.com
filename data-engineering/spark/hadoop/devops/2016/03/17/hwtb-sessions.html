@@ -11,8 +11,7 @@
   
   <meta name="description" content="I had a chance to speak at an online conference last weekend,
 Hadoop With The Best.
-I had fun sharing one of my total passions… data pipelines!
-In &hellip;">
+I had fun sharing one of my total passions&#8230; data pipelines &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -132,7 +131,7 @@ In &hellip;">
   
 
 
-<time datetime="2016-03-17T12:08:00-06:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
+<time datetime="2016-03-17T12:08:00+00:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
         
       </p>
     
@@ -141,7 +140,7 @@ In &hellip;">
 
 <div class="entry-content"><p>I had a chance to speak at an online conference last weekend,
 <a href="http://hadoop.withthebest.com/">Hadoop With The Best</a>.
-I had fun sharing one of my total passions… data pipelines!
+I had fun sharing one of my total passions&#8230; data pipelines!
 In particular, some techniques for catching raw user events,
 acting on those events and understanding user activity from 
 the sessionization of such events.</p>
@@ -158,16 +157,16 @@ the sessionization of such events.</p>
 
 <p><a href="svds.com">SVDS</a> is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
-problems.  In this role, we’re in a unique position to solve different
-kinds of problems across various industries… and start to recognize
-the patterns of solution that emerge.  That’s what I’d like to share.</p>
+problems.  In this role, we&#8217;re in a unique position to solve different
+kinds of problems across various industries&#8230; and start to recognize
+the patterns of solution that emerge.  That&#8217;s what I&#8217;d like to share.</p>
 
 <p>This talk is about some common data pipeline patterns used
 across various kinds of systems across various industries.
 Key Takeaways include:</p>
 
 <ul>
-  <li>what’s needed to understand user activity</li>
+  <li>what&#8217;s needed to understand user activity</li>
   <li>pipeline architectures that support this analysis</li>
 </ul>
 
@@ -185,23 +184,23 @@ differentiators in solution.</p>
 
 <h2 id="ingest-events">Ingest Events</h2>
 
-<p>The primary goal of an ingestion pipeline is to… ingest events.  All other
+<p>The primary goal of an ingestion pipeline is to&#8230; ingest events.  All other
 considerations are secondary.  We walk through an example pipeline and discuss
 how that architecture changes as we adjust scaling up to handle billions of
-events a day.  We’ll note along the way how general concepts of immutability
+events a day.  We&#8217;ll note along the way how general concepts of immutability
 and lazy evaluation can have large ramifications on data ingestion pipeline
 architecture.</p>
 
 <p>I start out covering typical classes of and types of events, some common event
 fields, and various ways that events are represented.  These vary <em>greatly</em>
 across current and legacy systems, and you should always expect that munging
-will be involved as you’re working to ingest events from various data sources
+will be involved as you&#8217;re working to ingest events from various data sources
 over time.</p>
 
-<p>For our sessionization examples, we’re interested in user events such as
+<p>For our sessionization examples, we&#8217;re interested in user events such as
 <code>login</code>, <code>checkout</code>, <code>add friend</code>, etc.</p>
 
-<p>These user events can be “flat”</p>
+<p>These user events can be &#8220;flat&#8221;</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -264,13 +263,13 @@ over time.</p>
 <p>and often both formats get used in the same systems in the wild so
 you have to intelligently detect or classify events rather than 
 just making blatant assumptions about them.  And yes, that <em>is</em> 
-expensive… but it’s surprisingly common.</p>
+expensive&#8230; but it&#8217;s surprisingly common.</p>
 
 <h3 id="ingestion-pipelines">Ingestion Pipelines</h3>
 
 <p>So what do basic ingestion pipelines usually look like?</p>
 
-<p>Tenants to keep in mind here… build a pipeline that’s immutable, lazy,
+<p>Tenants to keep in mind here&#8230; build a pipeline that&#8217;s immutable, lazy,
 simple/composable, and testable.  I come back to these often throughout
 the talk.</p>
 
@@ -281,11 +280,11 @@ lines of
 <img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a></p>
 
-<p>I introduce the “Power of the Query Side”… query-side tools are fast
+<p>I introduce the &#8220;Power of the Query Side&#8221;&#8230; query-side tools are fast
 nowadays.  Tools such as Impala have really won me over.  The Ingest pipeline
 needs to get the events as raw as possible as far back as possible in a format
-that’s amenable to fast queries.  Let’s state that again… it’s important.
-The pipeline’s core job is to get events that are as raw as possible (immutable
+that&#8217;s amenable to fast queries.  Let&#8217;s state that again&#8230; it&#8217;s important.
+The pipeline&#8217;s core job is to get events that are as raw as possible (immutable
 processing pipeline) as far back into the system as possible (lazily evaluated
 analysis) before any expensive computation is done.  Modern query-side tools
 support these paradigms quite well.  Better performance is obtained when events
@@ -295,12 +294,12 @@ partitions where possible
 <img src="/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a></p>
 
-<p>That’s simple enough and seems pretty straightforward in theory.  In practice
+<p>That&#8217;s simple enough and seems pretty straightforward in theory.  In practice
 you can ingest events straight into files in hdfs only up to a certain scale
 and degree of event complexity.</p>
 
 <p>As scale increases, an ingestion pipeline has to become effectively a dynamic
-impedance matching network.  It’s the funnel that’s catching events from what
+impedance matching network.  It&#8217;s the funnel that&#8217;s catching events from what
 can be a highly distributed, large number of data sources and trying to slam
 all these events into a relatively small number of filesystem datanodes.</p>
 
@@ -327,41 +326,41 @@ through that in a little more detail in the talk itself.</p>
 <p>Impedance or size mismatches between data sources and data storage are really
 only one half of the story.  Note that another culprit, <em>event complexity</em>, can
 limit ingest throughput for a number of reasons.  A common example of where
-this happens is when event “types” are either poorly defined or are changing so
-much they’re hard to identify.  As event complexity increases, so does the
-logic you use to group or partition the events so they’re fast to query.  In
+this happens is when event &#8220;types&#8221; are either poorly defined or are changing so
+much they&#8217;re hard to identify.  As event complexity increases, so does the
+logic you use to group or partition the events so they&#8217;re fast to query.  In
 practice this quickly grows from simple logic to full-blown event
 classification algorithms.  Often those classification algorithms have to learn
-from the body of events that’ve already landed.  You’re making decisions on
-events in front of you based on all the events you’ve ever seen.  I’ll bump any
-further discussion of that until we talk more about state in the “Recognize
-Activity” section later.</p>
+from the body of events that&#8217;ve already landed.  You&#8217;re making decisions on
+events in front of you based on all the events you&#8217;ve ever seen.  I&#8217;ll bump any
+further discussion of that until we talk more about state in the &#8220;Recognize
+Activity&#8221; section later.</p>
 
 <p>Ingest pipelines can get complicated as you try to scale in size and
-complexity… expect it!… plan for it!  The best way is to do this is to
+complexity&#8230; expect it!&#8230; plan for it!  The best way is to do this is to
 build or use a toolchain that can let you add a streaming and queueing solution
-without a lot of rearchitecture or downtime.  Folks often don’t try to solve
-this problem until it’s already painful in production!  There’re great ways
+without a lot of rearchitecture or downtime.  Folks often don&#8217;t try to solve
+this problem until it&#8217;s already painful in production!  There&#8217;re great ways
 to solve this in general.  My current fav atm uses a hybrid combination of
 Terraform, Consul, Ansible, and ClouderaManager/Ambari.</p>
 
-<p>Note also that we haven’t talked about any real-time processing or low-latency
+<p>Note also that we haven&#8217;t talked about any real-time processing or low-latency
 business requirements here at all.  The need for a stream processing solution
-arises when we’re <em>just</em> trying to catch events at scale.</p>
+arises when we&#8217;re <em>just</em> trying to catch events at scale.</p>
 
 <hr />
 
 <h2 id="take-action">Take Action</h2>
 
 <p>Catching events within the system is an interesting challenge all by itself.
-However, just efficiently and faithfully capturing events isn’t the end of the
+However, just efficiently and faithfully capturing events isn&#8217;t the end of the
 story.</p>
 
 <p><a href="/images/streaming-bare.svg">
 <img src="/images/streaming-bare.svg" width="720px" />
 </a></p>
 
-<p>That’s sorta boring if we’re not taking <em>action</em> on events as we catch
+<p>That&#8217;s sorta boring if we&#8217;re not taking <em>action</em> on events as we catch
 them.</p>
 
 <p>Actions such as </p>
@@ -371,17 +370,17 @@ them.</p>
   <li>Decorations</li>
   <li>Routing / Gating</li>
   <li>Counting</li>
-  <li>…</li>
+  <li>&#8230;</li>
 </ul>
 
-<p>can be taken in either “batch” or “real-time” modes.</p>
+<p>can be taken in either &#8220;batch&#8221; or &#8220;real-time&#8221; modes.</p>
 
 <p><a href="/images/streaming-simple.svg">
 <img src="/images/streaming-simple.svg" width="720px" />
 </a></p>
 
-<p>Unfortunately, folks have all sorts of meanings for these terms.  Let’s clear
-that up and be a little more precise…</p>
+<p>Unfortunately, folks have all sorts of meanings for these terms.  Let&#8217;s clear
+that up and be a little more precise&#8230;</p>
 
 <p>For every action you intend to take, and really every data product of your
 pipeline, you need to determine the latency requirements.  What is the
@@ -391,7 +390,7 @@ action be valid?  The answers might surprise you.</p>
 
 <p>Latency requirements let you make a first-pass attempt at specifying the
 <em>execution context</em> of each action.  There are two separate execution contexts we
-talk about here… <em>batch</em> and <em>stream</em>.</p>
+talk about here&#8230; <em>batch</em> and <em>stream</em>.</p>
 
 <ul>
   <li>
@@ -405,31 +404,31 @@ Impala, Hive, or SparkSQL.</p>
   <li>
     <p>stream.  Jobs that are run against either an individual event or a small
 window of events.  These are typically simple, low-computation jobs that
-don’t require context or information from other events.  These are typically
+don&#8217;t require context or information from other events.  These are typically
 implemented using Spark-streaming or Storm code.</p>
   </li>
 </ul>
 
-<p>When I say “real-time” in this talk, I mean that the action will be taken from
+<p>When I say &#8220;real-time&#8221; in this talk, I mean that the action will be taken from
 within the stream execution context.</p>
 
-<p>It’s important to realize that not all actions require “real-time” latency.
-There are plenty of actions that are perfectly valid even if they’re operating
-on “stale” day-old, hour-old, 15min-old data.  Of course, this sensitivity to
+<p>It&#8217;s important to realize that not all actions require &#8220;real-time&#8221; latency.
+There are plenty of actions that are perfectly valid even if they&#8217;re operating
+on &#8220;stale&#8221; day-old, hour-old, 15min-old data.  Of course, this sensitivity to
 latency varies greatly by action, domain, and industry.  Also, how stale stream
 -vs- batch events are depend of the actual performance characteristics of your
 ingestion pipeline under load.  Measure all the things!</p>
 
 <p>An approach I particularly like is to initially act from a batch context.
-There’s generally less development effort, more computational resources, more
-robustness, more flexibility, and more forgiveness involved when you’re working
-in a batch execution context.  You’re less likely to interrupt or congest your
+There&#8217;s generally less development effort, more computational resources, more
+robustness, more flexibility, and more forgiveness involved when you&#8217;re working
+in a batch execution context.  You&#8217;re less likely to interrupt or congest your
 ingestion pipeline.</p>
 
 <p>Once you have basic actions working from the batch layer, then do some
-profiling and identify which of the actions you’re working with really require
+profiling and identify which of the actions you&#8217;re working with really require
 less stale data.  <em>Selectively</em> bring those actions or analyses forward.  Tools
-such as Spark can help tremendously with this.  It’s not all fully baked yet,
+such as Spark can help tremendously with this.  It&#8217;s not all fully baked yet,
 but there are ways to write spark code where the same business logic code can
 be optionally bound in either stream or batch execution contexts.  You can move
 code around based on pipeline requirements and performance!</p>
@@ -455,16 +454,16 @@ the same trick (as we saw above)
 
 <h2 id="recognize-activity">Recognize Activity</h2>
 
-<p>What’s user activity?  Usually it’s a <em>Sequence of one or more events</em>
+<p>What&#8217;s user activity?  Usually it&#8217;s a <em>Sequence of one or more events</em>
 associated with a user.  From an infrastructure standpoint, the key distinction
-is that activity is constructed from a sequence of user events… <em>that don’t
+is that activity is constructed from a sequence of user events&#8230; <em>that don&#8217;t
 all fit within a single window of stream processing</em>.  This can either be
-because there are too many of them or because they’re spread out over too long
+because there are too many of them or because they&#8217;re spread out over too long
 a period of time.</p>
 
 <p>Another way to think of this is that event context matters.  In order to
 recognize activity as such, you often need to capture or create user context
-(let’s call it “state”) in such a way that it’s easily read by (and possibly
+(let&#8217;s call it &#8220;state&#8221;) in such a way that it&#8217;s easily read by (and possibly
 updated from) processing in-stream.</p>
 
 <p>We add hbase to our standard stack, and use it to store state
@@ -474,27 +473,27 @@ updated from) processing in-stream.</p>
 
 <p>which is then accessible from either stream or batch processing.  HBase is
 attractive as a fast key-value store.  Several other key-value stores could
-work here… I’ll often start using one simply because it’s easier to
+work here&#8230; I&#8217;ll often start using one simply because it&#8217;s easier to
 deploy/manage at first.  Then refine the choice of tool once more precise
 performance requirements of the state store have emerged from use.</p>
 
-<p>It’s important to note that you want fast key-based reads and writes.
-Full-table scans of columns are pretty much verboten in this setup.  They’re
+<p>It&#8217;s important to note that you want fast key-based reads and writes.
+Full-table scans of columns are pretty much verboten in this setup.  They&#8217;re
 simply too slow for value from stream.</p>
 
 <p>The usual approach is to update state in batch.  My favorite example when first
-talking to folks about this approach is to consider a user’s credit score.
+talking to folks about this approach is to consider a user&#8217;s credit score.
 Events coming into the system are routed in stream based on the associated
-user’s credit score.</p>
+user&#8217;s credit score.</p>
 
 <p>The stream system can simply (hopefully quickly) look that up in HBase keyed
 on a user id of some sort
 <a href="/images/hbase-state-credit-score.svg">
 <img src="/images/hbase-state-credit-score.svg" width="720px" />
 </a>
-The credit score is some number calculated by scanning across all a user’s
-events over the years.  It’s a big, long-running, expensive computation.  Do
-that continuously in batch… just update HBase as you go.  If you do that,
+The credit score is some number calculated by scanning across all a user&#8217;s
+events over the years.  It&#8217;s a big, long-running, expensive computation.  Do
+that continuously in batch&#8230; just update HBase as you go.  If you do that,
 then you make that information available for decisions in stream.</p>
 
 <p>Note that this is effectively a way to base fast-path decisions on
@@ -504,7 +503,7 @@ quite literally <em>learn from the past</em>  :-)</p>
 <p>Another example of this is tracking a package.  The events involved are the
 various independent scans the package undergoes throughout its journey.</p>
 
-<p>For “state” you might just want to keep an abbreviated version of the raw
+<p>For &#8220;state&#8221; you might just want to keep an abbreviated version of the raw
 history of each package
 <a href="/images/hbase-state-tracking-package.svg">
 <img src="/images/hbase-state-tracking-package.svg" width="720px" />
@@ -514,7 +513,7 @@ or just some derived notion of its state
 <img src="/images/hbase-state-tracking-package-derived.svg" width="720px" />
 </a>
 those derived notions of state are tough to define from a single scan in a
-warehouse somewhere… but make perfect sense when viewed in the context of the
+warehouse somewhere&#8230; but make perfect sense when viewed in the context of the
 entire package history.</p>
 
 <hr />
@@ -529,10 +528,10 @@ entire package history.</p>
   <li>Recognize Activity</li>
 </ul>
 
-<p>Along the way we’ve done a nod to some data-plumbing best practices… such as</p>
+<p>Along the way we&#8217;ve done a nod to some data-plumbing best practices&#8230; such as</p>
 
 <h4 id="the-power-of-the-query-side">The Power of the Query Side</h4>
-<p>Query-side tools are fast – use them effectively!</p>
+<p>Query-side tools are fast &#8211; use them effectively!</p>
 
 <h4 id="infrastructure-aspirations">Infrastructure Aspirations</h4>
 <p>A datascience pipeline is</p>
@@ -553,15 +552,15 @@ entire package history.</p>
 help you stay flexible and scalable</p>
 
 <h4 id="automate-all-of-the-things">Automate All of the Things</h4>
-<p>DevOps is your friend.  We’re using an interesting pushbutton stack that’ll be
+<p>DevOps is your friend.  We&#8217;re using an interesting pushbutton stack that&#8217;ll be
 the topic of another blog post :-)</p>
 
 <h4 id="test-all-of-the-things">Test All of the Things</h4>
-<p>TDD/BDD is your friend.  Again, I’ll add another post on “Sanity-Driven Data
-Science” which is my take on TDD/BDD as applied to datascience pipelines.</p>
+<p>TDD/BDD is your friend.  Again, I&#8217;ll add another post on &#8220;Sanity-Driven Data
+Science&#8221; which is my take on TDD/BDD as applied to datascience pipelines.</p>
 
 <h4 id="failure-is-a-first-class-citizen">Failure is a First Class Citizen</h4>
-<p>Fail fast, early, often… along with the obligatory reference to the Netflix
+<p>Fail fast, early, often&#8230; along with the obligatory reference to the Netflix
 Simian Army.</p>
 
 <hr />
@@ -570,20 +569,20 @@ Simian Army.</p>
 
 <p>It was a somewhat challenging presentation format.  I presented a live video
 feed solo while the audience was watching live and had the ability to send
-questions in via chat… no audio from the audience.  Somewhat reminiscent of
-IRC-based presentations we used to do in Ubuntu community events… but with
+questions in via chat&#8230; no audio from the audience.  Somewhat reminiscent of
+IRC-based presentations we used to do in Ubuntu community events&#8230; but with
 video.</p>
 
 <p>The moderator asked the audience to queue questions up until the end, but as
-anyone who’s been in a classroom with me knows, I welcome / live for
+anyone who&#8217;s been in a classroom with me knows, I welcome / live for
 interruptions :-) In this case, I could easily see the chat window as I
 presented so asking-questions-along-the-way is supported on that presentation
-platform.  I’d definitely ask for that in the future.</p>
+platform.  I&#8217;d definitely ask for that in the future.</p>
 
 <p>I do prefer the fireside chat nature of adding one or two more folks into the
-feed… kinda like on-the-air hangouts… where the speaker can get audible
+feed&#8230; kinda like on-the-air hangouts&#8230; where the speaker can get audible
 feedback from some folks.  Overall though this was a great experience and folks
-asked interesting questions at the end.  I’m not sure how it’ll be published,
+asked interesting questions at the end.  I&#8217;m not sure how it&#8217;ll be published,
 but questions had to be done in a second section as I dropped connectivity
 right at the end of the speaking session.</p>
 
@@ -620,7 +619,7 @@ right.</p>
   
 
 
-<time datetime="2016-03-17T12:08:00-06:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
+<time datetime="2016-03-17T12:08:00+00:00" pubdate data-updated="true">Mar 17<span>th</span>, 2016</time>
       
 
 <span class="categories">
@@ -654,10 +653,9 @@ right.</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -713,28 +711,12 @@ right.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html';
-        var disqus_url = 'http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

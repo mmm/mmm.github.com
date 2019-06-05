@@ -129,7 +129,7 @@
   
 
 
-<time datetime="2011-08-25T00:00:00-06:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
+<time datetime="2011-08-25T00:00:00+00:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
         
       </p>
     
@@ -139,12 +139,12 @@
 <div class="entry-content"><p>Several features have recently landed in juju that make 
 it easier to convert some common infrastructure-level components 
 over and use them within your stack of services.
-I figured it’s worth a series of posts about core services,
-storage, logging, monitoring, messaging, etc…  and how they
+I figured it&#8217;s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc&#8230;  and how they
 fit into the juju ecosystem.</p>
 
-<p>We’ll start with NFS.  I’d consider that vanilla workhorse to be
-core infrastructure technology… it’s still pretty much everywhere you
+<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
+core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
 look.  Many friends keep ancient boxes around as dedicated NFS 
 fileserver appliances that are usually in fairly critical roles.
 Well, how would this fit into a sexy new juju stack of services?</p>
@@ -153,7 +153,7 @@ Well, how would this fit into a sexy new juju stack of services?</p>
 
 <h2 id="the-goal">The Goal</h2>
 
-<p>In this post I’ll walk through adapting a basic mediawiki
+<p>In this post I&#8217;ll walk through adapting a basic mediawiki
 charm to enable using nfs mounts for shared resource directories.
 The steps here should work pretty closely for a lot of different
 service charms that might benefit from a NFS hooks.</p>
@@ -184,22 +184,22 @@ $ juju add-unit mywiki
 service is related to the <code>myimages</code> service,
 then all <code>mywiki</code> instances will share the same
 resource directory on the nfs server.  This works
-months into the deployment… we add another unit
+months into the deployment&#8230; we add another unit
 and the relation hooks perform the mount.</p>
 
-<p>The nfs server charm is pretty canned, it’ll take 
-config options, but has sane defaults.  There’s 
+<p>The nfs server charm is pretty canned, it&#8217;ll take 
+config options, but has sane defaults.  There&#8217;s 
 little need to adjust anything in there.</p>
 
 <p>To adapt your charm to use a juju-managed
 NFS service, we copy two hooks from an nfs-client
 example charm and adapt to suit the needs of
-the charm we’re working on (mediawiki in this
+the charm we&#8217;re working on (mediawiki in this
 example).</p>
 
 <h2 id="detailed-walk-through">Detailed walk-through</h2>
 
-<p>Let’s go through this process of adapting our charms
+<p>Let&#8217;s go through this process of adapting our charms
 to use NFS mounts.</p>
 
 <h3 id="the-problem">The Problem</h3>
@@ -213,8 +213,8 @@ $ juju add-relation mysql:db mywiki:db
 $ juju expose mywiki
 </code></pre>
 
-<p>With juju, it’s easy to spin up multiple mediawiki
-instances (or “service units” in juju-speak).</p>
+<p>With juju, it&#8217;s easy to spin up multiple mediawiki
+instances (or &#8220;service units&#8221; in juju-speak).</p>
 
 <pre><code>$ juju add-unit mywiki
 $ juju add-unit mywiki
@@ -224,8 +224,8 @@ $ juju add-unit mywiki
 then all these mywiki units share the same database and hence
 content.  Groovy.</p>
 
-<p>Ok, well there’s a problem.  Each wiki instance has its
-own filesystem-store for various things… images, uploads, etc.
+<p>Ok, well there&#8217;s a problem.  Each wiki instance has its
+own filesystem-store for various things&#8230; images, uploads, etc.
 This is pretty common practice across different CMSes that
 results in scaling pain.
 The content in the database will point to resources that
@@ -237,26 +237,26 @@ only exist on one of the instances.</p>
 is to just put these resource directories on a fileserver and
 share them out to each of the wiki instances using NFS.</p>
 
-<p>This, of course, isn’t limited to content management
+<p>This, of course, isn&#8217;t limited to content management
 systems.  Just about every infrastructure has some sort of need
 for shared storage.</p>
 
-<p>Ubuntu packages for mediawiki install mediawiki’s resource
+<p>Ubuntu packages for mediawiki install mediawiki&#8217;s resource
 directories with respect to <code>/var/lib/mediawiki/</code>.
-So let’s just set adapt the basic mediawiki charm to use
+So let&#8217;s just set adapt the basic mediawiki charm to use
 an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
 
 <p>Each mediawiki
 service unit has a <code>/var/lib/mediawiki/images</code> directory
 that points to 
-up multiple mediawiki instances, they’ll all share the
+up multiple mediawiki instances, they&#8217;ll all share the
 same <code>images</code> directory.</p>
 
 <h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
 
-<p>Let’s grab some code and get cranking…</p>
+<p>Let&#8217;s grab some code and get cranking&#8230;</p>
 
-<p>First, pull mediawiki as an example (or any charm you’re
+<p>First, pull mediawiki as an example (or any charm you&#8217;re
 currently working on that might need shared storage)</p>
 
 <pre><code>$ mkdir ~/charms
@@ -283,7 +283,7 @@ $ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
 
 <p>a bare mediawiki charm that we can use as a starting
 point to add our nfs client hooks.
-Note that even though this is an ‘nfsdemo’ branch just for this demo, 
+Note that even though this is an &#8216;nfsdemo&#8217; branch just for this demo, 
 the real mediawiki charm should now have nfs support in the trunk.</p>
 
 <p>Now, we can copy sample nfs client hooks from</p>
@@ -292,14 +292,14 @@ the real mediawiki charm should now have nfs support in the trunk.</p>
 </code></pre>
 
 <p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
-and save them as mediawiki hooks… I’d rename them to something
+and save them as mediawiki hooks&#8230; I&#8217;d rename them to something
 that makes sense to future readers of our mediawiki charm.
-Let’s call them <code>nfs-imagestore-relation-joined</code> and 
+Let&#8217;s call them <code>nfs-imagestore-relation-joined</code> and 
 <code>nfs-imagestore-relation-changed</code>.</p>
 
 <h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
 
-<p>Let’s look at the
+<p>Let&#8217;s look at the
 <code>nfs-imagestore-relation-joined</code> hook:</p>
 
 <pre><code>#!/bin/bash
@@ -314,11 +314,11 @@ relation-set client=`hostname -f`
 </code></pre>
 
 <p>This looks pretty normal.
-It installs some stuff nfs stuff when the relation is joined…
-this is good it doesn’t really install it until it’s needed.
+It installs some stuff nfs stuff when the relation is joined&#8230;
+this is good it doesn&#8217;t really install it until it&#8217;s needed.
 Then it tells the nfs server who we are for access control.
 Ok, so no changes need to be made to get this working
-on our mediawiki service unit… we can leave it as-is.</p>
+on our mediawiki service unit&#8230; we can leave it as-is.</p>
 
 <p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
 
@@ -384,7 +384,7 @@ local_owner=`config-get owner`
 </code></pre>
 
 <p>Well, for mediawiki
-these parameters aren’t really going to change.  It’s reasonable
+these parameters aren&#8217;t really going to change.  It&#8217;s reasonable
 to just hard-code them here as:</p>
 
 <pre><code>mw_root="/var/lib/mediawiki"
@@ -393,8 +393,8 @@ local_owner="www-data"
 </code></pre>
 
 <p>We could certainly just add these parameters to a <code>config.yaml</code>
-for the mediawiki charm, but in this case, they’re not really
-interesting “tweakable” aspects of the mediawiki charm, so let’s
+for the mediawiki charm, but in this case, they&#8217;re not really
+interesting &#8220;tweakable&#8221; aspects of the mediawiki charm, so let&#8217;s
 keep the mediawiki config simple.
 For other charms this might not be the case,
 but make that call in context.</p>
@@ -449,15 +449,15 @@ share_already_mounted || mount_share
 chown -f $local_owner.$local_owner $local_mountpoint
 </code></pre>
 
-<p>will run fine.  It’ll mount the <code>images</code> share and mediawiki
+<p>will run fine.  It&#8217;ll mount the <code>images</code> share and mediawiki
 will run normally.</p>
 
 <h3 id="additional-configuration">Additional configuration</h3>
 
 <p>This next step depends greatly on your particular charm/service.
-With mediawiki, the <code>images</code> directory isn’t really used until
+With mediawiki, the <code>images</code> directory isn&#8217;t really used until
 you tell mediawiki to turn on uploads.  This is true regardless
-of whether <code>images</code> is an nfs mount or you’re just using the
+of whether <code>images</code> is an nfs mount or you&#8217;re just using the
 directory on the local filesystem.</p>
 
 <p>The time to do this though is after the <code>images</code> share is mounted, 
@@ -530,12 +530,12 @@ EOS
 service apache2 status &amp;&amp; service apache2 restart
 </code></pre>
 
-<p>the same hook that’s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+<p>the same hook that&#8217;s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
 
 <h3 id="update-charm-metadata">Update charm metadata</h3>
 
-<p>So we have hooks that should do what we’d like… 
-(I’ll developing and debugging hooks in another post).
+<p>So we have hooks that should do what we&#8217;d like&#8230; 
+(I&#8217;ll developing and debugging hooks in another post).
 Next we need to update the charm metadata so juju
 knows when to fire them.</p>
 
@@ -555,7 +555,7 @@ provides:
 ...
 </code></pre>
 
-<p>let’s add our nfs requirement (<em>requirement</em> is a strong word… they’re
+<p>let&#8217;s add our nfs requirement (<em>requirement</em> is a strong word&#8230; they&#8217;re
 all optional),</p>
 
 <pre><code>...
@@ -574,8 +574,8 @@ provides:
 ...
 </code></pre>
 
-<p>The relation name’s gotta match up with what we called the hooks.
-I got the interface name from the nfs server charm’s metadata:</p>
+<p>The relation name&#8217;s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm&#8217;s metadata:</p>
 
 <pre><code>...
 provides:
@@ -586,13 +586,13 @@ provides:
 
 <p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
 
-<p>We can use the interface as a sanity check to insure we’re providing
+<p>We can use the interface as a sanity check to insure we&#8217;re providing
 and using the right parameters when communicating with the nfs server
 service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
 
 <h3 id="spin-it-up">Spin it up</h3>
 
-<p>Let’s deploy our new charm:</p>
+<p>Let&#8217;s deploy our new charm:</p>
 
 <pre><code>$ juju bootstrap
 $ juju deploy --repository=~/charms local:nfs myimages
@@ -605,24 +605,24 @@ $ juju expose mywiki
 
 <h3 id="spread-it-out">Spread it out</h3>
 
-<p>Add a few more mediawiki instances…</p>
+<p>Add a few more mediawiki instances&#8230;</p>
 
 <pre><code>$ for i in {1..10}; do
 $ juju add-unit mywiki
 $ done
 </code></pre>
 
-<p>When everything’s up, these should all share the same database
+<p>When everything&#8217;s up, these should all share the same database
 and image store.</p>
 
-<p>In real life you’d probably want to start adding mysql slaves
-to this.  Of course, in real life you’ll also add remote logging,
+<p>In real life you&#8217;d probably want to start adding mysql slaves
+to this.  Of course, in real life you&#8217;ll also add remote logging,
 monitoring, and other core infrastructure components too.
 Keep an eye out for subsequent posts in this series.</p>
 
 <h3 id="nfs-server-config">NFS server config</h3>
 
-<p>Up until now we’ve only talked about the NFS client.
+<p>Up until now we&#8217;ve only talked about the NFS client.
 The NFS <em>server</em> charm is pretty simple.</p>
 
 <p>It lives at
@@ -640,7 +640,7 @@ and supports configuration options at deploy(or run)-time via</p>
   export_options: rw,sync,no_root_squash,no_all_squash
 </code></pre>
 
-<h3 id="whats-left">What’s left?</h3>
+<h3 id="whats-left">What&#8217;s left?</h3>
 
 <p>This might not be an ideal NFS setup for your particular service.
 What are some other ways we can tweak this?</p>
@@ -652,7 +652,7 @@ that attaches to it.</p>
 share an export.  Well, you could deploy another mediawiki service unit
 called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
 share a different export.  The new export is created on the service when
-the first unit of a new service name joins… subsequent units of that named
+the first unit of a new service name joins&#8230; subsequent units of that named
 service are just connected to that new export.</p>
 
 <p>Of course, this works for entirely separate services too.  Relating a 
@@ -661,7 +661,7 @@ the <code>job27</code> units sharing a new nfs export.</p>
 
 <p>This behavior is a reasonable default, but there may be a need to do this a 
 little differently in your infrastructure.  You could change the nfs server
-charm to provide different levels of export sharing… either by some
+charm to provide different levels of export sharing&#8230; either by some
 additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
 An nfs client might request a unique export, for backups
 say, or a named export for sharing.</p>
@@ -691,7 +691,7 @@ say, or a named export for sharing.</p>
   
 
 
-<time datetime="2011-08-25T00:00:00-06:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
+<time datetime="2011-08-25T00:00:00+00:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -727,10 +727,9 @@ say, or a named export for sharing.</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -786,28 +785,12 @@ say, or a named export for sharing.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/cloud/2011/08/25/juju-nfs.html';
-        var disqus_url = 'http://markmims.com/cloud/2011/08/25/juju-nfs.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

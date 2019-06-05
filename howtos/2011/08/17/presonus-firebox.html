@@ -130,7 +130,7 @@ the firewire soundcard I got a few years &hellip;">
   
 
 
-<time datetime="2011-08-17T00:00:00-06:00" pubdate data-updated="true">Aug 17<span>th</span>, 2011</time>
+<time datetime="2011-08-17T00:00:00+00:00" pubdate data-updated="true">Aug 17<span>th</span>, 2011</time>
         
       </p>
     
@@ -149,16 +149,16 @@ worked great for me on audio production stuff several years
 ago, but at the time I could give jackd and friends a realtime kernel
 to have their way with.</p>
 
-<p>Now, I don’t really have the spare hardware to dedicate to a RT audio setup…<br />
-gotta run several ubuntu server VMs for work and can’t really hand the whole
+<p>Now, I don&#8217;t really have the spare hardware to dedicate to a RT audio setup&#8230;<br />
+gotta run several ubuntu server VMs for work and can&#8217;t really hand the whole
 shebang over to jack every time I wanna record something.</p>
 
-<p>Here’s my attempt to do it without realtime priorities…
-I’ll track my progress here.</p>
+<p>Here&#8217;s my attempt to do it without realtime priorities&#8230;
+I&#8217;ll track my progress here.</p>
 
 <!--more-->
 
-<h2 id="the-quick-and-the-dirty">The quick and the dirty…</h2>
+<h2 id="the-quick-and-the-dirty">The quick and the dirty&#8230;</h2>
 
 <p>Starting from a Natty desktop.</p>
 
@@ -170,11 +170,11 @@ I’ll track my progress here.</p>
 <p>when the installer asks to do realtime by default, I said no.</p>
 
 <p>Note that I installed <code>ffado-mixer-qt4 ffado-tools ffado-dbus-server</code>
-earlier trying to get this to work with pulse, without jack… but gave up.
-I don’t know if these packages effect the current setup, but they’re still
+earlier trying to get this to work with pulse, without jack&#8230; but gave up.
+I don&#8217;t know if these packages effect the current setup, but they&#8217;re still
 installed</p>
 
-<p>start the jack daemon… </p>
+<p>start the jack daemon&#8230; </p>
 
 <pre><code>$ jackd -r -dfirewire
 </code></pre>
@@ -194,7 +194,7 @@ installed</p>
 <p>and wire stuff together with the qjackctl patchpanel,
 start <code>jackd</code> and go.</p>
 
-<p>I used to use a better jack patch panel in the past… have to find it.</p>
+<p>I used to use a better jack patch panel in the past&#8230; have to find it.</p>
 
 <h2 id="resources">resources</h2>
 
@@ -225,7 +225,7 @@ http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digi
   
 
 
-<time datetime="2011-08-17T00:00:00-06:00" pubdate data-updated="true">Aug 17<span>th</span>, 2011</time>
+<time datetime="2011-08-17T00:00:00+00:00" pubdate data-updated="true">Aug 17<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -261,10 +261,9 @@ http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digi
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -320,28 +319,12 @@ http://rgrwkmn.hubpages.com/hub/Recording-in-Linux-aka-Free-and-Open-Source-Digi
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2011/08/17/presonus-firebox.html';
-        var disqus_url = 'http://markmims.com/howtos/2011/08/17/presonus-firebox.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

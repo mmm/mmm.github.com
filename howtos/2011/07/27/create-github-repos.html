@@ -9,8 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Ok, I’m too lazy to go through the web interface every time I want to add a new github repo.
-github api to the rescue… The goal I want git create &hellip;">
+  <meta name="description" content="Ok, I&#8217;m too lazy to go through the web interface every time I want to add a new github repo.
+github api to the rescue&#8230; The goal I want &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,15 +130,15 @@ github api to the rescue… The goal I want git create &hellip;">
   
 
 
-<time datetime="2011-07-27T00:00:00-06:00" pubdate data-updated="true">Jul 27<span>th</span>, 2011</time>
+<time datetime="2011-07-27T00:00:00+00:00" pubdate data-updated="true">Jul 27<span>th</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Ok, I’m too lazy to go through the web interface every time I want to add a new github repo.
-github api to the rescue…</p>
+<div class="entry-content"><p>Ok, I&#8217;m too lazy to go through the web interface every time I want to add a new github repo.
+github api to the rescue&#8230;</p>
 
 <h2 id="the-goal">The goal</h2>
 
@@ -147,13 +147,13 @@ github api to the rescue…</p>
 <pre><code>git create myrepo "my repo description"
 </code></pre>
 
-<p>to create a new github repo ‘myrepo’.</p>
+<p>to create a new github repo &#8216;myrepo&#8217;.</p>
 
 <!--more-->
 
 <h2 id="manually">manually</h2>
 
-<p>Grab your API Token from your github account, “Account Settings” – “Account Admin”.</p>
+<p>Grab your API Token from your github account, &#8220;Account Settings&#8221; &#8211; &#8220;Account Admin&#8221;.</p>
 
 <p>Use curl</p>
 
@@ -172,7 +172,7 @@ echo '{"name":"junk3","description":"junk3 description"}' | restclient post http
 <p>Github docs say you should send at least <code>name</code> but it will take any of these as POST args:</p>
 
 <ul>
-  <li><code>name</code> =&gt; name of the repository. ex: “my-repo” or “other-user/my-repo” </li>
+  <li><code>name</code> =&gt; name of the repository. ex: &#8220;my-repo&#8221; or &#8220;other-user/my-repo&#8221; </li>
   <li><code>description</code> =&gt; repo description </li>
   <li><code>homepage</code> =&gt; homepage url </li>
   <li><code>public</code> =&gt; 1 for public, 0 for private</li>
@@ -180,7 +180,7 @@ echo '{"name":"junk3","description":"junk3 description"}' | restclient post http
 
 <h2 id="monkeypatch-git">monkeypatch git</h2>
 
-<p>I’ll use a script…</p>
+<p>I&#8217;ll use a script&#8230;</p>
 
 <pre><code>#!/usr/bin/ruby
 
@@ -221,13 +221,13 @@ response = RestClient.post URL, params
 puts response.body
 </code></pre>
 
-<p>I’ll call it <code>git-create</code> and put it in my path at <code>~/bin</code>.
+<p>I&#8217;ll call it <code>git-create</code> and put it in my path at <code>~/bin</code>.
 Notice that git even picks it up as a builtin so I can</p>
 
 <pre><code>git create myrepo "my repo description"
 </code></pre>
 
-<p>and it just works…</p>
+<p>and it just works&#8230;</p>
 
 </div>
 
@@ -251,7 +251,7 @@ Notice that git even picks it up as a builtin so I can</p>
   
 
 
-<time datetime="2011-07-27T00:00:00-06:00" pubdate data-updated="true">Jul 27<span>th</span>, 2011</time>
+<time datetime="2011-07-27T00:00:00+00:00" pubdate data-updated="true">Jul 27<span>th</span>, 2011</time>
       
 
 <span class="categories">
@@ -287,10 +287,9 @@ Notice that git even picks it up as a builtin so I can</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -346,28 +345,12 @@ Notice that git even picks it up as a builtin so I can</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2011/07/27/create-github-repos.html';
-        var disqus_url = 'http://markmims.com/howtos/2011/07/27/create-github-repos.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

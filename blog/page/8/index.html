@@ -132,7 +132,7 @@
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -170,7 +170,7 @@
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -220,7 +220,7 @@ ganymede:~/etc/arch/machine-backups #
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -357,7 +357,7 @@ Bye
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -401,7 +401,7 @@ virt-clone --connect=qemu:///system -o oldvm -n newvm -f /usr/local/kvm/newvm/ro
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -438,7 +438,7 @@ virt-clone --connect=qemu:///system -o oldvm -n newvm -f /usr/local/kvm/newvm/ro
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -475,7 +475,7 @@ virt-clone --connect=qemu:///system -o oldvm -n newvm -f /usr/local/kvm/newvm/ro
   
 
 
-<time datetime="2010-05-09T00:00:00-06:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
+<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -486,7 +486,7 @@ virt-clone --connect=qemu:///system -o oldvm -n newvm -f /usr/local/kvm/newvm/ro
 </code></pre>
 
 <p>wtf is fuseblk?
-looks like it’s fuse’s version of an ntfs mount</p>
+looks like it&#8217;s fuse&#8217;s version of an ntfs mount</p>
 
 <hr />
 
@@ -503,7 +503,7 @@ Disk identifier: 0x00021631
 
 <hr />
 
-<p>some shit on the net about when it’s in an fstab, it needs to be ntfs-3g</p>
+<p>some shit on the net about when it&#8217;s in an fstab, it needs to be ntfs-3g</p>
 
 <pre><code>/dev/sda1               /mnt/winxp              ntfs-3g user,umask=0000 0 0
 /dev/sda2               /mnt/fat32              vfat    user,umask=0000 0 0
@@ -537,20 +537,20 @@ Disk identifier: 0x00021631
   
 
 
-<time datetime="2010-01-28T00:00:00-07:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
+<time datetime="2010-01-28T00:00:00+00:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><h1 id="share-ganymedes-wifi-eth1-connection-out-through-eth0">Share ganymede’s wifi (eth1) connection out through eth0</h1>
+  <div class="entry-content"><h1 id="share-ganymedes-wifi-eth1-connection-out-through-eth0">Share ganymede&#8217;s wifi (eth1) connection out through eth0</h1>
 
 <p>Bonus: plug helga into eth0 and re-share wireless over helganet</p>
 
 <p>on ganymede, set up eth0.</p>
 
-<p>/etc/network/interfaces… add:</p>
+<p>/etc/network/interfaces&#8230; add:</p>
 
 <pre><code>auto eth0
 #iface eth0 inet dhcp
@@ -559,7 +559,7 @@ iface eth0 inet static
   netmask 255.255.255.0
 </code></pre>
 
-<p>/etc/default/iptables… should read:</p>
+<p>/etc/default/iptables&#8230; should read:</p>
 
 <pre><code>*nat
 :PREROUTING ACCEPT [7126:609382]
@@ -672,7 +672,7 @@ COMMIT
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
         
       </p>
     
@@ -684,12 +684,12 @@ COMMIT
 <pre><code>hawk:~ $ vlc -Ihttp --http-host :7001 -vvv /tmp/howimetyourmother-S1d1-t1.mp4 --udp-caching 1500 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=800,ab=128}:standard{access=http{mime=video/x-ms-asf},mux=asf,dst:8080}'
 </code></pre>
 
-<p>this client hits hawk:8080 which forwards the port to hawk’s vlc process</p>
+<p>this client hits hawk:8080 which forwards the port to hawk&#8217;s vlc process</p>
 
 <p>insecure data stream (control stream still safe) but seems to work better than tunneling over 8080 too</p>
 
-<p>next up is to try it over some other protocol than http… 
-need to set up port forwarding for udp traffic and see fi that’s faster</p>
+<p>next up is to try it over some other protocol than http&#8230; 
+need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p>
 
 </div>
   
@@ -719,7 +719,7 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
         
       </p>
     
@@ -811,25 +811,12 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

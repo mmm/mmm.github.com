@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cloud | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/cloud/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2018-07-10T10:51:42-06:00</updated>
+  <updated>2019-06-05T03:49:24+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -16,10 +16,10 @@
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Local Provider]]></title>
     <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
-    <updated>2013-08-23T13:02:00-06:00</updated>
+    <updated>2013-08-23T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
-walks through using the new version of the juju local provider.  It’s cool!
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
+walks through using the new version of the juju local provider.  It&#8217;s cool!
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
@@ -36,17 +36,17 @@ walks through using the new version of the juju local provider.  It’s cool!
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Events in Depth]]></title>
     <link href="http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth.html"/>
-    <updated>2013-07-12T13:02:00-06:00</updated>
+    <updated>2013-07-12T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
-is a little more detail on juju events…
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
+is a little more detail on juju events&#8230;
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
@@ -63,17 +63,17 @@ is a little more detail on juju events…
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming Best Practices]]></title>
     <link href="http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
-    <updated>2013-06-28T13:02:00-06:00</updated>
+    <updated>2013-06-28T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
-we just sort of sat around and discussed best practices…
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week&#8217;s charmschool
+we just sort of sat around and discussed best practices&#8230;
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
@@ -90,22 +90,22 @@ we just sort of sat around and discussed best practices…
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Juju Demo Videos]]></title>
     <link href="http://markmims.com/cloud/2013/06/15/juju-demo-videos.html"/>
-    <updated>2013-06-15T13:02:00-06:00</updated>
+    <updated>2013-06-15T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/15/juju-demo-videos</id>
     <content type="html"><![CDATA[<p>I Put together a series of demo videos using juju-0.7 for oscon.</p>
 
 <p>These are really interesting in that they involve migrating environments
 between providers.  This works slightly differently on the newer juju-1.x
-series, but the idea’s still sound.</p>
+series, but the idea&#8217;s still sound.</p>
 
-<p>There’s no sound on these… they’re raw video backups for demoing juju (in
+<p>There&#8217;s no sound on these&#8230; they&#8217;re raw video backups for demoing juju (in
 case we lost networking during the demo).</p>
 
 <p>migrate local to hp
@@ -152,10 +152,10 @@ case we lost networking during the demo).</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming from scratch]]></title>
     <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
-    <updated>2013-06-05T13:02:00-06:00</updated>
+    <updated>2013-06-05T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week’s video
-we wrote a charm from scratch…
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week&#8217;s video
+we wrote a charm from scratch&#8230;
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('NQmxuzdc4Zg');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=NQmxuzdc4Zg" id="NQmxuzdc4Zg" onclick="return false;">
@@ -167,8 +167,8 @@ we wrote a charm from scratch…
 
 </p>
 
-<p>Starting from a simple node.js application, we put together “just enough” charm
-to get things working.  Watch for future episodes where we’ll refactor and
+<p>Starting from a simple node.js application, we put together &#8220;just enough&#8221; charm
+to get things working.  Watch for future episodes where we&#8217;ll refactor and
 refine both the application and the charm.</p>
 
 <!--more-->
@@ -176,7 +176,7 @@ refine both the application and the charm.</p>
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   

@@ -21,21 +21,16 @@ learn to tolerate noise and errors), I've since had an incredible career out in
 the world where Data Science meets DevOps and infrastructure engineering.
 
 I've been lucky enough to work for companies like Canonical, the folks behind
-the Ubuntu operating system, Infochimps, and now Silicon Valley Data Science.
-Places where talented teams of people are innovating and leading open-source
+the Ubuntu operating system, Infochimps, DigitalOcean, and now Google. Places
+where talented teams of people are innovating and leading open-source
 communities and the tech industry as a whole.
-
-I've been a consultant for a lot of my career, which gives me great insight
-into a vast range of data-related problems people have as well as how to help
-solve these problems across industries and technology stacks.
-
 
 Current Passions
 ----------------
 
-- training data scientists.  I'm building a class that's essentially "Just
-  enough data engineering" for data scientists in Berkeley's MIDS program and I
-  can't wait to start teaching it Fall 2017
+- training data scientists.  I teach an online class that's essentially "Just
+  enough data engineering" for data scientists in Berkeley's Data Science
+  Masters (MIDS) Program
 
 - adopting test-driven methodologies into building data pipelines... keeping
   pipelines strongly connected to the actual problems that need to be solved
@@ -46,40 +41,56 @@ Current Passions
 Experience
 ----------
 
-2017-Present
-:   **Staff R&D Engineer** \
-    *DigitalOcean * (New York)
+2019-Present
+:   **Staff Solutions Architect** \
+    *Google* (Boulder)
 
-    Helping build better cloud services for DigitalOcean users!
+    Helping users develop solutions on the Google Cloud Platform.
 
 
 2017-Present
 :   **Lecturer** - Master of Information and Data Science (MIDS) \
     *UC Berkeley School of Information * (Berkeley)
 
-    Design, develop, and teach the introductory *Just Enough Data Engineering*
+    Designed and developed the introductory *Fundamentals of Data Engineering*
     course for the MIDS program.
+
+    I currently teach and serve as Course Lead for this online course.
+
+
+2017-2019
+:   **Staff Engineer** - Data & Analytics \
+    *DigitalOcean* (New York)
+
+    AI-guided infrastructure at DO...  Helping build better cloud services for
+    DigitalOcean users!
 
 
 2014-2017
 :   **Principal Engineer** \
     *Silicon Valley Data Science* (Mountain View)
 
-    Building data science pipelines for various enterprise clients.
+    Update: Purchased by Apple.
 
-    Silicon Valley Data Science is a boutique consultancy specializing in
-    solving your toughest Data problems.  We provide Data Science, Data
-    Engineering, Architectural Advisory, and Data Strategy services to a wide
-    range of clients across industries.
+    Built data science pipelines for enterprise clients.
+
+    Silicon Valley Data Science (SVDS) was a boutique Data Science, Data
+    Strategy, and Data Engineering consultancy.  SVDS Peaked at 75+ employees
+    in four offices (Mountain View, CA; Chicago, IL; Bentonville, AR; London,
+    United Kingdom). Achieved ~$40M in revenue over 4+ years in operation.
+    Customers included Nike, Sainsburys, Target, Dexcom, GE, Intuit, Allant
+    Group, PayPal, Kabam, PIMCO, TiVo, Monsanto, Edmunds.com, Upsher Smith,
+    Amadeus, Zebra, RBC, AXA Global, Red Hat, Schneider Electric, Pure Storage,
+    and others.
 
     As a Principal Engineer with SVDS, I typically set technical direction,
-    provide technical guidance/mentoring, and write code to help deliver client
+    provided technical guidance/mentoring, and wrote code to help deliver client
     and internal projects:
 
     * *Data Engineering* - multiple engagements in Retail and Entertainment -
-      Providing the technical underpinnings of client initiatives to better
+      Provided the technical underpinnings of client initiatives to better
       understand customer activity and take action in an appropriate and timely
-      manner.  Solutions vary by client, but were primarily using technologies
+      manner.  Solutions varied by client, but were primarily using technologies
       such as Terraform/Ansible to automate data pipelines on AWS public cloud
       infrastructure and integrate with on-premise client datacenters, retail
       stores, etc.
@@ -91,9 +102,10 @@ Experience
     * *Speaking* - conference talks and workshops (Strata, Spark Summit, DataDay
       Austin/Seattle, Hadoop-With-The-Best, Enterprise Data World)
 
-    * *Internal R&D Projects* - spearheaded projects for data-platform and hybrid
-      devops for data pipelines and build/maintain some of our internal tooling
-      (docker images and ansible roles for cdh and cm-api development)
+    * *Internal R&D Projects* - spearheaded projects for data-platform and
+      hybrid devops for data pipelines and build/maintain some of our internal
+      tooling (terraform modules, docker images, and ansible roles for cdh and
+      cm-api development)
 
 
 2013-2014
@@ -406,5 +418,5 @@ Education
 ----
 
 > <mark.mims@gmail.com> • [+1(512)981-6467](callto:+1-512-981-6467) • [markmims.com](http://markmims.com/)\
-> San Francisco, CA - USA
+> Boulder, CO - USA
 

@@ -129,7 +129,7 @@
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
         
       </p>
     
@@ -141,12 +141,12 @@
 <pre><code>hawk:~ $ vlc -Ihttp --http-host :7001 -vvv /tmp/howimetyourmother-S1d1-t1.mp4 --udp-caching 1500 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=800,ab=128}:standard{access=http{mime=video/x-ms-asf},mux=asf,dst:8080}'
 </code></pre>
 
-<p>this client hits hawk:8080 which forwards the port to hawk’s vlc process</p>
+<p>this client hits hawk:8080 which forwards the port to hawk&#8217;s vlc process</p>
 
 <p>insecure data stream (control stream still safe) but seems to work better than tunneling over 8080 too</p>
 
-<p>next up is to try it over some other protocol than http… 
-need to set up port forwarding for udp traffic and see fi that’s faster</p>
+<p>next up is to try it over some other protocol than http&#8230; 
+need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p>
 
 </div>
 
@@ -170,7 +170,7 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
       
 
 <span class="categories">
@@ -206,10 +206,9 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -265,28 +264,12 @@ need to set up port forwarding for udp traffic and see fi that’s faster</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2010/01/27/howto-streamvlc-from-hawk.html';
-        var disqus_url = 'http://markmims.com/howtos/2010/01/27/howto-streamvlc-from-hawk.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

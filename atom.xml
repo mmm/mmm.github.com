@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2018-07-10T10:51:42-06:00</updated>
+  <updated>2019-06-05T03:49:24+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -16,11 +16,11 @@
   <entry>
     <title type="html"><![CDATA[Identifying User Activity from Streams of Raw Events]]></title>
     <link href="http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html"/>
-    <updated>2016-03-17T12:08:00-06:00</updated>
+    <updated>2016-03-17T12:08:00+00:00</updated>
     <id>http://markmims.com/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions</id>
     <content type="html"><![CDATA[<p>I had a chance to speak at an online conference last weekend,
 <a href="http://hadoop.withthebest.com/">Hadoop With The Best</a>.
-I had fun sharing one of my total passions… data pipelines!
+I had fun sharing one of my total passions&#8230; data pipelines!
 In particular, some techniques for catching raw user events,
 acting on those events and understanding user activity from 
 the sessionization of such events.</p>
@@ -37,16 +37,16 @@ the sessionization of such events.</p>
 
 <p><a href="svds.com">SVDS</a> is a boutique data science consulting firm.  We help folks
 with their hardest Data Strategy, Data Science, and/or Data Engineering
-problems.  In this role, we’re in a unique position to solve different
-kinds of problems across various industries… and start to recognize
-the patterns of solution that emerge.  That’s what I’d like to share.</p>
+problems.  In this role, we&#8217;re in a unique position to solve different
+kinds of problems across various industries&#8230; and start to recognize
+the patterns of solution that emerge.  That&#8217;s what I&#8217;d like to share.</p>
 
 <p>This talk is about some common data pipeline patterns used
 across various kinds of systems across various industries.
 Key Takeaways include:</p>
 
 <ul>
-  <li>what’s needed to understand user activity</li>
+  <li>what&#8217;s needed to understand user activity</li>
   <li>pipeline architectures that support this analysis</li>
 </ul>
 
@@ -64,23 +64,23 @@ differentiators in solution.</p>
 
 <h2 id="ingest-events">Ingest Events</h2>
 
-<p>The primary goal of an ingestion pipeline is to… ingest events.  All other
+<p>The primary goal of an ingestion pipeline is to&#8230; ingest events.  All other
 considerations are secondary.  We walk through an example pipeline and discuss
 how that architecture changes as we adjust scaling up to handle billions of
-events a day.  We’ll note along the way how general concepts of immutability
+events a day.  We&#8217;ll note along the way how general concepts of immutability
 and lazy evaluation can have large ramifications on data ingestion pipeline
 architecture.</p>
 
 <p>I start out covering typical classes of and types of events, some common event
 fields, and various ways that events are represented.  These vary <em>greatly</em>
 across current and legacy systems, and you should always expect that munging
-will be involved as you’re working to ingest events from various data sources
+will be involved as you&#8217;re working to ingest events from various data sources
 over time.</p>
 
-<p>For our sessionization examples, we’re interested in user events such as
+<p>For our sessionization examples, we&#8217;re interested in user events such as
 <code>login</code>, <code>checkout</code>, <code>add friend</code>, etc.</p>
 
-<p>These user events can be “flat”</p>
+<p>These user events can be &#8220;flat&#8221;</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -143,13 +143,13 @@ over time.</p>
 <p>and often both formats get used in the same systems in the wild so
 you have to intelligently detect or classify events rather than 
 just making blatant assumptions about them.  And yes, that <em>is</em> 
-expensive… but it’s surprisingly common.</p>
+expensive&#8230; but it&#8217;s surprisingly common.</p>
 
 <h3 id="ingestion-pipelines">Ingestion Pipelines</h3>
 
 <p>So what do basic ingestion pipelines usually look like?</p>
 
-<p>Tenants to keep in mind here… build a pipeline that’s immutable, lazy,
+<p>Tenants to keep in mind here&#8230; build a pipeline that&#8217;s immutable, lazy,
 simple/composable, and testable.  I come back to these often throughout
 the talk.</p>
 
@@ -160,11 +160,11 @@ lines of
 <img src="http://markmims.com/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a></p>
 
-<p>I introduce the “Power of the Query Side”… query-side tools are fast
+<p>I introduce the &#8220;Power of the Query Side&#8221;&#8230; query-side tools are fast
 nowadays.  Tools such as Impala have really won me over.  The Ingest pipeline
 needs to get the events as raw as possible as far back as possible in a format
-that’s amenable to fast queries.  Let’s state that again… it’s important.
-The pipeline’s core job is to get events that are as raw as possible (immutable
+that&#8217;s amenable to fast queries.  Let&#8217;s state that again&#8230; it&#8217;s important.
+The pipeline&#8217;s core job is to get events that are as raw as possible (immutable
 processing pipeline) as far back into the system as possible (lazily evaluated
 analysis) before any expensive computation is done.  Modern query-side tools
 support these paradigms quite well.  Better performance is obtained when events
@@ -174,12 +174,12 @@ partitions where possible
 <img src="http://markmims.com/images/event-ingestion-without-streaming-with-filename.svg" width="720px" />
 </a></p>
 
-<p>That’s simple enough and seems pretty straightforward in theory.  In practice
+<p>That&#8217;s simple enough and seems pretty straightforward in theory.  In practice
 you can ingest events straight into files in hdfs only up to a certain scale
 and degree of event complexity.</p>
 
 <p>As scale increases, an ingestion pipeline has to become effectively a dynamic
-impedance matching network.  It’s the funnel that’s catching events from what
+impedance matching network.  It&#8217;s the funnel that&#8217;s catching events from what
 can be a highly distributed, large number of data sources and trying to slam
 all these events into a relatively small number of filesystem datanodes.</p>
 
@@ -206,41 +206,41 @@ through that in a little more detail in the talk itself.</p>
 <p>Impedance or size mismatches between data sources and data storage are really
 only one half of the story.  Note that another culprit, <em>event complexity</em>, can
 limit ingest throughput for a number of reasons.  A common example of where
-this happens is when event “types” are either poorly defined or are changing so
-much they’re hard to identify.  As event complexity increases, so does the
-logic you use to group or partition the events so they’re fast to query.  In
+this happens is when event &#8220;types&#8221; are either poorly defined or are changing so
+much they&#8217;re hard to identify.  As event complexity increases, so does the
+logic you use to group or partition the events so they&#8217;re fast to query.  In
 practice this quickly grows from simple logic to full-blown event
 classification algorithms.  Often those classification algorithms have to learn
-from the body of events that’ve already landed.  You’re making decisions on
-events in front of you based on all the events you’ve ever seen.  I’ll bump any
-further discussion of that until we talk more about state in the “Recognize
-Activity” section later.</p>
+from the body of events that&#8217;ve already landed.  You&#8217;re making decisions on
+events in front of you based on all the events you&#8217;ve ever seen.  I&#8217;ll bump any
+further discussion of that until we talk more about state in the &#8220;Recognize
+Activity&#8221; section later.</p>
 
 <p>Ingest pipelines can get complicated as you try to scale in size and
-complexity… expect it!… plan for it!  The best way is to do this is to
+complexity&#8230; expect it!&#8230; plan for it!  The best way is to do this is to
 build or use a toolchain that can let you add a streaming and queueing solution
-without a lot of rearchitecture or downtime.  Folks often don’t try to solve
-this problem until it’s already painful in production!  There’re great ways
+without a lot of rearchitecture or downtime.  Folks often don&#8217;t try to solve
+this problem until it&#8217;s already painful in production!  There&#8217;re great ways
 to solve this in general.  My current fav atm uses a hybrid combination of
 Terraform, Consul, Ansible, and ClouderaManager/Ambari.</p>
 
-<p>Note also that we haven’t talked about any real-time processing or low-latency
+<p>Note also that we haven&#8217;t talked about any real-time processing or low-latency
 business requirements here at all.  The need for a stream processing solution
-arises when we’re <em>just</em> trying to catch events at scale.</p>
+arises when we&#8217;re <em>just</em> trying to catch events at scale.</p>
 
 <hr />
 
 <h2 id="take-action">Take Action</h2>
 
 <p>Catching events within the system is an interesting challenge all by itself.
-However, just efficiently and faithfully capturing events isn’t the end of the
+However, just efficiently and faithfully capturing events isn&#8217;t the end of the
 story.</p>
 
 <p><a href="http://markmims.com/images/streaming-bare.svg">
 <img src="http://markmims.com/images/streaming-bare.svg" width="720px" />
 </a></p>
 
-<p>That’s sorta boring if we’re not taking <em>action</em> on events as we catch
+<p>That&#8217;s sorta boring if we&#8217;re not taking <em>action</em> on events as we catch
 them.</p>
 
 <p>Actions such as </p>
@@ -250,17 +250,17 @@ them.</p>
   <li>Decorations</li>
   <li>Routing / Gating</li>
   <li>Counting</li>
-  <li>…</li>
+  <li>&#8230;</li>
 </ul>
 
-<p>can be taken in either “batch” or “real-time” modes.</p>
+<p>can be taken in either &#8220;batch&#8221; or &#8220;real-time&#8221; modes.</p>
 
 <p><a href="http://markmims.com/images/streaming-simple.svg">
 <img src="http://markmims.com/images/streaming-simple.svg" width="720px" />
 </a></p>
 
-<p>Unfortunately, folks have all sorts of meanings for these terms.  Let’s clear
-that up and be a little more precise…</p>
+<p>Unfortunately, folks have all sorts of meanings for these terms.  Let&#8217;s clear
+that up and be a little more precise&#8230;</p>
 
 <p>For every action you intend to take, and really every data product of your
 pipeline, you need to determine the latency requirements.  What is the
@@ -270,7 +270,7 @@ action be valid?  The answers might surprise you.</p>
 
 <p>Latency requirements let you make a first-pass attempt at specifying the
 <em>execution context</em> of each action.  There are two separate execution contexts we
-talk about here… <em>batch</em> and <em>stream</em>.</p>
+talk about here&#8230; <em>batch</em> and <em>stream</em>.</p>
 
 <ul>
   <li>
@@ -284,31 +284,31 @@ Impala, Hive, or SparkSQL.</p>
   <li>
     <p>stream.  Jobs that are run against either an individual event or a small
 window of events.  These are typically simple, low-computation jobs that
-don’t require context or information from other events.  These are typically
+don&#8217;t require context or information from other events.  These are typically
 implemented using Spark-streaming or Storm code.</p>
   </li>
 </ul>
 
-<p>When I say “real-time” in this talk, I mean that the action will be taken from
+<p>When I say &#8220;real-time&#8221; in this talk, I mean that the action will be taken from
 within the stream execution context.</p>
 
-<p>It’s important to realize that not all actions require “real-time” latency.
-There are plenty of actions that are perfectly valid even if they’re operating
-on “stale” day-old, hour-old, 15min-old data.  Of course, this sensitivity to
+<p>It&#8217;s important to realize that not all actions require &#8220;real-time&#8221; latency.
+There are plenty of actions that are perfectly valid even if they&#8217;re operating
+on &#8220;stale&#8221; day-old, hour-old, 15min-old data.  Of course, this sensitivity to
 latency varies greatly by action, domain, and industry.  Also, how stale stream
 -vs- batch events are depend of the actual performance characteristics of your
 ingestion pipeline under load.  Measure all the things!</p>
 
 <p>An approach I particularly like is to initially act from a batch context.
-There’s generally less development effort, more computational resources, more
-robustness, more flexibility, and more forgiveness involved when you’re working
-in a batch execution context.  You’re less likely to interrupt or congest your
+There&#8217;s generally less development effort, more computational resources, more
+robustness, more flexibility, and more forgiveness involved when you&#8217;re working
+in a batch execution context.  You&#8217;re less likely to interrupt or congest your
 ingestion pipeline.</p>
 
 <p>Once you have basic actions working from the batch layer, then do some
-profiling and identify which of the actions you’re working with really require
+profiling and identify which of the actions you&#8217;re working with really require
 less stale data.  <em>Selectively</em> bring those actions or analyses forward.  Tools
-such as Spark can help tremendously with this.  It’s not all fully baked yet,
+such as Spark can help tremendously with this.  It&#8217;s not all fully baked yet,
 but there are ways to write spark code where the same business logic code can
 be optionally bound in either stream or batch execution contexts.  You can move
 code around based on pipeline requirements and performance!</p>
@@ -334,16 +334,16 @@ the same trick (as we saw above)
 
 <h2 id="recognize-activity">Recognize Activity</h2>
 
-<p>What’s user activity?  Usually it’s a <em>Sequence of one or more events</em>
+<p>What&#8217;s user activity?  Usually it&#8217;s a <em>Sequence of one or more events</em>
 associated with a user.  From an infrastructure standpoint, the key distinction
-is that activity is constructed from a sequence of user events… <em>that don’t
+is that activity is constructed from a sequence of user events&#8230; <em>that don&#8217;t
 all fit within a single window of stream processing</em>.  This can either be
-because there are too many of them or because they’re spread out over too long
+because there are too many of them or because they&#8217;re spread out over too long
 a period of time.</p>
 
 <p>Another way to think of this is that event context matters.  In order to
 recognize activity as such, you often need to capture or create user context
-(let’s call it “state”) in such a way that it’s easily read by (and possibly
+(let&#8217;s call it &#8220;state&#8221;) in such a way that it&#8217;s easily read by (and possibly
 updated from) processing in-stream.</p>
 
 <p>We add hbase to our standard stack, and use it to store state
@@ -353,27 +353,27 @@ updated from) processing in-stream.</p>
 
 <p>which is then accessible from either stream or batch processing.  HBase is
 attractive as a fast key-value store.  Several other key-value stores could
-work here… I’ll often start using one simply because it’s easier to
+work here&#8230; I&#8217;ll often start using one simply because it&#8217;s easier to
 deploy/manage at first.  Then refine the choice of tool once more precise
 performance requirements of the state store have emerged from use.</p>
 
-<p>It’s important to note that you want fast key-based reads and writes.
-Full-table scans of columns are pretty much verboten in this setup.  They’re
+<p>It&#8217;s important to note that you want fast key-based reads and writes.
+Full-table scans of columns are pretty much verboten in this setup.  They&#8217;re
 simply too slow for value from stream.</p>
 
 <p>The usual approach is to update state in batch.  My favorite example when first
-talking to folks about this approach is to consider a user’s credit score.
+talking to folks about this approach is to consider a user&#8217;s credit score.
 Events coming into the system are routed in stream based on the associated
-user’s credit score.</p>
+user&#8217;s credit score.</p>
 
 <p>The stream system can simply (hopefully quickly) look that up in HBase keyed
 on a user id of some sort
 <a href="http://markmims.com/images/hbase-state-credit-score.svg">
 <img src="http://markmims.com/images/hbase-state-credit-score.svg" width="720px" />
 </a>
-The credit score is some number calculated by scanning across all a user’s
-events over the years.  It’s a big, long-running, expensive computation.  Do
-that continuously in batch… just update HBase as you go.  If you do that,
+The credit score is some number calculated by scanning across all a user&#8217;s
+events over the years.  It&#8217;s a big, long-running, expensive computation.  Do
+that continuously in batch&#8230; just update HBase as you go.  If you do that,
 then you make that information available for decisions in stream.</p>
 
 <p>Note that this is effectively a way to base fast-path decisions on
@@ -383,7 +383,7 @@ quite literally <em>learn from the past</em>  :-)</p>
 <p>Another example of this is tracking a package.  The events involved are the
 various independent scans the package undergoes throughout its journey.</p>
 
-<p>For “state” you might just want to keep an abbreviated version of the raw
+<p>For &#8220;state&#8221; you might just want to keep an abbreviated version of the raw
 history of each package
 <a href="http://markmims.com/images/hbase-state-tracking-package.svg">
 <img src="http://markmims.com/images/hbase-state-tracking-package.svg" width="720px" />
@@ -393,7 +393,7 @@ or just some derived notion of its state
 <img src="http://markmims.com/images/hbase-state-tracking-package-derived.svg" width="720px" />
 </a>
 those derived notions of state are tough to define from a single scan in a
-warehouse somewhere… but make perfect sense when viewed in the context of the
+warehouse somewhere&#8230; but make perfect sense when viewed in the context of the
 entire package history.</p>
 
 <hr />
@@ -408,10 +408,10 @@ entire package history.</p>
   <li>Recognize Activity</li>
 </ul>
 
-<p>Along the way we’ve done a nod to some data-plumbing best practices… such as</p>
+<p>Along the way we&#8217;ve done a nod to some data-plumbing best practices&#8230; such as</p>
 
 <h4 id="the-power-of-the-query-side">The Power of the Query Side</h4>
-<p>Query-side tools are fast – use them effectively!</p>
+<p>Query-side tools are fast &#8211; use them effectively!</p>
 
 <h4 id="infrastructure-aspirations">Infrastructure Aspirations</h4>
 <p>A datascience pipeline is</p>
@@ -432,15 +432,15 @@ entire package history.</p>
 help you stay flexible and scalable</p>
 
 <h4 id="automate-all-of-the-things">Automate All of the Things</h4>
-<p>DevOps is your friend.  We’re using an interesting pushbutton stack that’ll be
+<p>DevOps is your friend.  We&#8217;re using an interesting pushbutton stack that&#8217;ll be
 the topic of another blog post :-)</p>
 
 <h4 id="test-all-of-the-things">Test All of the Things</h4>
-<p>TDD/BDD is your friend.  Again, I’ll add another post on “Sanity-Driven Data
-Science” which is my take on TDD/BDD as applied to datascience pipelines.</p>
+<p>TDD/BDD is your friend.  Again, I&#8217;ll add another post on &#8220;Sanity-Driven Data
+Science&#8221; which is my take on TDD/BDD as applied to datascience pipelines.</p>
 
 <h4 id="failure-is-a-first-class-citizen">Failure is a First Class Citizen</h4>
-<p>Fail fast, early, often… along with the obligatory reference to the Netflix
+<p>Fail fast, early, often&#8230; along with the obligatory reference to the Netflix
 Simian Army.</p>
 
 <hr />
@@ -449,20 +449,20 @@ Simian Army.</p>
 
 <p>It was a somewhat challenging presentation format.  I presented a live video
 feed solo while the audience was watching live and had the ability to send
-questions in via chat… no audio from the audience.  Somewhat reminiscent of
-IRC-based presentations we used to do in Ubuntu community events… but with
+questions in via chat&#8230; no audio from the audience.  Somewhat reminiscent of
+IRC-based presentations we used to do in Ubuntu community events&#8230; but with
 video.</p>
 
 <p>The moderator asked the audience to queue questions up until the end, but as
-anyone who’s been in a classroom with me knows, I welcome / live for
+anyone who&#8217;s been in a classroom with me knows, I welcome / live for
 interruptions :-) In this case, I could easily see the chat window as I
 presented so asking-questions-along-the-way is supported on that presentation
-platform.  I’d definitely ask for that in the future.</p>
+platform.  I&#8217;d definitely ask for that in the future.</p>
 
 <p>I do prefer the fireside chat nature of adding one or two more folks into the
-feed… kinda like on-the-air hangouts… where the speaker can get audible
+feed&#8230; kinda like on-the-air hangouts&#8230; where the speaker can get audible
 feedback from some folks.  Overall though this was a great experience and folks
-asked interesting questions at the end.  I’m not sure how it’ll be published,
+asked interesting questions at the end.  I&#8217;m not sure how it&#8217;ll be published,
 but questions had to be done in a second section as I dropped connectivity
 right at the end of the speaking session.</p>
 
@@ -483,19 +483,19 @@ right.</p>
   <entry>
     <title type="html"><![CDATA[Develop Spark Apps on Yarn using Docker]]></title>
     <link href="http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html"/>
-    <updated>2015-10-13T15:07:00-06:00</updated>
+    <updated>2015-10-13T15:07:00+00:00</updated>
     <id>http://markmims.com/docker/data-engineering/spark/devops/2015/10/13/docker-cdh</id>
-    <content type="html"><![CDATA[<p>At svds, we’ll often run spark on yarn in production.  Add some artful tuning
+    <content type="html"><![CDATA[<p>At svds, we&#8217;ll often run spark on yarn in production.  Add some artful tuning
 and this works pretty well.  However, developers typically build and test spark
-application in <em>standalone</em> mode… not on yarn.</p>
+application in <em>standalone</em> mode&#8230; not on yarn.</p>
 
 <p>Rather than get bitten by the ideosyncracies involved in running spark on yarn
--vs- standalone when you go to deploy, here’s a way to set up a development
-environment for spark that more closely mimics how it’s used in the wild.</p>
+-vs- standalone when you go to deploy, here&#8217;s a way to set up a development
+environment for spark that more closely mimics how it&#8217;s used in the wild.</p>
 
 <!--more-->
 
-<h2 id="a-simple-yarn-cluster-on-your-laptop">A simple yarn “cluster” on your laptop</h2>
+<h2 id="a-simple-yarn-cluster-on-your-laptop">A simple yarn &#8220;cluster&#8221; on your laptop</h2>
 
 <p>Run a docker image for a cdh standalone instance</p>
 
@@ -515,7 +515,7 @@ docker exec -it mycdh hadoop fs -mkdir -p /tmp/blah
 
 <h2 id="run-spark">Run spark</h2>
 
-<p>Then, it’s pretty straightforward to run spark against yarn</p>
+<p>Then, it&#8217;s pretty straightforward to run spark against yarn</p>
 
 <pre><code>docker exec -it mycdh \
   spark-submit \
@@ -525,12 +525,12 @@ docker exec -it mycdh hadoop fs -mkdir -p /tmp/blah
     1000
 </code></pre>
 
-<p>Note that you can <em>submit</em> a spark job to run in either “yarn-client” or “yarn-cluster” modes.</p>
+<p>Note that you can <em>submit</em> a spark job to run in either &#8220;yarn-client&#8221; or &#8220;yarn-cluster&#8221; modes.</p>
 
-<p>In “yarn-client” mode, the spark driver runs outside of yarn and logs to
+<p>In &#8220;yarn-client&#8221; mode, the spark driver runs outside of yarn and logs to
 console and all spark executors run as yarn containers.</p>
 
-<p>In “yarn-cluster” mode, all spark executors run as yarn containers, but then
+<p>In &#8220;yarn-cluster&#8221; mode, all spark executors run as yarn containers, but then
 the spark driver also runs as a yarn container.  Yarn manages all the logs.</p>
 
 <p>You can also run the spark shell so that any workers spawned run in yarn</p>
@@ -547,14 +547,14 @@ the spark driver also runs as a yarn container.  Yarn manages all the logs.</p>
 
 <p>Ok, so <code>SparkPi</code> is all fine and dandy, but how do I run a real application?</p>
 
-<p>Let’s make up an example.  Say you build your spark project on your laptop in the
+<p>Let&#8217;s make up an example.  Say you build your spark project on your laptop in the
 <code>/Users/myname/mysparkproject/</code> directory.</p>
 
 <p>When you build with maven or sbt, it typically builds and leaves jars under a
-<code>/Users/myname/mysparkproject/target/</code> directory… for sbt, it’ll look like
+<code>/Users/myname/mysparkproject/target/</code> directory&#8230; for sbt, it&#8217;ll look like
 <code>/Users/myname/mysparkproject/target/scala-2.10/</code>.</p>
 
-<p>The idea here is to make these jars directly accessible from both your laptop’s
+<p>The idea here is to make these jars directly accessible from both your laptop&#8217;s
 build process as well as from inside the cdh container.</p>
 
 <p>When you start up the <code>cdh</code> container, map this local host directory up and
@@ -587,7 +587,7 @@ available as <code>/target</code> within the container.</p>
 
 <h2 id="logs">Logs</h2>
 
-<p>While a spark job is running, you can get its yarn “applicationId” from</p>
+<p>While a spark job is running, you can get its yarn &#8220;applicationId&#8221; from</p>
 
 <pre><code>docker exec -it mycdh yarn application -list
 </code></pre>
@@ -606,8 +606,8 @@ by using</p>
 <h2 id="consoles">Consoles</h2>
 
 <p>Web consoles are critical for application development.  Spend time up front
-getting ports open or forwarded correctly for all environments.  Don’t wait
-until you’re actually trying to debug something critical to figure out how to
+getting ports open or forwarded correctly for all environments.  Don&#8217;t wait
+until you&#8217;re actually trying to debug something critical to figure out how to
 forward ports to see the staging UI in all environments.</p>
 
 <h3 id="yarn-resourcemanager-ui">Yarn ResourceManager UI</h3>
@@ -658,16 +658,16 @@ address.  To do that, you have to map each port when you first spin up the
   <li>
     <p>The docker image <code>svds/cdh</code> is quite large (2GB).  I like to do a separate
 <code>docker pull</code> from any <code>docker run</code> commands just to isolate the download.
-In fact, I recommend pinning the cdh version for the same reason… so
+In fact, I recommend pinning the cdh version for the same reason&#8230; so
 <code>docker pull svds/cdh:5.4.0</code> for instance, then refer to it that way
-throughout <code>docker run -d --name=mycdh svds/cdh:5.4.0</code> and that’ll insure
-you’re not littering your laptop’s filesystem with docker layers from
+throughout <code>docker run -d --name=mycdh svds/cdh:5.4.0</code> and that&#8217;ll insure
+you&#8217;re not littering your laptop&#8217;s filesystem with docker layers from
 multiple cdh versions.  The bare <code>svds/cdh</code> (equiv to <code>svds/cdh:latest</code>)
 floats with the most recent cloudera versions</p>
   </li>
   <li>
-    <p>I’m using a CDH container here… but there’s an HDP one on the way as well.
-Keep an eye out for it on <a href="`https://hub.docker.com/u/svds`">svds’s dockerhub page</a></p>
+    <p>I&#8217;m using a CDH container here&#8230; but there&#8217;s an HDP one on the way as well.
+Keep an eye out for it on <a href="`https://hub.docker.com/u/svds`">svds&#8217;s dockerhub page</a></p>
   </li>
   <li>
     <p>web consoles and forwarding ports through SSH</p>
@@ -677,7 +677,7 @@ Keep an eye out for it on <a href="`https://hub.docker.com/u/svds`">svds’s doc
 <h2 id="bonus">Bonus</h2>
 
 <p>Ok, so the downside here is that the image is fat.  The upside is that it lets
-you play with the full suite of CDH-based tools.  I’ve tested out (besides the
+you play with the full suite of CDH-based tools.  I&#8217;ve tested out (besides the
 spark variations above)</p>
 
 <h3 id="impala-shell">Impala shell</h3>
@@ -701,10 +701,10 @@ spark variations above)</p>
   <entry>
     <title type="html"><![CDATA[SSH Tips and Tricks]]></title>
     <link href="http://markmims.com/2015/06/01/ssh-tips.html"/>
-    <updated>2015-06-01T16:00:00-06:00</updated>
+    <updated>2015-06-01T16:00:00+00:00</updated>
     <id>http://markmims.com/2015/06/01/ssh-tips</id>
-    <content type="html"><![CDATA[<p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
-but I’ll post it here for reference anyway.</p>
+    <content type="html"><![CDATA[<p>Notes from a lunch-and-learn talk.  It&#8217;s a little weak without the narrative,
+but I&#8217;ll post it here for reference anyway.</p>
 
 <p>Agenda:</p>
 
@@ -729,30 +729,30 @@ but I’ll post it here for reference anyway.</p>
 
 <h2 id="why-ssh">Why SSH?</h2>
 
-<p>It’s common practice to secure a cluster of servers using a <code>bastion</code> host.
+<p>It&#8217;s common practice to secure a cluster of servers using a <code>bastion</code> host.
 This might be a cluster of servers in a colocation facility, containers on a
-single host, or instances in an <code>EC2</code> region… the pattern can still be applied.</p>
+single host, or instances in an <code>EC2</code> region&#8230; the pattern can still be applied.</p>
 
 <p>The way this works is that the servers in the cluster are all locked down and
 not accessible to the outside world except where necessary for the production
 network design of the pipeline or application.</p>
 
-<p>That’s all great for production network traffic.  However, there’s often a need
+<p>That&#8217;s all great for production network traffic.  However, there&#8217;s often a need
 for adhoc access: testing, debugging, monitoring, etc of the cluster.  This is
-usually access to information that’s required <em>in addition</em> to the existing
+usually access to information that&#8217;s required <em>in addition</em> to the existing
 monitoring and logging for the production pipeline.  Until automated management
 solutions involving immutable infrastructure components are widely adopted,
-you’ll almost always need the ability for an engineer to directly log into
+you&#8217;ll almost always need the ability for an engineer to directly log into
 cluster instances to do things like clear <code>/tmp</code> directories, run jobs, etc.  </p>
 
-<p>You’ve also gotta routinely access various web consoles (ClouderaManager,
+<p>You&#8217;ve also gotta routinely access various web consoles (ClouderaManager,
 spark, hdfs, etc) to debug functional or performance problems, to change
 config, or even just to do sanity checks on overall cluster health.</p>
 
-<p>How do you access all of this?  You can’t just expose them to the outside
-world.  None of these consoles were ever designed for that.  They’re rife with
-holes…  with often <em>huge</em> ramifications for any incursions!  On the other
-hand, it’s often quite difficult (and dangerous!) to add adhoc network access
+<p>How do you access all of this?  You can&#8217;t just expose them to the outside
+world.  None of these consoles were ever designed for that.  They&#8217;re rife with
+holes&#8230;  with often <em>huge</em> ramifications for any incursions!  On the other
+hand, it&#8217;s often quite difficult (and dangerous!) to add adhoc network access
 into production network planning.</p>
 
 <p>Two practices are common:</p>
@@ -764,21 +764,21 @@ into production network planning.</p>
 
 <p>They each have pros/cons, tradeoffs between security, ease-of-use, flexibility,
 and capability.  VPN access is often ineffective due to its static nature and
-sensitivity to all manner of bad security practices.  It’s particularly
+sensitivity to all manner of bad security practices.  It&#8217;s particularly
 pointless due to the random way different web consoles choose which interfaces
-they like to bind to.  That’s a whole other discussion… for this talk,
+they like to bind to.  That&#8217;s a whole other discussion&#8230; for this talk,
 suffice it to say that I highly recommend and infinitely prefer an SSH-based
-solution.  It’s worth traversing the learning curve of SSH for the sheer power
+solution.  It&#8217;s worth traversing the learning curve of SSH for the sheer power
 and flexiblity it gives you without compromising security.</p>
 
 <hr />
 
 <h2 id="config-files">Config Files</h2>
 
-<p>In your home directory, there’s an optional <code>~/.ssh/config</code> file 
+<p>In your home directory, there&#8217;s an optional <code>~/.ssh/config</code> file 
 where you can customize your local SSH client behavior.</p>
 
-<p>You can use this for simple aliases…</p>
+<p>You can use this for simple aliases&#8230;</p>
 
 <pre><code>#################
 # MyBastions
@@ -791,7 +791,7 @@ Host customerZbastion
     Hostname ec2-zzz-zzz-zzz-zzz.compute-1.amazonaws.com 
 </code></pre>
 
-<p>or adding extra stuff that’s a pain to type <em>every</em> time</p>
+<p>or adding extra stuff that&#8217;s a pain to type <em>every</em> time</p>
 
 <pre><code>############
 # CustomerX
@@ -833,7 +833,7 @@ Host *.inside.customerY.com
 </code></pre>
 
 <p>Once you add multiple cluster configs and different customer environments,
-these SSH config files can get quite complex.  Here’re a couple of ways I’ve
+these SSH config files can get quite complex.  Here&#8217;re a couple of ways I&#8217;ve
 seen people manage that:</p>
 
 <ul>
@@ -843,38 +843,38 @@ comments to keep track of everything</p>
   </li>
   <li>
     <p>explictly specify config files at the command line a la <code>ssh -F
-~/.ssh/customerX-config &lt;server&gt;</code>… maybe even use a shell alias to shorten
+~/.ssh/customerX-config &lt;server&gt;</code>&#8230; maybe even use a shell alias to shorten
 this if you do it a lot</p>
   </li>
   <li>
     <p>[what I currently do] scripts to glue multiple config snippets from
 <code>~/.ssh/config.d/customerX.conf</code> into a single big read-only <code>~/.ssh/config</code>.
-It’d be nice to eventually change the ssh client to optionally read from
+It&#8217;d be nice to eventually change the ssh client to optionally read from
 these kind of <code>~/.ssh/config.d/</code> and <code>~/.ssh/authorized_keys.d/</code> snippet
 directories</p>
   </li>
   <li>
-    <p>customer-specific containers… I actually work a lot from <em>inside</em> of
+    <p>customer-specific containers&#8230; I actually work a lot from <em>inside</em> of
 containers on an ec2 instance.  I usually have them just bind-mount the
 underlying hosts home directory, but you could easily keep them isolated with
 separate config and spin them up only when you need overlay specific to a
-customer.  This also works even with gui apps on a laptop btw, but that’s a
+customer.  This also works even with gui apps on a laptop btw, but that&#8217;s a
 longer story :)</p>
   </li>
 </ul>
 
-<p>It’s also pretty common for folks to write scripts using config management
+<p>It&#8217;s also pretty common for folks to write scripts using config management
 (juju, knife, or ClouderaManager-like APIs) to generate ssh config snippets
 from a running infrastructure.  This can be quite useful, but is still a static
 picture of a cluster that changes.  Depending on the lifetime or stability of
-the cluster, you’re often better off using a more dynamic approach like <code>knife
-ssh</code>.  It’s a no-win tradeoff of sharing static SSH config snippets -vs-
+the cluster, you&#8217;re often better off using a more dynamic approach like <code>knife
+ssh</code>.  It&#8217;s a no-win tradeoff of sharing static SSH config snippets -vs-
 configuring chef environments for everyone who needs to access the cluster.</p>
 
-<p>I’d love to hear other solutions folks have come up with to deal with this.  I
+<p>I&#8217;d love to hear other solutions folks have come up with to deal with this.  I
 have no clue what puppet offers here, and I bet there are great examples of
-ansible’s ec2 plugin that’ll be a dead-simple way to interact with a dynamic
-host inventory.  Perhaps that’s where I’ll head next… we’ll see.  Totally
+ansible&#8217;s ec2 plugin that&#8217;ll be a dead-simple way to interact with a dynamic
+host inventory.  Perhaps that&#8217;s where I&#8217;ll head next&#8230; we&#8217;ll see.  Totally
 depends on customer environments.</p>
 
 <hr />
@@ -958,7 +958,7 @@ Set up your SSH config so you can ssh directly to the <code>bastion</code> host<
      +--------------------+         +-------------------+       +-------------------+
 </code></pre>
 
-<p>From laptop’s <code>~/.ssh/config</code> file:</p>
+<p>From laptop&#8217;s <code>~/.ssh/config</code> file:</p>
 
 <pre><code>Host bastion
     Hostname ec2-xxx.xxx.....amazon.com
@@ -970,9 +970,9 @@ Host target
 <p>then you can just <code>ssh target</code> directly from your laptop.  It automatically
 traverses the proxy <code>bastion</code> on your behalf.</p>
 
-<p>Note, that from an administrative perspective, it’s easy to control user access
-at the single <code>bastion</code>… if you can’t establish an ssh connection to the
-bastion, you can’t “jump through it” to internal hosts.</p>
+<p>Note, that from an administrative perspective, it&#8217;s easy to control user access
+at the single <code>bastion</code>&#8230; if you can&#8217;t establish an ssh connection to the
+bastion, you can&#8217;t &#8220;jump through it&#8221; to internal hosts.</p>
 
 <hr />
 
@@ -1007,7 +1007,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 
 <h3 id="forward-tunnels">forward tunnels</h3>
 
-<p>aka, “port forwarding”</p>
+<p>aka, &#8220;port forwarding&#8221;</p>
 
 <h4 id="forwarding-web-traffic">forwarding web traffic</h4>
 
@@ -1064,7 +1064,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 `ssh fred -L8888:localhost:80`
 </code></pre>
 
-<p>or, perhaps more useful…</p>
+<p>or, perhaps more useful&#8230;</p>
 
 <pre><code>`ssh fred -L50070:localhost:50070`
 `open http://localhost:50070/`
@@ -1103,7 +1103,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 `ssh fred -R2222:localhost:22`
 </code></pre>
 
-<p>or maybe something like…</p>
+<p>or maybe something like&#8230;</p>
 
 <pre><code>`ssh fred -R8888:localhost:80`
 </code></pre>
@@ -1124,10 +1124,10 @@ bastion, you can’t “jump through it” to internal hosts.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Local Provider]]></title>
     <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
-    <updated>2013-08-23T13:02:00-06:00</updated>
+    <updated>2013-08-23T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
-walks through using the new version of the juju local provider.  It’s cool!</p>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
+walks through using the new version of the juju local provider.  It&#8217;s cool!</p>
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
@@ -1142,17 +1142,17 @@ walks through using the new version of the juju local provider.  It’s cool!</p
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Events in Depth]]></title>
     <link href="http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth.html"/>
-    <updated>2013-07-12T13:02:00-06:00</updated>
+    <updated>2013-07-12T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week’s video
-is a little more detail on juju events…</p>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
+is a little more detail on juju events&#8230;</p>
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
@@ -1167,17 +1167,17 @@ is a little more detail on juju events…</p>
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming Best Practices]]></title>
     <link href="http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices.html"/>
-    <updated>2013-06-28T13:02:00-06:00</updated>
+    <updated>2013-06-28T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week’s charmschool
-we just sort of sat around and discussed best practices…</p>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week&#8217;s charmschool
+we just sort of sat around and discussed best practices&#8230;</p>
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
@@ -1192,22 +1192,22 @@ we just sort of sat around and discussed best practices…</p>
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Juju Demo Videos]]></title>
     <link href="http://markmims.com/cloud/2013/06/15/juju-demo-videos.html"/>
-    <updated>2013-06-15T13:02:00-06:00</updated>
+    <updated>2013-06-15T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/15/juju-demo-videos</id>
     <content type="html"><![CDATA[<p>I Put together a series of demo videos using juju-0.7 for oscon.</p>
 
 <p>These are really interesting in that they involve migrating environments
 between providers.  This works slightly differently on the newer juju-1.x
-series, but the idea’s still sound.</p>
+series, but the idea&#8217;s still sound.</p>
 
-<p>There’s no sound on these… they’re raw video backups for demoing juju (in
+<p>There&#8217;s no sound on these&#8230; they&#8217;re raw video backups for demoing juju (in
 case we lost networking during the demo).</p>
 
 <p>migrate local to hp</p>
@@ -1248,10 +1248,10 @@ case we lost networking during the demo).</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Charming from scratch]]></title>
     <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
-    <updated>2013-06-05T13:02:00-06:00</updated>
+    <updated>2013-06-05T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week’s video
-we wrote a charm from scratch…</p>
+    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week&#8217;s video
+we wrote a charm from scratch&#8230;</p>
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('NQmxuzdc4Zg');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=NQmxuzdc4Zg" id="NQmxuzdc4Zg" onclick="return false;">
@@ -1261,8 +1261,8 @@ we wrote a charm from scratch…</p>
 <div class="video-info">embedded youtube video NQmxuzdc4Zg</div>
 </div>
 
-<p>Starting from a simple node.js application, we put together “just enough” charm
-to get things working.  Watch for future episodes where we’ll refactor and
+<p>Starting from a simple node.js application, we put together &#8220;just enough&#8221; charm
+to get things working.  Watch for future episodes where we&#8217;ll refactor and
 refine both the application and the charm.</p>
 
 <!--more-->
@@ -1270,17 +1270,17 @@ refine both the application and the charm.</p>
 <p>As before, there are links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[CharmSchool Hangouts]]></title>
     <link href="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html"/>
-    <updated>2013-05-20T12:49:00-06:00</updated>
+    <updated>2013-05-20T12:49:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/05/20/charmschool-hangouts</id>
-    <content type="html"><![CDATA[<p>We’re doing a series of regular CharmSchools on G+ hangouts.
-Last week we did an intro to juju and charming…</p>
+    <content type="html"><![CDATA[<p>We&#8217;re doing a series of regular CharmSchools on G+ hangouts.
+Last week we did an intro to juju and charming&#8230;</p>
 
 <div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('yRcqSjOGweo');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/yRcqSjOGweo?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
 <a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/yRcqSjOGweo/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=yRcqSjOGweo" id="yRcqSjOGweo" onclick="return false;">
@@ -1290,10 +1290,10 @@ Last week we did an intro to juju and charming…</p>
 <div class="video-info">embedded youtube video yRcqSjOGweo</div>
 </div>
 
-<p>There’re links to the whole series of charmschool hangouts in the juju
+<p>There&#8217;re links to the whole series of charmschool hangouts in the juju
 <a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
 where we also have videos and screencasts of demos, talks,  and any other charm
-schools we’ve been able to capture on video.</p>
+schools we&#8217;ve been able to capture on video.</p>
 
 ]]></content>
   </entry>
@@ -1301,10 +1301,10 @@ schools we’ve been able to capture on video.</p>
   <entry>
     <title type="html"><![CDATA[CharmSchool Video from the Openstack Summit]]></title>
     <link href="http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html"/>
-    <updated>2013-04-25T12:40:00-06:00</updated>
+    <updated>2013-04-25T12:40:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/04/25/charmschool-video-from-the-openstack-summit</id>
     <content type="html"><![CDATA[<p>Jorge and I gave a charmschool at the ODS summit.
-The room was packed with 300+… and they pretty much stayed the whole time… whoohoo!</p>
+The room was packed with 300+&#8230; and they pretty much stayed the whole time&#8230; whoohoo!</p>
 
 <p>Watch it 
 <a href="http://www.openstack.org/summit/portland-2013/session-videos/presentation/juju-with-openstack-workshop">here</a>
@@ -1324,7 +1324,7 @@ or </p>
   <entry>
     <title type="html"><![CDATA[Running the LinuxPlumbers Conference Schedule with Juju]]></title>
     <link href="http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html"/>
-    <updated>2012-09-25T00:00:00-06:00</updated>
+    <updated>2012-09-25T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2012/09/25/linuxplumbers-juju</id>
     <content type="html"><![CDATA[<p class="meta">
 Written by Mark Mims and Chris Johnston
@@ -1334,12 +1334,12 @@ Written by Mark Mims and Chris Johnston
 <a href="http://linuxplumbersconf.org">Linux Plumbers Conference</a>
 entirely on juju!</p>
 
-<p>Here’s a little background on the experience.</p>
+<p>Here&#8217;s a little background on the experience.</p>
 
-<p>Along the way, we’ll go into a little more detail about running juju in
-production than the particular problem at hand might warrant.  It’s a basic
-stack of services that’s only alive for 6-months or so…  but this discussion
-applies to bigger longer-running production infrastructures too, so it’s worth
+<p>Along the way, we&#8217;ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It&#8217;s a basic
+stack of services that&#8217;s only alive for 6-months or so&#8230;  but this discussion
+applies to bigger longer-running production infrastructures too, so it&#8217;s worth
 going over here.</p>
 
 <!--more-->
@@ -1347,20 +1347,20 @@ going over here.</p>
 <h2 id="the-app">The App</h2>
 
 <p>So <a href="https://launchpad.net/summit">summit</a> is this great django app built for
-scheduling conferences.  It’s evolved over time to handle
+scheduling conferences.  It&#8217;s evolved over time to handle
 <a href="uds.ubuntu.com">UDS</a>-level traffic and is currently maintained by a
 <a href="https://launchpad.net/~summit-hackers">Summit Hackers</a> team that includes
 <a href="http://www.chrisjohnston.org/">Chris Johnston</a>
 and <a href="http://mhall119.com/">Michael Hall</a>.</p>
 
-<p>Chris contacted me to help him use juju to manage summit for this year’s
+<p>Chris contacted me to help him use juju to manage summit for this year&#8217;s
 Plumbers conference.  At the time we started this, the 11.10 version of juju
-wasn’t exactly blessed for production environments, but we decided it’d be a
+wasn&#8217;t exactly blessed for production environments, but we decided it&#8217;d be a
 great opportunity to work things out.</p>
 
 <h2 id="the-stack">The Stack</h2>
 
-<p>A typical summit stack’s got postgresql, the django app itself, and a memcached server.</p>
+<p>A typical summit stack&#8217;s got postgresql, the django app itself, and a memcached server.</p>
 
 <p><a href="http://markmims.com/images/django-stack.png">
 <img src="http://markmims.com/images/django-stack.png" width="198px" />
@@ -1372,64 +1372,64 @@ great opportunity to work things out.</p>
 <img src="http://markmims.com/images/bigger-django-stack.png" width="334px" />
 </a></p>
 
-<p>This’d let the app scale horizontally as well as give us a stable point to
+<p>This&#8217;d let the app scale horizontally as well as give us a stable point to
 attach an elastic-ip.  We decided to <em>not</em> do this at the time b/c we could
 most likely handle the peak conference load with a single django service-unit
 provided we slam select snippets of the site into memcached.</p>
 
-<p>This turned out to be true load-wise, but it really would’ve been a whole lot
+<p>This turned out to be true load-wise, but it really would&#8217;ve been a whole lot
 easier to have a nice constant haproxy node out there to tack the elastic-ip
 to.
 During development (charm, app, and theme) you want the freedom to destroy
 a service and respawn it without having to use external tools to go around and
-attach public IP addresses to the right places.  That’s a pain.  Also, if
-there’s a sensitive part of this infrastructure in production, it wouldn’t be
-postgresql, memcached, or haproxy… the app itself would be the most likely
+attach public IP addresses to the right places.  That&#8217;s a pain.  Also, if
+there&#8217;s a sensitive part of this infrastructure in production, it wouldn&#8217;t be
+postgresql, memcached, or haproxy&#8230; the app itself would be the most likely
 point of instability, so it was a mistake to attach the elastic-ip there.</p>
 
 <h2 id="the-environment">The Environment</h2>
 
 <h3 id="choice-of-cloud">choice of cloud</h3>
 
-<p>We chose to use ec2 to host the summit stack… mostly a matter of
-convenience.  The juju openstack-native provider wasn’t completed when we spun
-up the production environment for linuxplumbers and we didn’t have access to a
+<p>We chose to use ec2 to host the summit stack&#8230; mostly a matter of
+convenience.  The juju openstack-native provider wasn&#8217;t completed when we spun
+up the production environment for linuxplumbers and we didn&#8217;t have access to a
 stable private ubuntu cloud running the openstack-ec2-api at the time.
-All of this has subsequently landed, so we’d have more options today.</p>
+All of this has subsequently landed, so we&#8217;d have more options today.</p>
 
 <h3 id="the-charms">the charms</h3>
 
-<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>’s excellent
+<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>&#8217;s excellent
 <a href="lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk">django charm</a>
 to create a
 <a href="https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk">summit-charm</a>
 and freely specialized it for summit.</p>
 
-<p>Note that we’re updating this charm for 12.04
+<p>Note that we&#8217;re updating this charm for 12.04
 <a href="https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk">here</a>, but
-this will probably go away in the near future and we’ll just use a generic
-django charm.  It turns out we didn’t do too much here that won’t apply to
+this will probably go away in the near future and we&#8217;ll just use a generic
+django charm.  It turns out we didn&#8217;t do too much here that won&#8217;t apply to
 django apps in general, but more on that another time.</p>
 
 <p>There was nothing special about our tuning of postgresql or memcached.  We just
 used the services provided by the canned charms.  These sort of peripheral
-services aren’t the kind of charms you’re likely to be making changes to or
+services aren&#8217;t the kind of charms you&#8217;re likely to be making changes to or
 tweaking outside of their exposed config parameters.  I know <em>jack</em> about
-memcached, so I’ll defer to the experts in this regard.  Similarly for
-postgresql… and haproxy if we used it in this stack.</p>
+memcached, so I&#8217;ll defer to the experts in this regard.  Similarly for
+postgresql&#8230; and haproxy if we used it in this stack.</p>
 
-<p>The summit charm is a little different.  It’s something we were continuing to
+<p>The summit charm is a little different.  It&#8217;s something we were continuing to
 tweak during development.  Perhaps with future more generic django charm
-versions, we won’t need to tweak the charm itself… just configure it.</p>
+versions, we won&#8217;t need to tweak the charm itself&#8230; just configure it.</p>
 
-<p>We used a “local” repository for <em>all</em> charms because the charm store hadn’t
+<p>We used a &#8220;local&#8221; repository for <em>all</em> charms because the charm store hadn&#8217;t
 landed when we were setting this up.  Well, now that the charm store is live,
 you can just deploy the canned charms straight from the store</p>
 
 <pre><code>`juju deploy -e summit memcached`
 </code></pre>
 
-<p>and keep the ones you want to tweak in a local repository… </p>
+<p>and keep the ones you want to tweak in a local repository&#8230; </p>
 
 <pre><code>`juju deploy -e summit --repository ~/charms local:summit`
 </code></pre>
@@ -1438,22 +1438,22 @@ you can just deploy the canned charms straight from the store</p>
 
 <h3 id="control-environment">control environment</h3>
 
-<p>We had multiple people to manage the production summit environment.  What’s the
+<p>We had multiple people to manage the production summit environment.  What&#8217;s the
 best way to do that?  It turns out juju supports this pretty well right out of
-the box.  There’s an environment config for the set of ssh public keys to
-inject into everything in the environment as it starts up… you can read more
+the box.  There&#8217;s an environment config for the set of ssh public keys to
+inject into everything in the environment as it starts up&#8230; you can read more
 about that on 
 <a href="http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju">askubuntu</a>.</p>
 
 <p>Note that this is only useful to configure at the beginning of the stack.  Once
-you’re up, adding keys is problematic.  I don’t even recommend trying b/c of
+you&#8217;re up, adding keys is problematic.  I don&#8217;t even recommend trying b/c of
 the risk of getting undetermined state for the environment.  i.e., different
 nodes with different sets of keys depending on when you changed the keys relative
-to what actions you’ve performed on the environment.  It’s a problem.</p>
+to what actions you&#8217;ve performed on the environment.  It&#8217;s a problem.</p>
 
-<p>What I recommend now is actually to use <em>another</em> juju environment…  (and no,
-we’re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
-“control” environment.  You bootstrap it, then set up a juju client that controls
+<p>What I recommend now is actually to use <em>another</em> juju environment&#8230;  (and no,
+we&#8217;re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+&#8220;control&#8221; environment.  You bootstrap it, then set up a juju client that controls
 the main production environment.  Then set up a shared tmux session that any of
 the admins for the production environment can use:</p>
 
@@ -1462,28 +1462,28 @@ the admins for the production environment can use:</p>
 </a></p>
 
 <p>Adding/changing the set of
-admin keys is then done in a single place.  This technique isn’t strictly
+admin keys is then done in a single place.  This technique isn&#8217;t strictly
 necessary, but it was certainly worth it here with different admins having
 various different levels of familiarity with the tools.  I started it as a
 teaching tool, left it up because it was an easy control dashboard, and now
 recommend it because it works so well.</p>
 
-<h3 id="its-chilly-in-here">it’s chilly in here</h3>
+<h3 id="its-chilly-in-here">it&#8217;s chilly in here</h3>
 
 <p>Yeah, so during development you break things.  There were a couple of times
 using 11.10 juju that changes to juju core prevented a client from talking to
-an existing stack.  Aargh!  This wasn’t going to fly for production use.</p>
+an existing stack.  Aargh!  This wasn&#8217;t going to fly for production use.</p>
 
 <p>The juju team has subsequently done a <em>bunch</em> to prevent this from happening,
 but hey we needed production summit working and stable at the time.  The
-answer… freeze the code.</p>
+answer&#8230; freeze the code.</p>
 
 <p>Juju has an environment config option <code>juju-origin</code> to specify where to
 get the juju installed on all instances in the environment.  I branched juju
 core to <code>lp:~mark-mims/juju/running-summit</code> and just worked straight from there
 for the lifetime of the environment (still up atm).  Easy enough.</p>
 
-<p>Now the tricky part is to make sure that you’re always using the
+<p>Now the tricky part is to make sure that you&#8217;re always using the
 <code>lp:~mark-mims/juju/running-summit</code> version of the juju cli when talking to the
 production summit environment.</p>
 
@@ -1497,19 +1497,19 @@ export PYTHONPATH=$JUJU_BRANCH
 
 <p>which my tmuxinator config sources into every pane in my <code>summit</code> tmux session.</p>
 
-<p>This was also done on the <code>summit-control</code> instance so it’s easy to make sure
-we’re all using the right version of the juju cli to talk to the production
+<p>This was also done on the <code>summit-control</code> instance so it&#8217;s easy to make sure
+we&#8217;re all using the right version of the juju cli to talk to the production
 environment.</p>
 
 <h3 id="backups">backups</h3>
 
 <p>The <code>juju ssh</code> subcommand to the rescue.  You can do all your standard ssh
-tricks…</p>
+tricks&#8230;</p>
 
 <pre><code>juju ssh postgresql/0 'su postgres pg_dump summit' &gt; summit.dump
 </code></pre>
 
-<p>… on a cronjob.  Juju just stays out of the way and just helps out a bit with
+<p>&#8230; on a cronjob.  Juju just stays out of the way and just helps out a bit with
 the addressing.  Real version pipes through bzip2 and adds timestamps of course.</p>
 
 <p>Of course snapshots are easy enough too via euca2ools, but the pgsql dumps
@@ -1518,12 +1518,12 @@ failover.</p>
 
 <h3 id="debugging">debugging</h3>
 
-<p>The biggest debugging activity during development was cleaning up the app’s
+<p>The biggest debugging activity during development was cleaning up the app&#8217;s
 theming.  The summit charm is configured to get the django app itself from
 one <a href="https://code.launchpad.net/summit">application branch</a> and the theme from a separate
 <a href="https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme">theme branch</a>.</p>
 
-<p>So… ahem… “best practice” for theme development would’ve been to
+<p>So&#8230; ahem&#8230; &#8220;best practice&#8221; for theme development would&#8217;ve been to
 develop/tweak the theme locally, then push to the branch.  A simple</p>
 
 <pre><code>juju set --config=summit.yaml summit/0
@@ -1531,20 +1531,20 @@ develop/tweak the theme locally, then push to the branch.  A simple</p>
 
 <p>would update config for the live instances.</p>
 
-<p>Well…  some of the menus from the base template used absolute paths so it was
+<p>Well&#8230;  some of the menus from the base template used absolute paths so it was
 simpler to cheat a bit early in the process to test it all in-place with actual
-dns names.  Had we been doing this the “right” way from the beginning we
-would’ve had much more confidence in the stack when practicing recovery and
-failover later in the cycle… we would’ve been doing it all since day one.</p>
+dns names.  Had we been doing this the &#8220;right&#8221; way from the beginning we
+would&#8217;ve had much more confidence in the stack when practicing recovery and
+failover later in the cycle&#8230; we would&#8217;ve been doing it all since day one.</p>
 
 <p>Another thing we had to do was manually test memcached.  To test out caching
-we’d ssh to the memcached instance, stop the service, run memcached verbosely
+we&#8217;d ssh to the memcached instance, stop the service, run memcached verbosely
 in the foreground.  Once we determined everything was working the way we
-expected, we’d kill it and restart the upstart job.</p>
+expected, we&#8217;d kill it and restart the upstart job.</p>
 
-<p>This is a bug in the memcached charm imo… the option to temporarily run
+<p>This is a bug in the memcached charm imo&#8230; the option to temporarily run
 verbosely for debugging should totally be a config option for that service.
-It’d then be a simple matter of</p>
+It&#8217;d then be a simple matter of</p>
 
 <pre><code>juju set memcached/0 debug=true
 </code></pre>
@@ -1554,7 +1554,7 @@ It’d then be a simple matter of</p>
 <pre><code>juju ssh memcached/0
 </code></pre>
 
-<p>to watch some logs.  Once we’re convinced it’s working the way it should</p>
+<p>to watch some logs.  Once we&#8217;re convinced it&#8217;s working the way it should</p>
 
 <pre><code>juju set memcached/0 debug=false
 </code></pre>
@@ -1562,19 +1562,19 @@ It’d then be a simple matter of</p>
 <p>should make it performant again.</p>
 
 <p>Next time around, we should take more advantage of <code>juju set</code> config to
-update/reconfigure the app as we made changes… and generally implement a
+update/reconfigure the app as we made changes&#8230; and generally implement a
 better set of development practices.</p>
 
 <h3 id="monitoring">monitoring</h3>
 
-<p>Sorely lacking.  “What? curl doesn’t cut it?”… um… no.</p>
+<p>Sorely lacking.  &#8220;What? curl doesn&#8217;t cut it?&#8221;&#8230; um&#8230; no.</p>
 
 <h3 id="planning-for-failures">planning for failures</h3>
 
 <p>Our notion of failover for this app was just a spare set of cloud credentials
 and a tested recovery plan.</p>
 
-<p>The plan we practiced was…</p>
+<p>The plan we practiced was&#8230;</p>
 
 <ul>
   <li>bootstrap a new environment (using spare credentials if necessary)</li>
@@ -1583,14 +1583,14 @@ and a tested recovery plan.</p>
 should be extended to accept a config parameter of a storage url, S3 in this
 case, to slurp the db backups from)</li>
   <li>
-    <p>restore from offsite backups… something along the lines of</p>
+    <p>restore from offsite backups&#8230; something along the lines of</p>
 
     <table>
       <tbody>
         <tr>
           <td>cat summit-$timestamp.dump.bz2</td>
-          <td>juju ssh -e failover postgresql/0 ‘bunzip2 -c</td>
-          <td>su - postgres pgsql summit’</td>
+          <td>juju ssh -e failover postgresql/0 &#8216;bunzip2 -c</td>
+          <td>su - postgres pgsql summit&#8217;</td>
         </tr>
       </tbody>
     </table>
@@ -1599,32 +1599,32 @@ case, to slurp the db backups from)</li>
 
 <p>In practice, that took about 10-15minutes to recover once we started acting.
 Given the additional delay between notification and action, that could spell an
-hour or two of outtage.  That’s not so great.</p>
+hour or two of outtage.  That&#8217;s not so great.</p>
 
 <p>Juju makes other failover scenarios cheaper and easier to implement than they
 used to be, so why not put those into place just to be safe?  Perhaps the
-additional instance costs for hot-spares wouldn’t’ve been necessary for the
+additional instance costs for hot-spares wouldn&#8217;t&#8217;ve been necessary for the
 entire 6-months of lead-time for scheduling and planning this conference, but
-they’d certainly be worth the spend during the few days of the event itself.
+they&#8217;d certainly be worth the spend during the few days of the event itself.
 Juju sort of makes it a no-brainer.  We should do more posts on this one
-issue… the game has changed here.</p>
+issue&#8230; the game has changed here.</p>
 
 <h2 id="lessons-learned">Lessons Learned</h2>
 
-<p>What would we do differently next time?  Well, there’s a list :).</p>
+<p>What would we do differently next time?  Well, there&#8217;s a list :).</p>
 
 <ul>
-  <li>use the stable ppa… instead of freezing the code</li>
+  <li>use the stable ppa&#8230; instead of freezing the code</li>
   <li>sit the app behind haproxy</li>
   <li>use s3fs or equivalent subordinate charm to manage backups instead of just
 sshing them off the box</li>
-  <li>better monitoring… we’ve gotten a great set of monitoring charms
-recently… thanks <a href="http://fewbar.com/">Clint</a>!</li>
-  <li>log aggregation would’ve been a little bit of overkill for this app, but next
+  <li>better monitoring&#8230; we&#8217;ve gotten a great set of monitoring charms
+recently&#8230; thanks <a href="http://fewbar.com/">Clint</a>!</li>
+  <li>log aggregation would&#8217;ve been a little bit of overkill for this app, but next
 time might warrant it</li>
-  <li>it’s cheap to add failover with juju… just do it</li>
+  <li>it&#8217;s cheap to add failover with juju&#8230; just do it</li>
   <li>maybe follow a development process a little more carefully next time around :)</li>
-  <li>we’ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
+  <li>we&#8217;ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
 </ul>
 
 ]]></content>
@@ -1633,16 +1633,16 @@ time might warrant it</li>
   <entry>
     <title type="html"><![CDATA[Scaling a 2000-node Hadoop cluster on EC2/Ubuntu with Juju]]></title>
     <link href="http://markmims.com/cloud/2012/06/04/juju-at-scale.html"/>
-    <updated>2012-06-04T00:00:00-06:00</updated>
+    <updated>2012-06-04T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2012/06/04/juju-at-scale</id>
     <content type="html"><![CDATA[<p class="meta">
 Written by Mark Mims and James Page
 </p>
 
-<p>Lately we’ve been fleshing out our testing frameworks for Juju and Juju Charms.  There’s
-lots of great stuff going on here, so we figured it’s time to start posting about it.</p>
+<p>Lately we&#8217;ve been fleshing out our testing frameworks for Juju and Juju Charms.  There&#8217;s
+lots of great stuff going on here, so we figured it&#8217;s time to start posting about it.</p>
 
-<p>First off, the coolest thing we did during last month’s Ubuntu Developer Summit (UDS)
+<p>First off, the coolest thing we did during last month&#8217;s Ubuntu Developer Summit (UDS)
 was get the go-ahead to spend more time/effort/money scale-testing Juju.</p>
 
 <!--more-->
@@ -1672,12 +1672,12 @@ sat down over the course of
 a couple of nights at UDS to take a crack at it.
 We chose Hadoop.
 We started with 40 nodes and iterated up 100, 500, 1000 and 2000.
-Here’re some notes on the process.</p>
+Here&#8217;re some notes on the process.</p>
 
 <h2 id="hadoop">Hadoop</h2>
 
 <p>Hadoop was a pretty obvious choice here.
-It’s a great actively-maintained
+It&#8217;s a great actively-maintained
 <a href="http://hadoop.apache.org/">project</a>
 with a large community of users.
 It scales in a somewhat known manner, and the
@@ -1686,45 +1686,45 @@ makes it super-simple to manage.
 There are also several known benchmarks that are pretty straightforward to get going,
 and distribute load throughout the cluster.</p>
 
-<p>There’s an entire science/art to tuning hadoop jobs to run optimally given the 
+<p>There&#8217;s an entire science/art to tuning hadoop jobs to run optimally given the 
 characteristics of a particular cluster.  Our sole goal in tuning hadoop benchmarks
 was to <em>engage</em> the entire cluster and profile juju during various activities throughout
-an actual run.  For our purposes, we’re in no hurry… a slower/longer run gives us a
+an actual run.  For our purposes, we&#8217;re in no hurry&#8230; a slower/longer run gives us a
 good profiling picture for managing the nodes themselves under load (with a sufficient
 mix of i/o -vs- cpu load).</p>
 
 <h2 id="ec2">EC2</h2>
 
-<p>Surprisingly enough, we don’t really have that many servers just lying around… so EC2 to the rescue.</p>
+<p>Surprisingly enough, we don&#8217;t really have that many servers just lying around&#8230; so EC2 to the rescue.</p>
 
-<p>Disclaimer… we’re testing our infrastructure tools here, not benchmarking hadoop in EC2.
-Some folks advocate running hadoop in a cloudy virtualized environment… while some
-folks are die-hard server huggers.  That’s actually a really interesting discussion.
-It comes down to the actual jobs/problems you’re
+<p>Disclaimer&#8230; we&#8217;re testing our infrastructure tools here, not benchmarking hadoop in EC2.
+Some folks advocate running hadoop in a cloudy virtualized environment&#8230; while some
+folks are die-hard server huggers.  That&#8217;s actually a really interesting discussion.
+It comes down to the actual jobs/problems you&#8217;re
 trying to solve and how those jobs fit in your data pipeline.
-Please note that we’re not
+Please note that we&#8217;re not
 trying to solve that problem here or even provide realistic benchmarking data to contribute
-to the discussion… we’re simply testing how our infrastructure tools perform at scale.</p>
+to the discussion&#8230; we&#8217;re simply testing how our infrastructure tools perform at scale.</p>
 
-<p>If you <em>do</em> run hadoop in EC2, Amazon’s Elastic Map Reduce service is likely to perform
+<p>If you <em>do</em> run hadoop in EC2, Amazon&#8217;s Elastic Map Reduce service is likely to perform
 better at scale in EC2 than just running hadoop itself on general purpose instances.
 Amazon can do all sorts of stuff internally to show hadoop lots of love.
-We chose not to use EMR because we’re interested in testing how juju performs
-with <em>generic</em> Ubuntu Server images, not EMR… at least for now.</p>
+We chose not to use EMR because we&#8217;re interested in testing how juju performs
+with <em>generic</em> Ubuntu Server images, not EMR&#8230; at least for now.</p>
 
 <p>Note that stock EC2 accounts limit you to something like 20 instances.  To grow beyond that, you have to
 ask AWS to bump up your limits.</p>
 
 <h2 id="juju">Juju</h2>
 
-<p>We started scale testing from a fresh branch of juju trunk… what gets deployed to
-the PPA nightly… this freed us up to experiment with live changes to add instrumentation,
+<p>We started scale testing from a fresh branch of juju trunk&#8230; what gets deployed to
+the PPA nightly&#8230; this freed us up to experiment with live changes to add instrumentation,
 profiling information, and randomly mess with code as necessary.  This also locks in 
 the branch of juju that the scale testing environment uses.</p>
 
 <p>As usual, juju will keep track of the state of our infrastructure going forward and
 we can make changes as necessary via juju commands.  To bootstrap and spin up the
-initial environment we’ll just use shell scripts wrapping juju commands.</p>
+initial environment we&#8217;ll just use shell scripts wrapping juju commands.</p>
 
 <h3 id="spinning-up-a-cluster">Spinning up a cluster</h3>
 
@@ -1734,9 +1734,9 @@ a simple <a href="https://gist.github.com/2050525">rails stack</a>
 or a more realistic HA <a href="https://gist.github.com/1406018">wiki stack</a>.</p>
 
 <p>The hadoop scripts for EC2 will get a little more complex as we grow simply because
-we don’t want AWS to think we’re a DoS attack… we’ll pace ourselves during spinup.</p>
+we don&#8217;t want AWS to think we&#8217;re a DoS attack&#8230; we&#8217;ll pace ourselves during spinup.</p>
 
-<p>From the hadoop charm’s readme, the basic steps to spinning up a simple combined
+<p>From the hadoop charm&#8217;s readme, the basic steps to spinning up a simple combined
 hdfs and mapreduce cluster are:</p>
 
 <pre><code>juju bootstrap
@@ -1784,8 +1784,8 @@ echo "done"
 
 <h3 id="configuring-hadoop">Configuring Hadoop</h3>
 
-<p>Note that we’re specifying constraints to tell juju to use different sized ec2 instances for
-different juju services.  We’d like an m1.large for the
+<p>Note that we&#8217;re specifying constraints to tell juju to use different sized ec2 instances for
+different juju services.  We&#8217;d like an m1.large for the
 hadoop master</p>
 
 <pre><code>juju deploy ... --constraints "instance-type=m1.large" ... hadoop-master
@@ -1796,7 +1796,7 @@ hadoop master</p>
 <pre><code>juju deploy ... --constraints "instance-type=m1.medium" ... hadoop-slave
 </code></pre>
 
-<p>Note that we’ll also pass config files to specify different heap sizes for the different memory footprints</p>
+<p>Note that we&#8217;ll also pass config files to specify different heap sizes for the different memory footprints</p>
 
 <pre><code>juju deploy ... --config "hadoop-master.yaml" ... hadoop-master
 </code></pre>
@@ -1843,11 +1843,11 @@ hadoop-slave:
 </code></pre>
 
 <p>Note also that we also have our juju environment configured to use
-instance-store images… juju defaults to ebs-rooted images, but that’s
+instance-store images&#8230; juju defaults to ebs-rooted images, but that&#8217;s
 not a great idea with hdfs.  You specify this by adding a <code>default-image-id</code>
 into your <code>~/.juju/environments.yaml</code> file.
 This gave each of our instances an extra ~400G local drive
-on <code>/mnt</code>… hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
+on <code>/mnt</code>&#8230; hence the <code>hadoop.dir.base</code> of <code>/mnt/hadoop</code>
 in the config above.</p>
 
 <h2 id="nodes-and-100-nodes">40 nodes and 100 nodes</h2>
@@ -1860,10 +1860,10 @@ our account limits to allow for 100+ nodes.</p>
 
 <p>Once we had permission from Amazon to spin up 500 nodes on our account,
 we initially just naively spun
-up 500 instances… and quickly got throttled.</p>
+up 500 instances&#8230; and quickly got throttled.</p>
 
-<p>No particular surprise, we’re not specifying multiplicity in the ec2 api,
-nor are we using an auto scaling group… we must look like a DoS attack.</p>
+<p>No particular surprise, we&#8217;re not specifying multiplicity in the ec2 api,
+nor are we using an auto scaling group&#8230; we must look like a DoS attack.</p>
 
 <p>The order was eventually fulfilled, and juju waited around for it.
 Everything ran as expected, it just took about an hour and 15 minutes
@@ -1904,7 +1904,7 @@ and ran terasort with no problems</p>
 - pass these along all the way to the ec2 api... don't expand these into multiple api calls
 </code></pre>
 
-<p>We’ll add those to the list of things to do.</p>
+<p>We&#8217;ll add those to the list of things to do.</p>
 
 <h2 id="nodes-1">1000 nodes</h2>
 
@@ -1983,7 +1983,7 @@ exit 0
 </code></pre>
 
 <p>We experimented with more clever ways of doing the spinup
-(too little coffee at this point of the night)…
+(too little coffee at this point of the night)&#8230;
 but the real fix is to get juju to take
 advantage of multiplicity in api calls.
 Until then, timed batches work just fine.</p>
@@ -2030,15 +2030,15 @@ between each batch until we got near 2000 slaves.</p>
 </a></p>
 
 <p>but was stopped early b/c waiting for the job to complete
-would’ve just been silly at this point.  With our naive job
-config, we’re considerably past the point of diminishing
-returns for adding nodes to the actual terasort, and we’d
+would&#8217;ve just been silly at this point.  With our naive job
+config, we&#8217;re considerably past the point of diminishing
+returns for adding nodes to the actual terasort, and we&#8217;d
 captured the profiling info we needed at this point.</p>
 
 <p>Juju spun up 1972 slaves in just over seven hours total.
 Profiling showed that juju was spending a <em>lot</em> of time
 serializing stuff into zookeeper nodes using yaml.  It
-looks like python’s yaml implementation is python, and
+looks like python&#8217;s yaml implementation is python, and
 not just wrapping libyaml.  We tested a smaller run replacing
 the internal yaml serialization with json.. 
 Wham!  two orders of magnitude faster.  No particular surprise.</p>
@@ -2048,28 +2048,28 @@ Wham!  two orders of magnitude faster.  No particular surprise.</p>
 <p>Ok, so at the end of the day, what did we learn here?</p>
 
 <p>What we did here is the way developing for performance at scale
-should be done… start with a naive, flexible approach
+should be done&#8230; start with a naive, flexible approach
 and then spend time and effort obtaining real profiling
 information.  Follow that with optimization decisions that actually
-make a difference.  Otherwise it’s all just a crapshoot
+make a difference.  Otherwise it&#8217;s all just a crapshoot
 based on where developers think the bottlenecks might be.</p>
 
 <p>Things to do to juju as a result of these tests:</p>
 
 <ul>
-  <li>streamline our implementation of ‘-n’ options
+  <li>streamline our implementation of &#8216;-n&#8217; options
     <ul>
       <li>the client should pass the multiplicity to the provisioning agent</li>
       <li>the provisioning agent should pass the multiplicity to the EC2 api</li>
     </ul>
   </li>
-  <li>don’t use yaml to marshall data in and out of zookeeper</li>
+  <li>don&#8217;t use yaml to marshall data in and out of zookeeper</li>
   <li>replace per-instance security groups with per-instance firewalls</li>
 </ul>
 
-<h2 id="whats-next">What’s Next?</h2>
+<h2 id="whats-next">What&#8217;s Next?</h2>
 
-<p>So that’s a big enough bite for one round of scale testing.</p>
+<p>So that&#8217;s a big enough bite for one round of scale testing.</p>
 
 <p>Next up:</p>
 
@@ -2090,7 +2090,7 @@ of services?</li>
 
 <ul>
   <li>
-    <p>find some better test jobs!  benchmarks are boring… perhaps we can use
+    <p>find some better test jobs!  benchmarks are boring&#8230; perhaps we can use
 this compute time to mine educational data or cure cancer or something?</p>
   </li>
   <li>
@@ -2098,7 +2098,7 @@ this compute time to mine educational data or cure cancer or something?</p>
 Are there transactional features in more recent versions of zk that we can use?</p>
   </li>
   <li>
-    <p>use spot instances on ec2.  This is harder because you’ve gotta incorporate price monitoring.</p>
+    <p>use spot instances on ec2.  This is harder because you&#8217;ve gotta incorporate price monitoring.</p>
   </li>
 </ul>
 
@@ -2108,7 +2108,7 @@ Are there transactional features in more recent versions of zk that we can use?<
   <entry>
     <title type="html"><![CDATA[Charm School!]]></title>
     <link href="http://markmims.com/cloud/2011/11/22/charm-school.html"/>
-    <updated>2011-11-22T00:00:00-07:00</updated>
+    <updated>2011-11-22T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2011/11/22/charm-school</id>
     <content type="html"><![CDATA[<p>Wanna learn more about <a href="http://juju.ubuntu.com">juju</a>?</p>
 
@@ -2120,7 +2120,7 @@ Are there transactional features in more recent versions of zk that we can use?<
 
 <!--more-->
 
-<p>Details from <a href="http://tumblr.com/ZKG8NyCGhHZR">Jorge’s post</a>:</p>
+<p>Details from <a href="http://tumblr.com/ZKG8NyCGhHZR">Jorge&#8217;s post</a>:</p>
 
 <pre><code>We're holding a Charm School on IRC.
 
@@ -2147,12 +2147,12 @@ and configured if you want to get deep into the event.
   <entry>
     <title type="html"><![CDATA[Ensemble renamed to juju]]></title>
     <link href="http://markmims.com/cloud/2011/10/12/project-rename.html"/>
-    <updated>2011-10-12T00:00:00-06:00</updated>
+    <updated>2011-10-12T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2011/10/12/project-rename</id>
     <content type="html"><![CDATA[<p>Just a note that the Ubuntu Ensemble suite of DevOps tools for
 Ubuntu Server has been renamed to <code>juju</code>.</p>
 
-<p>I’ll be updating previous posts to reflect the name changes so they’ll be up to date.</p>
+<p>I&#8217;ll be updating previous posts to reflect the name changes so they&#8217;ll be up to date.</p>
 
 ]]></content>
   </entry>
@@ -2160,9 +2160,9 @@ Ubuntu Server has been renamed to <code>juju</code>.</p>
   <entry>
     <title type="html"><![CDATA[Where did the 'close-lid' action go in gnome3?]]></title>
     <link href="http://markmims.com/howtos/2011/09/13/power-lid-closed-actions.html"/>
-    <updated>2011-09-13T00:00:00-06:00</updated>
+    <updated>2011-09-13T00:00:00+00:00</updated>
     <id>http://markmims.com/howtos/2011/09/13/power-lid-closed-actions</id>
-    <content type="html"><![CDATA[<p>Here’s a workaround… (thanks slangasek!)</p>
+    <content type="html"><![CDATA[<p>Here&#8217;s a workaround&#8230; (thanks slangasek!)</p>
 
 <pre><code>gsettings set org.gnome.settings-daemon.plugins.power lid-close-ac-action 'nothing'
 </code></pre>
@@ -2173,7 +2173,7 @@ Ubuntu Server has been renamed to <code>juju</code>.</p>
   <entry>
     <title type="html"><![CDATA[Stir that memory of autotools]]></title>
     <link href="http://markmims.com/howtos/2011/09/08/autotools.html"/>
-    <updated>2011-09-08T00:00:00-06:00</updated>
+    <updated>2011-09-08T00:00:00+00:00</updated>
     <id>http://markmims.com/howtos/2011/09/08/autotools</id>
     <content type="html"><![CDATA[<p>Ok, never going to forget these again, dammit!</p>
 
@@ -2195,23 +2195,23 @@ $ OS_ARCH=amd64 make
   <entry>
     <title type="html"><![CDATA[Node.js and MongoDB on Ubuntu]]></title>
     <link href="http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu.html"/>
-    <updated>2011-09-07T00:00:00-06:00</updated>
+    <updated>2011-09-07T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu</id>
-    <content type="html"><![CDATA[<p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu… 
+    <content type="html"><![CDATA[<p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu&#8230; 
 it was quite a new experience.
-Figured I’d post details of the talk here.</p>
+Figured I&#8217;d post details of the talk here.</p>
 
 <h2 id="an-example-stack">An example stack</h2>
 
-<p>We’ll use <a href="http://juju.ubuntu.com/">juju</a> to deploy a basic
+<p>We&#8217;ll use <a href="http://juju.ubuntu.com/">juju</a> to deploy a basic
 <a href="http://nodejs.org">node.js</a>
 app along with a couple of typical surrounding services..
 - <a href="http://haproxy.1wt.eu/">haproxy</a> to catch inbound web traffic and route it to our node.js app cluster
 - <a href="http://mongodb.org/">mongodb</a> for app storage</p>
 
-<p>Along the way, we’ll see what it takes to connect and scale this particular stack
-of services.  I’ll err on the side of too much detail over simplicity in this
-example, but I’ll try to make it clear when there’s a sidebar topic.</p>
+<p>Along the way, we&#8217;ll see what it takes to connect and scale this particular stack
+of services.  I&#8217;ll err on the side of too much detail over simplicity in this
+example, but I&#8217;ll try to make it clear when there&#8217;s a sidebar topic.</p>
 
 <!--more-->
 
@@ -2248,28 +2248,28 @@ $   juju add-unit myapp
 $ done
 </code></pre>
 
-<p>and we’ll soon have a cluster of one haproxy node balancing
+<p>and we&#8217;ll soon have a cluster of one haproxy node balancing
 between five application nodes all talking to a single mongo
 node in the backend.  Of course, we can scale mongo too,
-but that’s another post.</p>
+but that&#8217;s another post.</p>
 
-<h2 id="juju-application-charms">juju “Application” charms</h2>
+<h2 id="juju-application-charms">juju &#8220;Application&#8221; charms</h2>
 
 <p>There are two types of juju charms used in this example:</p>
 
-<p>“Canned Charms”, like the
+<p>&#8220;Canned Charms&#8221;, like the
 <a href="http://github.com/mmm/juju-haproxy">haproxy charm</a>
 and the
 <a href="http://github.com/mmm/juju-mongodb">mongodb charm</a>,
-and “Application Charms”, like
+and &#8220;Application Charms&#8221;, like
 the <a href="http://github.com/mmm/juju-node-app">node.js app charm</a>.</p>
 
 <p>Canned charms can be used as-is right off the shelf.</p>
 
 <p>Application charms are used to manage your custom application
-as an juju service.  We haven’t nailed down the language on
+as an juju service.  We haven&#8217;t nailed down the language on
 this, but these charms create a contained environment,
-“framework”, or “wrapper” around your custom application and
+&#8220;framework&#8221;, or &#8220;wrapper&#8221; around your custom application and
 help it to play nicely with other services.</p>
 
 <p>The 
@@ -2281,7 +2281,7 @@ to maintain custom components of your infrastructure.</p>
 <h2 id="the-node-app-charm">The <code>node-app</code> charm</h2>
 
 <p>The <code>node-app</code> charm is the key feature we want to look at.
-It’s a charm that will pull your app from revision control
+It&#8217;s a charm that will pull your app from revision control
 and config/deploy/maintain it as a service within your
 infrastructure.</p>
 
@@ -2292,7 +2292,7 @@ $ cd ~/charms
 ~/charms$ git clone http://github.com/charms/node-app
 </code></pre>
 
-<p>and we’ll walk through it.</p>
+<p>and we&#8217;ll walk through it.</p>
 
 <pre><code>README.markdown
 config.yaml
@@ -2313,12 +2313,12 @@ hooks/
 node.js service, along with a couple of other hooks for relating to
 other services.</p>
 
-<p>Before we go into this in detail, let’s take a little sidebar on
-the Node.js app we’ll be deploying…</p>
+<p>Before we go into this in detail, let&#8217;s take a little sidebar on
+the Node.js app we&#8217;ll be deploying&#8230;</p>
 
 <h3 id="example-nodejs-app">Example node.js app</h3>
 
-<p>The example app I’m using for this</p>
+<p>The example app I&#8217;m using for this</p>
 
 <pre><code>http://github.com/mmm/testnode
 </code></pre>
@@ -2326,11 +2326,11 @@ the Node.js app we’ll be deploying…</p>
 <p>just logs page hits in mongo and reports results.</p>
 
 <p>As usual, I have absolutely no graphic design gifts so things look a little
-bare-bones.  Don’t let that fool you… it’s quite easy to dress this up
-with some svg maps and some client-side js a la topfunky’s (peepcode.com)
+bare-bones.  Don&#8217;t let that fool you&#8230; it&#8217;s quite easy to dress this up
+with some svg maps and some client-side js a la topfunky&#8217;s (peepcode.com)
 node examples.</p>
 
-<p>This is a really basic node app that…</p>
+<p>This is a really basic node app that&#8230;</p>
 
 <p>Reads config info</p>
 
@@ -2436,23 +2436,23 @@ server.listen(config.listen_port);
 console.log("Server running at http://0.0.0.0:" + config.listen_port + "/");
 </code></pre>
 
-<p>We won’t get into my node.js skillz at the moment… 
-it’s a deployment example.</p>
+<p>We won&#8217;t get into my node.js skillz at the moment&#8230; 
+it&#8217;s a deployment example.</p>
 
-<p>I’ve also got a <code>package.json</code> in there to let <code>npm</code> resolve
+<p>I&#8217;ve also got a <code>package.json</code> in there to let <code>npm</code> resolve
 some example dependencies upon install.</p>
 
-<p>Now, there’s no standard way to handle configuration in node
-apps, so it’s quite likely your app’s config looks a bit 
-different.  No problem, it’s pretty straightforward to adapt
-this example charm to handle the way your app works…
+<p>Now, there&#8217;s no standard way to handle configuration in node
+apps, so it&#8217;s quite likely your app&#8217;s config looks a bit 
+different.  No problem, it&#8217;s pretty straightforward to adapt
+this example charm to handle the way your app works&#8230;
 and use your own config file paths, and config parameter names.</p>
 
-<p>End-of-sidebar… Back to the <code>node-app</code> charm.</p>
+<p>End-of-sidebar&#8230; Back to the <code>node-app</code> charm.</p>
 
 <h3 id="hooks">Hooks</h3>
 
-<p>Let’s go through the hooks as they would be executing during
+<p>Let&#8217;s go through the hooks as they would be executing during
 deployment and service relation.</p>
 
 <p>The <code>install</code> hook is kicked off upon deployment,
@@ -2464,12 +2464,12 @@ reads its config from <code>config.yaml</code> and then will</p>
   <li>run <code>npm</code> if your app contains <code>package.json</code></li>
   <li>configure networking if your app contains <code>config/config.js</code></li>
   <li>create a startup service for your app</li>
-  <li>wait to startup once we’re joined to a <code>mongodb</code> service</li>
+  <li>wait to startup once we&#8217;re joined to a <code>mongodb</code> service</li>
 </ul>
 
 <p><code>start</code> and <code>stop</code> are trivial in this charm because
 we want to wait for mongo to join before we actually run
-the app.  If your app was simpler and didn’t depend on
+the app.  If your app was simpler and didn&#8217;t depend on
 a backing store, then you could use these hooks to
 manage the service created during installation.</p>
 
@@ -2478,8 +2478,8 @@ manage the service created during installation.</p>
 <p>The key to almost every charm is in the relation hooks.</p>
 
 <p>This particular app is written against mongodb
-so the app’s charm has hooks that get fired when
-the “app” service is related to the mongo service.</p>
+so the app&#8217;s charm has hooks that get fired when
+the &#8220;app&#8221; service is related to the mongo service.</p>
 
 <p>This relation was defined when we did</p>
 
@@ -2500,7 +2500,7 @@ will read config from <code>config.yaml</code></p>
   <li>start the node app service we created during <code>install</code></li>
 </ul>
 
-<p>That’s it really… our app is up and running at this
+<p>That&#8217;s it really&#8230; our app is up and running at this
 point.</p>
 
 <p>Note that the example here depends on mongo,
@@ -2509,23 +2509,23 @@ Just like we have <code>mongodb-relation-changed</code> hooks, we
 could just as easily have <code>cassandra-relation-changed</code> hooks
 that would look strikingly similar.  Of course, our app would
 have to be written in such a way that it could use either,
-but that’s another topic.  The deployment tool supports
+but that&#8217;s another topic.  The deployment tool supports
 the choice being made dynamically when relations are joined.
-I’d say “at deployment time” but it’s even better than that
+I&#8217;d say &#8220;at deployment time&#8221; but it&#8217;s even better than that
 because I can remove relations and add other ones at 
-any time throughout the lifetime of the service… and the
+any time throughout the lifetime of the service&#8230; and the
 correct hooks get called.</p>
 
 <h3 id="haproxy">HAProxy</h3>
 
-<p>For this example, I’d like to use haproxy to load balance</p>
+<p>For this example, I&#8217;d like to use haproxy to load balance</p>
 
 <p>This example stack uses haproxy to handle initial
 web requests from outside.  haproxy will load balance
 across multiple instances of our app.  That way we
 could just attach an elastic ip to haproxy, configure
-dns, and we’re cruising 
-(of course we’re leaving out
+dns, and we&#8217;re cruising 
+(of course we&#8217;re leaving out
 plenty of infrastructure aspects like 
 monitoring/logging/backups/etc that are
 pretty important for a production deployment
@@ -2533,7 +2533,7 @@ in the cloud).</p>
 
 <p>The app charm has
 hooks that get fired when
-the “app” service is related to the haproxy service.
+the &#8220;app&#8221; service is related to the haproxy service.
 Just as above, this relation was defined when we did</p>
 
 <pre><code>$ juju add-relation haproxy myapp
@@ -2560,7 +2560,7 @@ requests.</p>
 <p>We could of course configure our app to listen on port
 80, tell the charm to open port 80 in its firewall,
 and then expose port 80 for our app service to the
-outside world.  That’d be fine if we never needed to
+outside world.  That&#8217;d be fine if we never needed to
 scale or we were planning to load balance multiple
 units of our app using dns, elastic load balancer instances,
 or something else external.</p>
@@ -2573,7 +2573,7 @@ that consumed the juju <code>http</code> interface.</p>
 
 <p>Ok, so I lied a little up above when I said that the hooks
 read config info from <code>config.yaml</code>.  Yes, they do read config
-information from there, but that’s not the whole story.
+information from there, but that&#8217;s not the whole story.
 The values of the configurable parameters can be set/overidden
 in a number of different ways throughout the lifecycle of
 the service.</p>
@@ -2595,13 +2595,13 @@ configuration for the service itself, versus configuration for
 the service <em>in the context of</em> a relation with another service.</p>
 
 <p>When these two types of configuration are well isolated,
-scaling with juju just works.  I’ve caught myself several
+scaling with juju just works.  I&#8217;ve caught myself several
 times working on just getting a service charm working, with
 no real thought to scalability, and being pleasantly surprised
 to find out that the service pretty much scales as written.</p>
 
 <p>The best way to grok this is to walk through the process
-of joining your relations as single unit services…</p>
+of joining your relations as single unit services&#8230;</p>
 
 <p>In our example,</p>
 
@@ -2617,16 +2617,16 @@ the services are up, related, and running.</p>
 
 <p>Ok, now comes scaling.  <code>juju add-unit myapp</code> adds a new
 <code>myapp</code> service node and goes through the whole cycle above.
-The “services” are already related, so the relation hooks are
+The &#8220;services&#8221; are already related, so the relation hooks are
 automatically fired as each new unit is <code>started</code>.
 Since we divided up
 the installation/configuration/setup/startup of the service
 into the parts that are specific to the service and parts that
 are specific to the relation with another service, then each
-new unit runs “just enough” configuration to join it to the
+new unit runs &#8220;just enough&#8221; configuration to join it to the
 cluster.</p>
 
-<p>Not all tools can be configured like that, but that’s the key
+<p>Not all tools can be configured like that, but that&#8217;s the key
 to strive for when writing relation hooks.
 Identify the components of your application
 configuration that really depend on another service, and 
@@ -2642,9 +2642,9 @@ the more scalable the service.</p>
   <entry>
     <title type="html"><![CDATA[Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia]]></title>
     <link href="http://markmims.com/cloud/2011/09/03/terasort-ganglia.html"/>
-    <updated>2011-09-03T00:00:00-06:00</updated>
+    <updated>2011-09-03T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2011/09/03/terasort-ganglia</id>
-    <content type="html"><![CDATA[<p>Here I’m using new features of
+    <content type="html"><![CDATA[<p>Here I&#8217;m using new features of
 <a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
 (namely <a href="http://juju.ubuntu.com">juju</a>)
 to easily deploy
@@ -2661,7 +2661,7 @@ like
 <hr />
 
 <p><em>Updated on 2011-11-08:</em>
-The ubuntu project “ensemble” is now known as “juju”.
+The ubuntu project &#8220;ensemble&#8221; is now known as &#8220;juju&#8221;.
 This post has been updated to reflect the new names and updates to the api.</p>
 
 <hr />
@@ -2701,38 +2701,38 @@ hdfs$ hadoop jar hadoop-*-examples.jar terasort -Dmapred.map.tasks=100 -Dmapred.
 <pre><code>http://&lt;jobmonitor-instance-ec2-url&gt;/ganglia/
 </code></pre>
 
-<p>and see…</p>
+<p>and see&#8230;</p>
 
 <p><a href="http://markmims.com/images/terasort-ganglia-1.png">
 <img src="http://markmims.com/images/terasort-ganglia-1.png" width="720px" />
 </a></p>
 
-<p>and a little later as the jobs run…</p>
+<p>and a little later as the jobs run&#8230;</p>
 
 <p><a href="http://markmims.com/images/terasort-ganglia-2.png">
 <img src="http://markmims.com/images/terasort-ganglia-2.png" width="720px" />
 </a></p>
 
-<p>Of course, I’m just playing around with ganglia at the moment…
-For real performance, I’d change my juju config file
+<p>Of course, I&#8217;m just playing around with ganglia at the moment&#8230;
+For real performance, I&#8217;d change my juju config file
 to choose larger (and ephemeral) EC2 instances instead of
 the defaults.</p>
 
-<h2 id="a-few-details">A Few Details…</h2>
+<h2 id="a-few-details">A Few Details&#8230;</h2>
 
-<p>Let’s grab the charms necessary to reproduce this.</p>
+<p>Let&#8217;s grab the charms necessary to reproduce this.</p>
 
-<p>First, let’s install juju and set up a our charms.</p>
+<p>First, let&#8217;s install juju and set up a our charms.</p>
 
 <pre><code>$ sudo apt-get install juju charm-tools
 </code></pre>
 
-<p>Note that I’m describing all this using an Ubuntu laptop to run
-the juju cli because that’s how I roll, but you can certainly
+<p>Note that I&#8217;m describing all this using an Ubuntu laptop to run
+the juju cli because that&#8217;s how I roll, but you can certainly
 use a Mac to drive your Ubuntu services in the cloud.
-The juju CLI is already available in ports, but I’m not sure
+The juju CLI is already available in ports, but I&#8217;m not sure
 the version.  Homebrew packages are in the works.
-Windows should work too, but I don’t have a clue.</p>
+Windows should work too, but I don&#8217;t have a clue.</p>
 
 <pre><code>$ mkdir -p ~/charms/oneiric
 $ cd ~/charms/oneiric
@@ -2741,16 +2741,16 @@ $ charm get hadoop-slave
 $ charm get ganglia
 </code></pre>
 
-<p>That’s about all that’s really necessary to get you up and
+<p>That&#8217;s about all that&#8217;s really necessary to get you up and
 benchmarking/monitoring.</p>
 
-<p>I’ll do another post on how to adapt your own charms to use monitoring
-and the <code>monitor</code> juju interface as part of the “Core Infrastructure”
-series I’m writing for charm developers.  I’ll go over the process of
+<p>I&#8217;ll do another post on how to adapt your own charms to use monitoring
+and the <code>monitor</code> juju interface as part of the &#8220;Core Infrastructure&#8221;
+series I&#8217;m writing for charm developers.  I&#8217;ll go over the process of
 what I had to do to get the <code>hadoop-slave</code> service talking to monitoring
 services like <code>ganglia</code>.</p>
 
-<p>Until then, clone/test/enjoy… or better yet, fork/adapt/use!</p>
+<p>Until then, clone/test/enjoy&#8230; or better yet, fork/adapt/use!</p>
 
 ]]></content>
   </entry>
@@ -2758,17 +2758,17 @@ services like <code>ganglia</code>.</p>
   <entry>
     <title type="html"><![CDATA[Core Infrastructure Part 1 - Adding NFS to juju charms]]></title>
     <link href="http://markmims.com/cloud/2011/08/25/juju-nfs.html"/>
-    <updated>2011-08-25T00:00:00-06:00</updated>
+    <updated>2011-08-25T00:00:00+00:00</updated>
     <id>http://markmims.com/cloud/2011/08/25/juju-nfs</id>
     <content type="html"><![CDATA[<p>Several features have recently landed in juju that make 
 it easier to convert some common infrastructure-level components 
 over and use them within your stack of services.
-I figured it’s worth a series of posts about core services,
-storage, logging, monitoring, messaging, etc…  and how they
+I figured it&#8217;s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc&#8230;  and how they
 fit into the juju ecosystem.</p>
 
-<p>We’ll start with NFS.  I’d consider that vanilla workhorse to be
-core infrastructure technology… it’s still pretty much everywhere you
+<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
+core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
 look.  Many friends keep ancient boxes around as dedicated NFS 
 fileserver appliances that are usually in fairly critical roles.
 Well, how would this fit into a sexy new juju stack of services?</p>
@@ -2777,7 +2777,7 @@ Well, how would this fit into a sexy new juju stack of services?</p>
 
 <h2 id="the-goal">The Goal</h2>
 
-<p>In this post I’ll walk through adapting a basic mediawiki
+<p>In this post I&#8217;ll walk through adapting a basic mediawiki
 charm to enable using nfs mounts for shared resource directories.
 The steps here should work pretty closely for a lot of different
 service charms that might benefit from a NFS hooks.</p>
@@ -2808,22 +2808,22 @@ $ juju add-unit mywiki
 service is related to the <code>myimages</code> service,
 then all <code>mywiki</code> instances will share the same
 resource directory on the nfs server.  This works
-months into the deployment… we add another unit
+months into the deployment&#8230; we add another unit
 and the relation hooks perform the mount.</p>
 
-<p>The nfs server charm is pretty canned, it’ll take 
-config options, but has sane defaults.  There’s 
+<p>The nfs server charm is pretty canned, it&#8217;ll take 
+config options, but has sane defaults.  There&#8217;s 
 little need to adjust anything in there.</p>
 
 <p>To adapt your charm to use a juju-managed
 NFS service, we copy two hooks from an nfs-client
 example charm and adapt to suit the needs of
-the charm we’re working on (mediawiki in this
+the charm we&#8217;re working on (mediawiki in this
 example).</p>
 
 <h2 id="detailed-walk-through">Detailed walk-through</h2>
 
-<p>Let’s go through this process of adapting our charms
+<p>Let&#8217;s go through this process of adapting our charms
 to use NFS mounts.</p>
 
 <h3 id="the-problem">The Problem</h3>
@@ -2837,8 +2837,8 @@ $ juju add-relation mysql:db mywiki:db
 $ juju expose mywiki
 </code></pre>
 
-<p>With juju, it’s easy to spin up multiple mediawiki
-instances (or “service units” in juju-speak).</p>
+<p>With juju, it&#8217;s easy to spin up multiple mediawiki
+instances (or &#8220;service units&#8221; in juju-speak).</p>
 
 <pre><code>$ juju add-unit mywiki
 $ juju add-unit mywiki
@@ -2848,8 +2848,8 @@ $ juju add-unit mywiki
 then all these mywiki units share the same database and hence
 content.  Groovy.</p>
 
-<p>Ok, well there’s a problem.  Each wiki instance has its
-own filesystem-store for various things… images, uploads, etc.
+<p>Ok, well there&#8217;s a problem.  Each wiki instance has its
+own filesystem-store for various things&#8230; images, uploads, etc.
 This is pretty common practice across different CMSes that
 results in scaling pain.
 The content in the database will point to resources that
@@ -2861,26 +2861,26 @@ only exist on one of the instances.</p>
 is to just put these resource directories on a fileserver and
 share them out to each of the wiki instances using NFS.</p>
 
-<p>This, of course, isn’t limited to content management
+<p>This, of course, isn&#8217;t limited to content management
 systems.  Just about every infrastructure has some sort of need
 for shared storage.</p>
 
-<p>Ubuntu packages for mediawiki install mediawiki’s resource
+<p>Ubuntu packages for mediawiki install mediawiki&#8217;s resource
 directories with respect to <code>/var/lib/mediawiki/</code>.
-So let’s just set adapt the basic mediawiki charm to use
+So let&#8217;s just set adapt the basic mediawiki charm to use
 an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
 
 <p>Each mediawiki
 service unit has a <code>/var/lib/mediawiki/images</code> directory
 that points to 
-up multiple mediawiki instances, they’ll all share the
+up multiple mediawiki instances, they&#8217;ll all share the
 same <code>images</code> directory.</p>
 
 <h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
 
-<p>Let’s grab some code and get cranking…</p>
+<p>Let&#8217;s grab some code and get cranking&#8230;</p>
 
-<p>First, pull mediawiki as an example (or any charm you’re
+<p>First, pull mediawiki as an example (or any charm you&#8217;re
 currently working on that might need shared storage)</p>
 
 <pre><code>$ mkdir ~/charms
@@ -2907,7 +2907,7 @@ $ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
 
 <p>a bare mediawiki charm that we can use as a starting
 point to add our nfs client hooks.
-Note that even though this is an ‘nfsdemo’ branch just for this demo, 
+Note that even though this is an &#8216;nfsdemo&#8217; branch just for this demo, 
 the real mediawiki charm should now have nfs support in the trunk.</p>
 
 <p>Now, we can copy sample nfs client hooks from</p>
@@ -2916,14 +2916,14 @@ the real mediawiki charm should now have nfs support in the trunk.</p>
 </code></pre>
 
 <p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
-and save them as mediawiki hooks… I’d rename them to something
+and save them as mediawiki hooks&#8230; I&#8217;d rename them to something
 that makes sense to future readers of our mediawiki charm.
-Let’s call them <code>nfs-imagestore-relation-joined</code> and 
+Let&#8217;s call them <code>nfs-imagestore-relation-joined</code> and 
 <code>nfs-imagestore-relation-changed</code>.</p>
 
 <h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
 
-<p>Let’s look at the
+<p>Let&#8217;s look at the
 <code>nfs-imagestore-relation-joined</code> hook:</p>
 
 <pre><code>#!/bin/bash
@@ -2938,11 +2938,11 @@ relation-set client=`hostname -f`
 </code></pre>
 
 <p>This looks pretty normal.
-It installs some stuff nfs stuff when the relation is joined…
-this is good it doesn’t really install it until it’s needed.
+It installs some stuff nfs stuff when the relation is joined&#8230;
+this is good it doesn&#8217;t really install it until it&#8217;s needed.
 Then it tells the nfs server who we are for access control.
 Ok, so no changes need to be made to get this working
-on our mediawiki service unit… we can leave it as-is.</p>
+on our mediawiki service unit&#8230; we can leave it as-is.</p>
 
 <p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
 
@@ -3008,7 +3008,7 @@ local_owner=`config-get owner`
 </code></pre>
 
 <p>Well, for mediawiki
-these parameters aren’t really going to change.  It’s reasonable
+these parameters aren&#8217;t really going to change.  It&#8217;s reasonable
 to just hard-code them here as:</p>
 
 <pre><code>mw_root="/var/lib/mediawiki"
@@ -3017,8 +3017,8 @@ local_owner="www-data"
 </code></pre>
 
 <p>We could certainly just add these parameters to a <code>config.yaml</code>
-for the mediawiki charm, but in this case, they’re not really
-interesting “tweakable” aspects of the mediawiki charm, so let’s
+for the mediawiki charm, but in this case, they&#8217;re not really
+interesting &#8220;tweakable&#8221; aspects of the mediawiki charm, so let&#8217;s
 keep the mediawiki config simple.
 For other charms this might not be the case,
 but make that call in context.</p>
@@ -3073,15 +3073,15 @@ share_already_mounted || mount_share
 chown -f $local_owner.$local_owner $local_mountpoint
 </code></pre>
 
-<p>will run fine.  It’ll mount the <code>images</code> share and mediawiki
+<p>will run fine.  It&#8217;ll mount the <code>images</code> share and mediawiki
 will run normally.</p>
 
 <h3 id="additional-configuration">Additional configuration</h3>
 
 <p>This next step depends greatly on your particular charm/service.
-With mediawiki, the <code>images</code> directory isn’t really used until
+With mediawiki, the <code>images</code> directory isn&#8217;t really used until
 you tell mediawiki to turn on uploads.  This is true regardless
-of whether <code>images</code> is an nfs mount or you’re just using the
+of whether <code>images</code> is an nfs mount or you&#8217;re just using the
 directory on the local filesystem.</p>
 
 <p>The time to do this though is after the <code>images</code> share is mounted, 
@@ -3154,12 +3154,12 @@ EOS
 service apache2 status &amp;&amp; service apache2 restart
 </code></pre>
 
-<p>the same hook that’s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+<p>the same hook that&#8217;s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
 
 <h3 id="update-charm-metadata">Update charm metadata</h3>
 
-<p>So we have hooks that should do what we’d like… 
-(I’ll developing and debugging hooks in another post).
+<p>So we have hooks that should do what we&#8217;d like&#8230; 
+(I&#8217;ll developing and debugging hooks in another post).
 Next we need to update the charm metadata so juju
 knows when to fire them.</p>
 
@@ -3179,7 +3179,7 @@ provides:
 ...
 </code></pre>
 
-<p>let’s add our nfs requirement (<em>requirement</em> is a strong word… they’re
+<p>let&#8217;s add our nfs requirement (<em>requirement</em> is a strong word&#8230; they&#8217;re
 all optional),</p>
 
 <pre><code>...
@@ -3198,8 +3198,8 @@ provides:
 ...
 </code></pre>
 
-<p>The relation name’s gotta match up with what we called the hooks.
-I got the interface name from the nfs server charm’s metadata:</p>
+<p>The relation name&#8217;s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm&#8217;s metadata:</p>
 
 <pre><code>...
 provides:
@@ -3210,13 +3210,13 @@ provides:
 
 <p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
 
-<p>We can use the interface as a sanity check to insure we’re providing
+<p>We can use the interface as a sanity check to insure we&#8217;re providing
 and using the right parameters when communicating with the nfs server
 service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
 
 <h3 id="spin-it-up">Spin it up</h3>
 
-<p>Let’s deploy our new charm:</p>
+<p>Let&#8217;s deploy our new charm:</p>
 
 <pre><code>$ juju bootstrap
 $ juju deploy --repository=~/charms local:nfs myimages
@@ -3229,24 +3229,24 @@ $ juju expose mywiki
 
 <h3 id="spread-it-out">Spread it out</h3>
 
-<p>Add a few more mediawiki instances…</p>
+<p>Add a few more mediawiki instances&#8230;</p>
 
 <pre><code>$ for i in {1..10}; do
 $ juju add-unit mywiki
 $ done
 </code></pre>
 
-<p>When everything’s up, these should all share the same database
+<p>When everything&#8217;s up, these should all share the same database
 and image store.</p>
 
-<p>In real life you’d probably want to start adding mysql slaves
-to this.  Of course, in real life you’ll also add remote logging,
+<p>In real life you&#8217;d probably want to start adding mysql slaves
+to this.  Of course, in real life you&#8217;ll also add remote logging,
 monitoring, and other core infrastructure components too.
 Keep an eye out for subsequent posts in this series.</p>
 
 <h3 id="nfs-server-config">NFS server config</h3>
 
-<p>Up until now we’ve only talked about the NFS client.
+<p>Up until now we&#8217;ve only talked about the NFS client.
 The NFS <em>server</em> charm is pretty simple.</p>
 
 <p>It lives at
@@ -3264,7 +3264,7 @@ and supports configuration options at deploy(or run)-time via</p>
   export_options: rw,sync,no_root_squash,no_all_squash
 </code></pre>
 
-<h3 id="whats-left">What’s left?</h3>
+<h3 id="whats-left">What&#8217;s left?</h3>
 
 <p>This might not be an ideal NFS setup for your particular service.
 What are some other ways we can tweak this?</p>
@@ -3276,7 +3276,7 @@ that attaches to it.</p>
 share an export.  Well, you could deploy another mediawiki service unit
 called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
 share a different export.  The new export is created on the service when
-the first unit of a new service name joins… subsequent units of that named
+the first unit of a new service name joins&#8230; subsequent units of that named
 service are just connected to that new export.</p>
 
 <p>Of course, this works for entirely separate services too.  Relating a 
@@ -3285,7 +3285,7 @@ the <code>job27</code> units sharing a new nfs export.</p>
 
 <p>This behavior is a reasonable default, but there may be a need to do this a 
 little differently in your infrastructure.  You could change the nfs server
-charm to provide different levels of export sharing… either by some
+charm to provide different levels of export sharing&#8230; either by some
 additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
 An nfs client might request a unique export, for backups
 say, or a named export for sharing.</p>
@@ -3299,7 +3299,7 @@ say, or a named export for sharing.</p>
   <entry>
     <title type="html"><![CDATA[PreSonus FireBox in Ubuntu]]></title>
     <link href="http://markmims.com/howtos/2011/08/17/presonus-firebox.html"/>
-    <updated>2011-08-17T00:00:00-06:00</updated>
+    <updated>2011-08-17T00:00:00+00:00</updated>
     <id>http://markmims.com/howtos/2011/08/17/presonus-firebox</id>
     <content type="html"><![CDATA[<p>Just some notes to myself for later.</p>
 
@@ -3313,16 +3313,16 @@ worked great for me on audio production stuff several years
 ago, but at the time I could give jackd and friends a realtime kernel
 to have their way with.</p>
 
-<p>Now, I don’t really have the spare hardware to dedicate to a RT audio setup…<br />
-gotta run several ubuntu server VMs for work and can’t really hand the whole
+<p>Now, I don&#8217;t really have the spare hardware to dedicate to a RT audio setup&#8230;<br />
+gotta run several ubuntu server VMs for work and can&#8217;t really hand the whole
 shebang over to jack every time I wanna record something.</p>
 
-<p>Here’s my attempt to do it without realtime priorities…
-I’ll track my progress here.</p>
+<p>Here&#8217;s my attempt to do it without realtime priorities&#8230;
+I&#8217;ll track my progress here.</p>
 
 <!--more-->
 
-<h2 id="the-quick-and-the-dirty">The quick and the dirty…</h2>
+<h2 id="the-quick-and-the-dirty">The quick and the dirty&#8230;</h2>
 
 <p>Starting from a Natty desktop.</p>
 
@@ -3334,11 +3334,11 @@ I’ll track my progress here.</p>
 <p>when the installer asks to do realtime by default, I said no.</p>
 
 <p>Note that I installed <code>ffado-mixer-qt4 ffado-tools ffado-dbus-server</code>
-earlier trying to get this to work with pulse, without jack… but gave up.
-I don’t know if these packages effect the current setup, but they’re still
+earlier trying to get this to work with pulse, without jack&#8230; but gave up.
+I don&#8217;t know if these packages effect the current setup, but they&#8217;re still
 installed</p>
 
-<p>start the jack daemon… </p>
+<p>start the jack daemon&#8230; </p>
 
 <pre><code>$ jackd -r -dfirewire
 </code></pre>
@@ -3358,7 +3358,7 @@ installed</p>
 <p>and wire stuff together with the qjackctl patchpanel,
 start <code>jackd</code> and go.</p>
 
-<p>I used to use a better jack patch panel in the past… have to find it.</p>
+<p>I used to use a better jack patch panel in the past&#8230; have to find it.</p>
 
 <h2 id="resources">resources</h2>
 

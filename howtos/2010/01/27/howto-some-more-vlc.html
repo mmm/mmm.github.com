@@ -129,7 +129,7 @@
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
         
       </p>
     
@@ -143,8 +143,8 @@
 <pre><code>vlc -I http --control http:rc --rc-host :4800 --http-host :7000 --no-rc-show-pos --volume 500 --spdif -vvv /home/laptop/all.m3u --random --sout-keep --sout '#duplicate{dst=display,dst="transcode{acodec=vorb,anc=vorbis{quality=2},ab=64,samplerate=44100,channels=2}:standard{access=http,mux=ogg,url=192.168.3.2:8000}"}'
 </code></pre>
 
-<p>To explain what’s going on:
-vlc opens in the background with an http interface available. vlc can be controlled by both the http interface, on port 7000, and a remote control advanced telnet interface on port 4800. It’s playing the all.m3u playlist, at random, and keeps the stream-out alive between tracks. The stream-out (sout) is duplicated: the first stream plays locally (display), whilst the duplicate stream is transcoded via vorbis, to a quality of 2, at a bitrate of 64, 44100 mhz, stereo, with an ogg stream via http on port 8000. (whew)</p>
+<p>To explain what&#8217;s going on:
+vlc opens in the background with an http interface available. vlc can be controlled by both the http interface, on port 7000, and a remote control advanced telnet interface on port 4800. It&#8217;s playing the all.m3u playlist, at random, and keeps the stream-out alive between tracks. The stream-out (sout) is duplicated: the first stream plays locally (display), whilst the duplicate stream is transcoded via vorbis, to a quality of 2, at a bitrate of 64, 44100 mhz, stereo, with an ogg stream via http on port 8000. (whew)</p>
 
 </div>
 
@@ -168,7 +168,7 @@ vlc opens in the background with an http interface available. vlc can be control
   
 
 
-<time datetime="2010-01-27T00:00:00-07:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
+<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
       
 
 <span class="categories">
@@ -204,10 +204,9 @@ vlc opens in the background with an http interface available. vlc can be control
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -263,28 +262,12 @@ vlc opens in the background with an http interface available. vlc can be control
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2010/01/27/howto-some-more-vlc.html';
-        var disqus_url = 'http://markmims.com/howtos/2010/01/27/howto-some-more-vlc.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

@@ -133,7 +133,7 @@ google picasa post --title="ParkCity" *.* ">
   
 
 
-<time datetime="2010-10-19T00:00:00-06:00" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
+<time datetime="2010-10-19T00:00:00+00:00" pubdate data-updated="true">Oct 19<span>th</span>, 2010</time>
         
       </p>
     
@@ -172,7 +172,7 @@ google picasa post --title="ParkCity" *.*
   
 
 
-<time datetime="2010-10-12T00:00:00-06:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
+<time datetime="2010-10-12T00:00:00+00:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
         
       </p>
     
@@ -183,14 +183,14 @@ google picasa post --title="ParkCity" *.*
 
 <h2 id="linux--mac">Linux / Mac</h2>
 
-<p>You can create a video of Gource using the –output-ppm-stream option. This creates an uncompressed sequence of screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video. The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):</p>
+<p>You can create a video of Gource using the &#8211;output-ppm-stream option. This creates an uncompressed sequence of screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video. The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):</p>
 
 <pre><code>gource --disable-progress --stop-at-end --output-ppm-stream - | ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 gource.mp4
 </code></pre>
 
-<p>Note: You may need to add one of ‘-vpre default’, ‘-vpre libx264-default’ or ‘-fpre /path/to/libx264-default.ffpreset’ to get ffmpeg to work. The arguments for ffmpeg may vary depending on the version you have. There is a good guide to using x264 with ffmpeg here.</p>
+<p>Note: You may need to add one of &#8216;-vpre default&#8217;, &#8216;-vpre libx264-default&#8217; or &#8216;-fpre /path/to/libx264-default.ffpreset&#8217; to get ffmpeg to work. The arguments for ffmpeg may vary depending on the version you have. There is a good guide to using x264 with ffmpeg here.</p>
 
-<p>You can also adjust the output frame rate with –output-framerate. Note you will need to adjust the frame rate used by the encoder (eg ffmpeg -r) as well.</p>
+<p>You can also adjust the output frame rate with &#8211;output-framerate. Note you will need to adjust the frame rate used by the encoder (eg ffmpeg -r) as well.</p>
 </div>
   
   
@@ -219,7 +219,7 @@ google picasa post --title="ParkCity" *.*
   
 
 
-<time datetime="2010-10-09T00:00:00-06:00" pubdate data-updated="true">Oct 9<span>th</span>, 2010</time>
+<time datetime="2010-10-09T00:00:00+00:00" pubdate data-updated="true">Oct 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -259,14 +259,14 @@ google picasa post --title="ParkCity" *.*
   
 
 
-<time datetime="2010-09-30T00:00:00-06:00" pubdate data-updated="true">Sep 30<span>th</span>, 2010</time>
+<time datetime="2010-09-30T00:00:00+00:00" pubdate data-updated="true">Sep 30<span>th</span>, 2010</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>This was cobbled together from other stuff… no longer have the links</p>
+  <div class="entry-content"><p>This was cobbled together from other stuff&#8230; no longer have the links</p>
 
 <pre><code>require 'net/https'
 
@@ -371,7 +371,7 @@ end
   
 
 
-<time datetime="2010-09-30T00:00:00-06:00" pubdate data-updated="true">Sep 30<span>th</span>, 2010</time>
+<time datetime="2010-09-30T00:00:00+00:00" pubdate data-updated="true">Sep 30<span>th</span>, 2010</time>
         
       </p>
     
@@ -416,7 +416,7 @@ end
   
 
 
-<time datetime="2010-09-29T00:00:00-06:00" pubdate data-updated="true">Sep 29<span>th</span>, 2010</time>
+<time datetime="2010-09-29T00:00:00+00:00" pubdate data-updated="true">Sep 29<span>th</span>, 2010</time>
         
       </p>
     
@@ -451,7 +451,7 @@ rsync -Cauvzd  /Users/Shared/Photos/ user@server:/var/backups/photos
 <pre><code>scp mydropbox@hawk:/home/mydropbox/bin/sync-MyDropBox.sh .
 </code></pre>
 
-<p>and then run it in a cronjob…</p>
+<p>and then run it in a cronjob&#8230;</p>
 
 <pre><code>SHELL=/bin/bash
 PATH=/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin
@@ -516,7 +516,7 @@ done
   
 
 
-<time datetime="2010-08-15T00:00:00-06:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
+<time datetime="2010-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
         
       </p>
     
@@ -565,7 +565,7 @@ done
   
 
 
-<time datetime="2010-08-09T00:00:00-06:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
+<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -575,7 +575,7 @@ done
   <div class="entry-content"><pre><code>grub rescue&gt; set
 </code></pre>
 
-<p>see what current settings are…</p>
+<p>see what current settings are&#8230;</p>
 
 <pre><code>set prefix=(hd2,1)/boot/grub
 set root=(hd2,1)
@@ -613,7 +613,7 @@ boot
   
 
 
-<time datetime="2010-08-09T00:00:00-06:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
+<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
         
       </p>
     
@@ -625,7 +625,7 @@ boot
 <pre><code>apt-get install dhcp3-server
 </code></pre>
 
-<p>edit dhcpd.conf… to add</p>
+<p>edit dhcpd.conf&#8230; to add</p>
 
 <pre><code>ddns-update-style none;
 option domain-name "blah.blah";
@@ -712,7 +712,7 @@ lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
   
 
 
-<time datetime="2010-07-13T00:00:00-06:00" pubdate data-updated="true">Jul 13<span>th</span>, 2010</time>
+<time datetime="2010-07-13T00:00:00+00:00" pubdate data-updated="true">Jul 13<span>th</span>, 2010</time>
         
       </p>
     
@@ -793,25 +793,12 @@ lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

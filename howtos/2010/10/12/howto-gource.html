@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="From gource docs: Linux / Mac You can create a video of Gource using the –output-ppm-stream option. This creates an uncompressed sequence of &hellip;">
+  <meta name="description" content="From gource docs: Linux / Mac You can create a video of Gource using the &#8211;output-ppm-stream option. This creates an uncompressed sequence of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -129,7 +129,7 @@
   
 
 
-<time datetime="2010-10-12T00:00:00-06:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
+<time datetime="2010-10-12T00:00:00+00:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
         
       </p>
     
@@ -140,14 +140,14 @@
 
 <h2 id="linux--mac">Linux / Mac</h2>
 
-<p>You can create a video of Gource using the –output-ppm-stream option. This creates an uncompressed sequence of screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video. The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):</p>
+<p>You can create a video of Gource using the &#8211;output-ppm-stream option. This creates an uncompressed sequence of screenshots in PPM format which can then be processed by another program (such as ffmpeg) to produce a video. The below command line will create a video at 60fps in x264 format (assumes you have ffmpeg with x264 support):</p>
 
 <pre><code>gource --disable-progress --stop-at-end --output-ppm-stream - | ffmpeg -y -b 3000K -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 gource.mp4
 </code></pre>
 
-<p>Note: You may need to add one of ‘-vpre default’, ‘-vpre libx264-default’ or ‘-fpre /path/to/libx264-default.ffpreset’ to get ffmpeg to work. The arguments for ffmpeg may vary depending on the version you have. There is a good guide to using x264 with ffmpeg here.</p>
+<p>Note: You may need to add one of &#8216;-vpre default&#8217;, &#8216;-vpre libx264-default&#8217; or &#8216;-fpre /path/to/libx264-default.ffpreset&#8217; to get ffmpeg to work. The arguments for ffmpeg may vary depending on the version you have. There is a good guide to using x264 with ffmpeg here.</p>
 
-<p>You can also adjust the output frame rate with –output-framerate. Note you will need to adjust the frame rate used by the encoder (eg ffmpeg -r) as well.</p>
+<p>You can also adjust the output frame rate with &#8211;output-framerate. Note you will need to adjust the frame rate used by the encoder (eg ffmpeg -r) as well.</p>
 </div>
 
 
@@ -170,7 +170,7 @@
   
 
 
-<time datetime="2010-10-12T00:00:00-06:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
+<time datetime="2010-10-12T00:00:00+00:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time>
       
 
 <span class="categories">
@@ -206,10 +206,9 @@
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -265,28 +264,12 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/howtos/2010/10/12/howto-gource.html';
-        var disqus_url = 'http://markmims.com/howtos/2010/10/12/howto-gource.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

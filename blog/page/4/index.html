@@ -136,7 +136,7 @@ d1 2T /home ">
   
 
 
-<time datetime="2011-03-02T00:00:00-07:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2011</time>
+<time datetime="2011-03-02T00:00:00+00:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2011</time>
         
       </p>
     
@@ -178,14 +178,14 @@ d1 2T /home
   
 
 
-<time datetime="2011-02-22T00:00:00-07:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
+<time datetime="2011-02-22T00:00:00+00:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I’m gonna set up hawk to configure VMs into isolated VLANs.</p>
+  <div class="entry-content"><p>I&#8217;m gonna set up hawk to configure VMs into isolated VLANs.</p>
 
 <p>most of this comes from</p>
 
@@ -221,14 +221,14 @@ d1 2T /home
   
 
 
-<time datetime="2011-02-22T00:00:00-07:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
+<time datetime="2011-02-22T00:00:00+00:00" pubdate data-updated="true">Feb 22<span>nd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>I’m loving dd-wrt…</p>
+  <div class="entry-content"><p>I&#8217;m loving dd-wrt&#8230;</p>
 
 <p>startup scripts</p>
 
@@ -267,7 +267,7 @@ d1 2T /home
   
 
 
-<time datetime="2011-02-13T00:00:00-07:00" pubdate data-updated="true">Feb 13<span>th</span>, 2011</time>
+<time datetime="2011-02-13T00:00:00+00:00" pubdate data-updated="true">Feb 13<span>th</span>, 2011</time>
         
       </p>
     
@@ -290,7 +290,7 @@ d1 2T /home
 
 <p>need to figure out how to get this working from router reboot!</p>
 
-<p>ok, resolved this…</p>
+<p>ok, resolved this&#8230;</p>
 
 <pre><code>nvram set rc_startup="
   echo '10.10.10.2 hawk.mmmhtm.org' &gt;&gt; /etc/hosts
@@ -329,7 +329,7 @@ reboot
   
 
 
-<time datetime="2011-02-05T00:00:00-07:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
+<time datetime="2011-02-05T00:00:00+00:00" pubdate data-updated="true">Feb 5<span>th</span>, 2011</time>
         
       </p>
     
@@ -345,7 +345,7 @@ and
 
 <h2 id="problem1">problem1</h2>
 
-<p>vtund wasn’t in sync with the pid in /var/run/eucalyptus and so it “wasn’t able to bind to socket” in /var/log/syslog</p>
+<p>vtund wasn&#8217;t in sync with the pid in /var/run/eucalyptus and so it &#8220;wasn&#8217;t able to bind to socket&#8221; in /var/log/syslog</p>
 
 <hr />
 
@@ -353,13 +353,13 @@ and
 
 <p>Volume is created and available from the SC
     ps awux | grep vblade
-should return something… something running on the br0 interface… but they seem to be stuck on eth0</p>
+should return something&#8230; something running on the br0 interface&#8230; but they seem to be stuck on eth0</p>
 
 <hr />
 
 <h2 id="general-method-for-exporting-things-using-aoe">general method for exporting things using aoe</h2>
 
-<p>On the storage controller (“target” in AoE lingo)…</p>
+<p>On the storage controller (&#8220;target&#8221; in AoE lingo)&#8230;</p>
 
 <p>Load the module
     modprobe aoe</p>
@@ -369,10 +369,10 @@ should return something… something running on the br0 interface… but they se
 or for euca
     vblade 0 5 br0 /dev/vg-TldY4A../lv-hrh7uQ.. </p>
 
-<p>Then on the NC (“initiator”)…</p>
+<p>Then on the NC (&#8220;initiator&#8221;)&#8230;</p>
 
 <p>discover
-    aoe-discover (this wasn’t necessary on a NC… just worked once the target had the right device)</p>
+    aoe-discover (this wasn&#8217;t necessary on a NC&#8230; just worked once the target had the right device)</p>
 
 <p>status
     aoe-stat
@@ -381,7 +381,7 @@ or for euca
 <p>this showed a <code>e0.5</code> entry that can be treated like a regular partition</p>
 
 <p>Note: iSCSI is over TCP (layer 4?), AoE is over Ethernet (layer 2)
-so iscsi can be routed, aoe can’t (at least not without ebtables and l2 switches)
+so iscsi can be routed, aoe can&#8217;t (at least not without ebtables and l2 switches)
 aoe is designed to be used in a tighter lan environment</p>
 
 <hr />
@@ -395,7 +395,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
 
 <h2 id="vtun">vtun?</h2>
 
-<p>dunno wtf… I assume it’s something going on with tunneling traffic between SC and NC instances?</p>
+<p>dunno wtf&#8230; I assume it&#8217;s something going on with tunneling traffic between SC and NC instances?</p>
 
 </div>
   
@@ -425,7 +425,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
   
 
 
-<time datetime="2011-02-04T00:00:00-07:00" pubdate data-updated="true">Feb 4<span>th</span>, 2011</time>
+<time datetime="2011-02-04T00:00:00+00:00" pubdate data-updated="true">Feb 4<span>th</span>, 2011</time>
         
       </p>
     
@@ -436,7 +436,7 @@ to use <code>br0</code> instead of <code>eth0</code></p>
 
 <h1 id="update">update</h1>
 
-<p>Some tools from this were broken… got a decent set of revisions working… yay!</p>
+<p>Some tools from this were broken&#8230; got a decent set of revisions working&#8230; yay!</p>
 
 <p>Grab and install the following:</p>
 
@@ -458,8 +458,8 @@ sudo ln -s ../src/git-bzr-ng/git-bzr-ng git-bzr
 </code></pre>
 
 <p>Now install.<br />
-I know there’re much better ways to do this…
-I’m just capturing what I did to get it to work</p>
+I know there&#8217;re much better ways to do this&#8230;
+I&#8217;m just capturing what I did to get it to work</p>
 
 <pre><code>cd bzr-fastimport
 sudo ./setup.py install
@@ -524,7 +524,7 @@ $ git bzr push upstream
   
 
 
-<time datetime="2011-01-31T00:00:00-07:00" pubdate data-updated="true">Jan 31<span>st</span>, 2011</time>
+<time datetime="2011-01-31T00:00:00+00:00" pubdate data-updated="true">Jan 31<span>st</span>, 2011</time>
         
       </p>
     
@@ -579,7 +579,7 @@ git svn fetch
   
 
 
-<time datetime="2011-01-30T00:00:00-07:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
+<time datetime="2011-01-30T00:00:00+00:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
         
       </p>
     
@@ -646,7 +646,7 @@ Set 'PowerCtrl' to 'forceoff'
   
 
 
-<time datetime="2011-01-29T00:00:00-07:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
+<time datetime="2011-01-29T00:00:00+00:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
         
       </p>
     
@@ -686,15 +686,15 @@ Set 'PowerCtrl' to 'forceoff'
   
 
 
-<time datetime="2011-01-21T00:00:00-07:00" pubdate data-updated="true">Jan 21<span>st</span>, 2011</time>
+<time datetime="2011-01-21T00:00:00+00:00" pubdate data-updated="true">Jan 21<span>st</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>Ok, dia is totally screwed up with units… 
-here’s how to make it work well.</p>
+  <div class="entry-content"><p>Ok, dia is totally screwed up with units&#8230; 
+here&#8217;s how to make it work well.</p>
 
 <p>open dia</p>
 
@@ -726,7 +726,7 @@ Grid Lines
   Lines per major line: 5
 </code></pre>
 
-<p>on the diagram window… File-&gt;Page Setup</p>
+<p>on the diagram window&#8230; File-&gt;Page Setup</p>
 
 <pre><code>Paper Size: Letter
 orientation again portrait
@@ -811,25 +811,12 @@ Scale: 100.0
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

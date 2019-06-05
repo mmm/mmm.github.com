@@ -9,8 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Notes from a lunch-and-learn talk. It’s a little weak without the narrative,
-but I’ll post it here for reference anyway. Agenda: config tunnels &hellip;">
+  <meta name="description" content="Notes from a lunch-and-learn talk. It&#8217;s a little weak without the narrative,
+but I&#8217;ll post it here for reference anyway. Agenda: config &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,15 +130,15 @@ but I’ll post it here for reference anyway. Agenda: config tunnels &hellip;">
   
 
 
-<time datetime="2015-06-01T16:00:00-06:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
+<time datetime="2015-06-01T16:00:00+00:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Notes from a lunch-and-learn talk.  It’s a little weak without the narrative,
-but I’ll post it here for reference anyway.</p>
+<div class="entry-content"><p>Notes from a lunch-and-learn talk.  It&#8217;s a little weak without the narrative,
+but I&#8217;ll post it here for reference anyway.</p>
 
 <p>Agenda:</p>
 
@@ -163,30 +163,30 @@ but I’ll post it here for reference anyway.</p>
 
 <h2 id="why-ssh">Why SSH?</h2>
 
-<p>It’s common practice to secure a cluster of servers using a <code>bastion</code> host.
+<p>It&#8217;s common practice to secure a cluster of servers using a <code>bastion</code> host.
 This might be a cluster of servers in a colocation facility, containers on a
-single host, or instances in an <code>EC2</code> region… the pattern can still be applied.</p>
+single host, or instances in an <code>EC2</code> region&#8230; the pattern can still be applied.</p>
 
 <p>The way this works is that the servers in the cluster are all locked down and
 not accessible to the outside world except where necessary for the production
 network design of the pipeline or application.</p>
 
-<p>That’s all great for production network traffic.  However, there’s often a need
+<p>That&#8217;s all great for production network traffic.  However, there&#8217;s often a need
 for adhoc access: testing, debugging, monitoring, etc of the cluster.  This is
-usually access to information that’s required <em>in addition</em> to the existing
+usually access to information that&#8217;s required <em>in addition</em> to the existing
 monitoring and logging for the production pipeline.  Until automated management
 solutions involving immutable infrastructure components are widely adopted,
-you’ll almost always need the ability for an engineer to directly log into
+you&#8217;ll almost always need the ability for an engineer to directly log into
 cluster instances to do things like clear <code>/tmp</code> directories, run jobs, etc.  </p>
 
-<p>You’ve also gotta routinely access various web consoles (ClouderaManager,
+<p>You&#8217;ve also gotta routinely access various web consoles (ClouderaManager,
 spark, hdfs, etc) to debug functional or performance problems, to change
 config, or even just to do sanity checks on overall cluster health.</p>
 
-<p>How do you access all of this?  You can’t just expose them to the outside
-world.  None of these consoles were ever designed for that.  They’re rife with
-holes…  with often <em>huge</em> ramifications for any incursions!  On the other
-hand, it’s often quite difficult (and dangerous!) to add adhoc network access
+<p>How do you access all of this?  You can&#8217;t just expose them to the outside
+world.  None of these consoles were ever designed for that.  They&#8217;re rife with
+holes&#8230;  with often <em>huge</em> ramifications for any incursions!  On the other
+hand, it&#8217;s often quite difficult (and dangerous!) to add adhoc network access
 into production network planning.</p>
 
 <p>Two practices are common:</p>
@@ -198,21 +198,21 @@ into production network planning.</p>
 
 <p>They each have pros/cons, tradeoffs between security, ease-of-use, flexibility,
 and capability.  VPN access is often ineffective due to its static nature and
-sensitivity to all manner of bad security practices.  It’s particularly
+sensitivity to all manner of bad security practices.  It&#8217;s particularly
 pointless due to the random way different web consoles choose which interfaces
-they like to bind to.  That’s a whole other discussion… for this talk,
+they like to bind to.  That&#8217;s a whole other discussion&#8230; for this talk,
 suffice it to say that I highly recommend and infinitely prefer an SSH-based
-solution.  It’s worth traversing the learning curve of SSH for the sheer power
+solution.  It&#8217;s worth traversing the learning curve of SSH for the sheer power
 and flexiblity it gives you without compromising security.</p>
 
 <hr />
 
 <h2 id="config-files">Config Files</h2>
 
-<p>In your home directory, there’s an optional <code>~/.ssh/config</code> file 
+<p>In your home directory, there&#8217;s an optional <code>~/.ssh/config</code> file 
 where you can customize your local SSH client behavior.</p>
 
-<p>You can use this for simple aliases…</p>
+<p>You can use this for simple aliases&#8230;</p>
 
 <pre><code>#################
 # MyBastions
@@ -225,7 +225,7 @@ Host customerZbastion
     Hostname ec2-zzz-zzz-zzz-zzz.compute-1.amazonaws.com 
 </code></pre>
 
-<p>or adding extra stuff that’s a pain to type <em>every</em> time</p>
+<p>or adding extra stuff that&#8217;s a pain to type <em>every</em> time</p>
 
 <pre><code>############
 # CustomerX
@@ -267,7 +267,7 @@ Host *.inside.customerY.com
 </code></pre>
 
 <p>Once you add multiple cluster configs and different customer environments,
-these SSH config files can get quite complex.  Here’re a couple of ways I’ve
+these SSH config files can get quite complex.  Here&#8217;re a couple of ways I&#8217;ve
 seen people manage that:</p>
 
 <ul>
@@ -277,38 +277,38 @@ comments to keep track of everything</p>
   </li>
   <li>
     <p>explictly specify config files at the command line a la <code>ssh -F
-~/.ssh/customerX-config &lt;server&gt;</code>… maybe even use a shell alias to shorten
+~/.ssh/customerX-config &lt;server&gt;</code>&#8230; maybe even use a shell alias to shorten
 this if you do it a lot</p>
   </li>
   <li>
     <p>[what I currently do] scripts to glue multiple config snippets from
 <code>~/.ssh/config.d/customerX.conf</code> into a single big read-only <code>~/.ssh/config</code>.
-It’d be nice to eventually change the ssh client to optionally read from
+It&#8217;d be nice to eventually change the ssh client to optionally read from
 these kind of <code>~/.ssh/config.d/</code> and <code>~/.ssh/authorized_keys.d/</code> snippet
 directories</p>
   </li>
   <li>
-    <p>customer-specific containers… I actually work a lot from <em>inside</em> of
+    <p>customer-specific containers&#8230; I actually work a lot from <em>inside</em> of
 containers on an ec2 instance.  I usually have them just bind-mount the
 underlying hosts home directory, but you could easily keep them isolated with
 separate config and spin them up only when you need overlay specific to a
-customer.  This also works even with gui apps on a laptop btw, but that’s a
+customer.  This also works even with gui apps on a laptop btw, but that&#8217;s a
 longer story :)</p>
   </li>
 </ul>
 
-<p>It’s also pretty common for folks to write scripts using config management
+<p>It&#8217;s also pretty common for folks to write scripts using config management
 (juju, knife, or ClouderaManager-like APIs) to generate ssh config snippets
 from a running infrastructure.  This can be quite useful, but is still a static
 picture of a cluster that changes.  Depending on the lifetime or stability of
-the cluster, you’re often better off using a more dynamic approach like <code>knife
-ssh</code>.  It’s a no-win tradeoff of sharing static SSH config snippets -vs-
+the cluster, you&#8217;re often better off using a more dynamic approach like <code>knife
+ssh</code>.  It&#8217;s a no-win tradeoff of sharing static SSH config snippets -vs-
 configuring chef environments for everyone who needs to access the cluster.</p>
 
-<p>I’d love to hear other solutions folks have come up with to deal with this.  I
+<p>I&#8217;d love to hear other solutions folks have come up with to deal with this.  I
 have no clue what puppet offers here, and I bet there are great examples of
-ansible’s ec2 plugin that’ll be a dead-simple way to interact with a dynamic
-host inventory.  Perhaps that’s where I’ll head next… we’ll see.  Totally
+ansible&#8217;s ec2 plugin that&#8217;ll be a dead-simple way to interact with a dynamic
+host inventory.  Perhaps that&#8217;s where I&#8217;ll head next&#8230; we&#8217;ll see.  Totally
 depends on customer environments.</p>
 
 <hr />
@@ -392,7 +392,7 @@ Set up your SSH config so you can ssh directly to the <code>bastion</code> host<
      +--------------------+         +-------------------+       +-------------------+
 </code></pre>
 
-<p>From laptop’s <code>~/.ssh/config</code> file:</p>
+<p>From laptop&#8217;s <code>~/.ssh/config</code> file:</p>
 
 <pre><code>Host bastion
     Hostname ec2-xxx.xxx.....amazon.com
@@ -404,9 +404,9 @@ Host target
 <p>then you can just <code>ssh target</code> directly from your laptop.  It automatically
 traverses the proxy <code>bastion</code> on your behalf.</p>
 
-<p>Note, that from an administrative perspective, it’s easy to control user access
-at the single <code>bastion</code>… if you can’t establish an ssh connection to the
-bastion, you can’t “jump through it” to internal hosts.</p>
+<p>Note, that from an administrative perspective, it&#8217;s easy to control user access
+at the single <code>bastion</code>&#8230; if you can&#8217;t establish an ssh connection to the
+bastion, you can&#8217;t &#8220;jump through it&#8221; to internal hosts.</p>
 
 <hr />
 
@@ -441,7 +441,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 
 <h3 id="forward-tunnels">forward tunnels</h3>
 
-<p>aka, “port forwarding”</p>
+<p>aka, &#8220;port forwarding&#8221;</p>
 
 <h4 id="forwarding-web-traffic">forwarding web traffic</h4>
 
@@ -498,7 +498,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 `ssh fred -L8888:localhost:80`
 </code></pre>
 
-<p>or, perhaps more useful…</p>
+<p>or, perhaps more useful&#8230;</p>
 
 <pre><code>`ssh fred -L50070:localhost:50070`
 `open http://localhost:50070/`
@@ -537,7 +537,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 `ssh fred -R2222:localhost:22`
 </code></pre>
 
-<p>or maybe something like…</p>
+<p>or maybe something like&#8230;</p>
 
 <pre><code>`ssh fred -R8888:localhost:80`
 </code></pre>
@@ -574,7 +574,7 @@ bastion, you can’t “jump through it” to internal hosts.</p>
   
 
 
-<time datetime="2015-06-01T16:00:00-06:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
+<time datetime="2015-06-01T16:00:00+00:00" pubdate data-updated="true">Jun 1<span>st</span>, 2015</time>
       
 
 
@@ -604,10 +604,9 @@ bastion, you can’t “jump through it” to internal hosts.</p>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -663,28 +662,12 @@ bastion, you can’t “jump through it” to internal hosts.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/2015/06/01/ssh-tips.html';
-        var disqus_url = 'http://markmims.com/2015/06/01/ssh-tips.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 

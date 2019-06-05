@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="Written by Mark Mims and Chris Johnston Hey, so last month we ran scheduling for the Linux Plumbers Conference
-entirely on juju! Here’s a little &hellip;">
+entirely on juju! Here&#8217;s a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -130,7 +130,7 @@ entirely on juju! Here’s a little &hellip;">
   
 
 
-<time datetime="2012-09-25T00:00:00-06:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
+<time datetime="2012-09-25T00:00:00+00:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
         
       </p>
     
@@ -145,12 +145,12 @@ Written by Mark Mims and Chris Johnston
 <a href="http://linuxplumbersconf.org">Linux Plumbers Conference</a>
 entirely on juju!</p>
 
-<p>Here’s a little background on the experience.</p>
+<p>Here&#8217;s a little background on the experience.</p>
 
-<p>Along the way, we’ll go into a little more detail about running juju in
-production than the particular problem at hand might warrant.  It’s a basic
-stack of services that’s only alive for 6-months or so…  but this discussion
-applies to bigger longer-running production infrastructures too, so it’s worth
+<p>Along the way, we&#8217;ll go into a little more detail about running juju in
+production than the particular problem at hand might warrant.  It&#8217;s a basic
+stack of services that&#8217;s only alive for 6-months or so&#8230;  but this discussion
+applies to bigger longer-running production infrastructures too, so it&#8217;s worth
 going over here.</p>
 
 <!--more-->
@@ -158,20 +158,20 @@ going over here.</p>
 <h2 id="the-app">The App</h2>
 
 <p>So <a href="https://launchpad.net/summit">summit</a> is this great django app built for
-scheduling conferences.  It’s evolved over time to handle
+scheduling conferences.  It&#8217;s evolved over time to handle
 <a href="uds.ubuntu.com">UDS</a>-level traffic and is currently maintained by a
 <a href="https://launchpad.net/~summit-hackers">Summit Hackers</a> team that includes
 <a href="http://www.chrisjohnston.org/">Chris Johnston</a>
 and <a href="http://mhall119.com/">Michael Hall</a>.</p>
 
-<p>Chris contacted me to help him use juju to manage summit for this year’s
+<p>Chris contacted me to help him use juju to manage summit for this year&#8217;s
 Plumbers conference.  At the time we started this, the 11.10 version of juju
-wasn’t exactly blessed for production environments, but we decided it’d be a
+wasn&#8217;t exactly blessed for production environments, but we decided it&#8217;d be a
 great opportunity to work things out.</p>
 
 <h2 id="the-stack">The Stack</h2>
 
-<p>A typical summit stack’s got postgresql, the django app itself, and a memcached server.</p>
+<p>A typical summit stack&#8217;s got postgresql, the django app itself, and a memcached server.</p>
 
 <p><a href="/images/django-stack.png">
 <img src="/images/django-stack.png" width="198px" />
@@ -183,64 +183,64 @@ great opportunity to work things out.</p>
 <img src="/images/bigger-django-stack.png" width="334px" />
 </a></p>
 
-<p>This’d let the app scale horizontally as well as give us a stable point to
+<p>This&#8217;d let the app scale horizontally as well as give us a stable point to
 attach an elastic-ip.  We decided to <em>not</em> do this at the time b/c we could
 most likely handle the peak conference load with a single django service-unit
 provided we slam select snippets of the site into memcached.</p>
 
-<p>This turned out to be true load-wise, but it really would’ve been a whole lot
+<p>This turned out to be true load-wise, but it really would&#8217;ve been a whole lot
 easier to have a nice constant haproxy node out there to tack the elastic-ip
 to.
 During development (charm, app, and theme) you want the freedom to destroy
 a service and respawn it without having to use external tools to go around and
-attach public IP addresses to the right places.  That’s a pain.  Also, if
-there’s a sensitive part of this infrastructure in production, it wouldn’t be
-postgresql, memcached, or haproxy… the app itself would be the most likely
+attach public IP addresses to the right places.  That&#8217;s a pain.  Also, if
+there&#8217;s a sensitive part of this infrastructure in production, it wouldn&#8217;t be
+postgresql, memcached, or haproxy&#8230; the app itself would be the most likely
 point of instability, so it was a mistake to attach the elastic-ip there.</p>
 
 <h2 id="the-environment">The Environment</h2>
 
 <h3 id="choice-of-cloud">choice of cloud</h3>
 
-<p>We chose to use ec2 to host the summit stack… mostly a matter of
-convenience.  The juju openstack-native provider wasn’t completed when we spun
-up the production environment for linuxplumbers and we didn’t have access to a
+<p>We chose to use ec2 to host the summit stack&#8230; mostly a matter of
+convenience.  The juju openstack-native provider wasn&#8217;t completed when we spun
+up the production environment for linuxplumbers and we didn&#8217;t have access to a
 stable private ubuntu cloud running the openstack-ec2-api at the time.
-All of this has subsequently landed, so we’d have more options today.</p>
+All of this has subsequently landed, so we&#8217;d have more options today.</p>
 
 <h3 id="the-charms">the charms</h3>
 
-<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>’s excellent
+<p>We forked <a href="https://twitter.com/michaelanelson">Michael Nelson</a>&#8217;s excellent
 <a href="lp:~michael.nelson/charms/oneiric/apache-django-wsgi/trunk">django charm</a>
 to create a
 <a href="https://code.launchpad.net/~mark-mims/charms/oneiric/summit/trunk">summit-charm</a>
 and freely specialized it for summit.</p>
 
-<p>Note that we’re updating this charm for 12.04
+<p>Note that we&#8217;re updating this charm for 12.04
 <a href="https://code.launchpad.net/~mark-mims/charms/precise/summit/trunk">here</a>, but
-this will probably go away in the near future and we’ll just use a generic
-django charm.  It turns out we didn’t do too much here that won’t apply to
+this will probably go away in the near future and we&#8217;ll just use a generic
+django charm.  It turns out we didn&#8217;t do too much here that won&#8217;t apply to
 django apps in general, but more on that another time.</p>
 
 <p>There was nothing special about our tuning of postgresql or memcached.  We just
 used the services provided by the canned charms.  These sort of peripheral
-services aren’t the kind of charms you’re likely to be making changes to or
+services aren&#8217;t the kind of charms you&#8217;re likely to be making changes to or
 tweaking outside of their exposed config parameters.  I know <em>jack</em> about
-memcached, so I’ll defer to the experts in this regard.  Similarly for
-postgresql… and haproxy if we used it in this stack.</p>
+memcached, so I&#8217;ll defer to the experts in this regard.  Similarly for
+postgresql&#8230; and haproxy if we used it in this stack.</p>
 
-<p>The summit charm is a little different.  It’s something we were continuing to
+<p>The summit charm is a little different.  It&#8217;s something we were continuing to
 tweak during development.  Perhaps with future more generic django charm
-versions, we won’t need to tweak the charm itself… just configure it.</p>
+versions, we won&#8217;t need to tweak the charm itself&#8230; just configure it.</p>
 
-<p>We used a “local” repository for <em>all</em> charms because the charm store hadn’t
+<p>We used a &#8220;local&#8221; repository for <em>all</em> charms because the charm store hadn&#8217;t
 landed when we were setting this up.  Well, now that the charm store is live,
 you can just deploy the canned charms straight from the store</p>
 
 <pre><code>`juju deploy -e summit memcached`
 </code></pre>
 
-<p>and keep the ones you want to tweak in a local repository… </p>
+<p>and keep the ones you want to tweak in a local repository&#8230; </p>
 
 <pre><code>`juju deploy -e summit --repository ~/charms local:summit`
 </code></pre>
@@ -249,22 +249,22 @@ you can just deploy the canned charms straight from the store</p>
 
 <h3 id="control-environment">control environment</h3>
 
-<p>We had multiple people to manage the production summit environment.  What’s the
+<p>We had multiple people to manage the production summit environment.  What&#8217;s the
 best way to do that?  It turns out juju supports this pretty well right out of
-the box.  There’s an environment config for the set of ssh public keys to
-inject into everything in the environment as it starts up… you can read more
+the box.  There&#8217;s an environment config for the set of ssh public keys to
+inject into everything in the environment as it starts up&#8230; you can read more
 about that on 
 <a href="http://askubuntu.com/questions/179230/how-can-i-manage-multiple-administrators-with-juju">askubuntu</a>.</p>
 
 <p>Note that this is only useful to configure at the beginning of the stack.  Once
-you’re up, adding keys is problematic.  I don’t even recommend trying b/c of
+you&#8217;re up, adding keys is problematic.  I don&#8217;t even recommend trying b/c of
 the risk of getting undetermined state for the environment.  i.e., different
 nodes with different sets of keys depending on when you changed the keys relative
-to what actions you’ve performed on the environment.  It’s a problem.</p>
+to what actions you&#8217;ve performed on the environment.  It&#8217;s a problem.</p>
 
-<p>What I recommend now is actually to use <em>another</em> juju environment…  (and no,
-we’re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
-“control” environment.  You bootstrap it, then set up a juju client that controls
+<p>What I recommend now is actually to use <em>another</em> juju environment&#8230;  (and no,
+we&#8217;re not paid to promote cloud providers by the instance :) I wish! ) a dedicated
+&#8220;control&#8221; environment.  You bootstrap it, then set up a juju client that controls
 the main production environment.  Then set up a shared tmux session that any of
 the admins for the production environment can use:</p>
 
@@ -273,28 +273,28 @@ the admins for the production environment can use:</p>
 </a></p>
 
 <p>Adding/changing the set of
-admin keys is then done in a single place.  This technique isn’t strictly
+admin keys is then done in a single place.  This technique isn&#8217;t strictly
 necessary, but it was certainly worth it here with different admins having
 various different levels of familiarity with the tools.  I started it as a
 teaching tool, left it up because it was an easy control dashboard, and now
 recommend it because it works so well.</p>
 
-<h3 id="its-chilly-in-here">it’s chilly in here</h3>
+<h3 id="its-chilly-in-here">it&#8217;s chilly in here</h3>
 
 <p>Yeah, so during development you break things.  There were a couple of times
 using 11.10 juju that changes to juju core prevented a client from talking to
-an existing stack.  Aargh!  This wasn’t going to fly for production use.</p>
+an existing stack.  Aargh!  This wasn&#8217;t going to fly for production use.</p>
 
 <p>The juju team has subsequently done a <em>bunch</em> to prevent this from happening,
 but hey we needed production summit working and stable at the time.  The
-answer… freeze the code.</p>
+answer&#8230; freeze the code.</p>
 
 <p>Juju has an environment config option <code>juju-origin</code> to specify where to
 get the juju installed on all instances in the environment.  I branched juju
 core to <code>lp:~mark-mims/juju/running-summit</code> and just worked straight from there
 for the lifetime of the environment (still up atm).  Easy enough.</p>
 
-<p>Now the tricky part is to make sure that you’re always using the
+<p>Now the tricky part is to make sure that you&#8217;re always using the
 <code>lp:~mark-mims/juju/running-summit</code> version of the juju cli when talking to the
 production summit environment.</p>
 
@@ -308,19 +308,19 @@ export PYTHONPATH=$JUJU_BRANCH
 
 <p>which my tmuxinator config sources into every pane in my <code>summit</code> tmux session.</p>
 
-<p>This was also done on the <code>summit-control</code> instance so it’s easy to make sure
-we’re all using the right version of the juju cli to talk to the production
+<p>This was also done on the <code>summit-control</code> instance so it&#8217;s easy to make sure
+we&#8217;re all using the right version of the juju cli to talk to the production
 environment.</p>
 
 <h3 id="backups">backups</h3>
 
 <p>The <code>juju ssh</code> subcommand to the rescue.  You can do all your standard ssh
-tricks…</p>
+tricks&#8230;</p>
 
 <pre><code>juju ssh postgresql/0 'su postgres pg_dump summit' &gt; summit.dump
 </code></pre>
 
-<p>… on a cronjob.  Juju just stays out of the way and just helps out a bit with
+<p>&#8230; on a cronjob.  Juju just stays out of the way and just helps out a bit with
 the addressing.  Real version pipes through bzip2 and adds timestamps of course.</p>
 
 <p>Of course snapshots are easy enough too via euca2ools, but the pgsql dumps
@@ -329,12 +329,12 @@ failover.</p>
 
 <h3 id="debugging">debugging</h3>
 
-<p>The biggest debugging activity during development was cleaning up the app’s
+<p>The biggest debugging activity during development was cleaning up the app&#8217;s
 theming.  The summit charm is configured to get the django app itself from
 one <a href="https://code.launchpad.net/summit">application branch</a> and the theme from a separate
 <a href="https://code.launchpad.net/~lpc-organizers/ubuntu-community-webthemes/light-django-plumbers-theme">theme branch</a>.</p>
 
-<p>So… ahem… “best practice” for theme development would’ve been to
+<p>So&#8230; ahem&#8230; &#8220;best practice&#8221; for theme development would&#8217;ve been to
 develop/tweak the theme locally, then push to the branch.  A simple</p>
 
 <pre><code>juju set --config=summit.yaml summit/0
@@ -342,20 +342,20 @@ develop/tweak the theme locally, then push to the branch.  A simple</p>
 
 <p>would update config for the live instances.</p>
 
-<p>Well…  some of the menus from the base template used absolute paths so it was
+<p>Well&#8230;  some of the menus from the base template used absolute paths so it was
 simpler to cheat a bit early in the process to test it all in-place with actual
-dns names.  Had we been doing this the “right” way from the beginning we
-would’ve had much more confidence in the stack when practicing recovery and
-failover later in the cycle… we would’ve been doing it all since day one.</p>
+dns names.  Had we been doing this the &#8220;right&#8221; way from the beginning we
+would&#8217;ve had much more confidence in the stack when practicing recovery and
+failover later in the cycle&#8230; we would&#8217;ve been doing it all since day one.</p>
 
 <p>Another thing we had to do was manually test memcached.  To test out caching
-we’d ssh to the memcached instance, stop the service, run memcached verbosely
+we&#8217;d ssh to the memcached instance, stop the service, run memcached verbosely
 in the foreground.  Once we determined everything was working the way we
-expected, we’d kill it and restart the upstart job.</p>
+expected, we&#8217;d kill it and restart the upstart job.</p>
 
-<p>This is a bug in the memcached charm imo… the option to temporarily run
+<p>This is a bug in the memcached charm imo&#8230; the option to temporarily run
 verbosely for debugging should totally be a config option for that service.
-It’d then be a simple matter of</p>
+It&#8217;d then be a simple matter of</p>
 
 <pre><code>juju set memcached/0 debug=true
 </code></pre>
@@ -365,7 +365,7 @@ It’d then be a simple matter of</p>
 <pre><code>juju ssh memcached/0
 </code></pre>
 
-<p>to watch some logs.  Once we’re convinced it’s working the way it should</p>
+<p>to watch some logs.  Once we&#8217;re convinced it&#8217;s working the way it should</p>
 
 <pre><code>juju set memcached/0 debug=false
 </code></pre>
@@ -373,19 +373,19 @@ It’d then be a simple matter of</p>
 <p>should make it performant again.</p>
 
 <p>Next time around, we should take more advantage of <code>juju set</code> config to
-update/reconfigure the app as we made changes… and generally implement a
+update/reconfigure the app as we made changes&#8230; and generally implement a
 better set of development practices.</p>
 
 <h3 id="monitoring">monitoring</h3>
 
-<p>Sorely lacking.  “What? curl doesn’t cut it?”… um… no.</p>
+<p>Sorely lacking.  &#8220;What? curl doesn&#8217;t cut it?&#8221;&#8230; um&#8230; no.</p>
 
 <h3 id="planning-for-failures">planning for failures</h3>
 
 <p>Our notion of failover for this app was just a spare set of cloud credentials
 and a tested recovery plan.</p>
 
-<p>The plan we practiced was…</p>
+<p>The plan we practiced was&#8230;</p>
 
 <ul>
   <li>bootstrap a new environment (using spare credentials if necessary)</li>
@@ -394,14 +394,14 @@ and a tested recovery plan.</p>
 should be extended to accept a config parameter of a storage url, S3 in this
 case, to slurp the db backups from)</li>
   <li>
-    <p>restore from offsite backups… something along the lines of</p>
+    <p>restore from offsite backups&#8230; something along the lines of</p>
 
     <table>
       <tbody>
         <tr>
           <td>cat summit-$timestamp.dump.bz2</td>
-          <td>juju ssh -e failover postgresql/0 ‘bunzip2 -c</td>
-          <td>su - postgres pgsql summit’</td>
+          <td>juju ssh -e failover postgresql/0 &#8216;bunzip2 -c</td>
+          <td>su - postgres pgsql summit&#8217;</td>
         </tr>
       </tbody>
     </table>
@@ -410,32 +410,32 @@ case, to slurp the db backups from)</li>
 
 <p>In practice, that took about 10-15minutes to recover once we started acting.
 Given the additional delay between notification and action, that could spell an
-hour or two of outtage.  That’s not so great.</p>
+hour or two of outtage.  That&#8217;s not so great.</p>
 
 <p>Juju makes other failover scenarios cheaper and easier to implement than they
 used to be, so why not put those into place just to be safe?  Perhaps the
-additional instance costs for hot-spares wouldn’t’ve been necessary for the
+additional instance costs for hot-spares wouldn&#8217;t&#8217;ve been necessary for the
 entire 6-months of lead-time for scheduling and planning this conference, but
-they’d certainly be worth the spend during the few days of the event itself.
+they&#8217;d certainly be worth the spend during the few days of the event itself.
 Juju sort of makes it a no-brainer.  We should do more posts on this one
-issue… the game has changed here.</p>
+issue&#8230; the game has changed here.</p>
 
 <h2 id="lessons-learned">Lessons Learned</h2>
 
-<p>What would we do differently next time?  Well, there’s a list :).</p>
+<p>What would we do differently next time?  Well, there&#8217;s a list :).</p>
 
 <ul>
-  <li>use the stable ppa… instead of freezing the code</li>
+  <li>use the stable ppa&#8230; instead of freezing the code</li>
   <li>sit the app behind haproxy</li>
   <li>use s3fs or equivalent subordinate charm to manage backups instead of just
 sshing them off the box</li>
-  <li>better monitoring… we’ve gotten a great set of monitoring charms
-recently… thanks <a href="http://fewbar.com/">Clint</a>!</li>
-  <li>log aggregation would’ve been a little bit of overkill for this app, but next
+  <li>better monitoring&#8230; we&#8217;ve gotten a great set of monitoring charms
+recently&#8230; thanks <a href="http://fewbar.com/">Clint</a>!</li>
+  <li>log aggregation would&#8217;ve been a little bit of overkill for this app, but next
 time might warrant it</li>
-  <li>it’s cheap to add failover with juju… just do it</li>
+  <li>it&#8217;s cheap to add failover with juju&#8230; just do it</li>
   <li>maybe follow a development process a little more carefully next time around :)</li>
-  <li>we’ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
+  <li>we&#8217;ll soon have access to a production-stable private ubuntu cloud for these sorts of apps/projects</li>
 </ul>
 
 </div>
@@ -460,7 +460,7 @@ time might warrant it</li>
   
 
 
-<time datetime="2012-09-25T00:00:00-06:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
+<time datetime="2012-09-25T00:00:00+00:00" pubdate data-updated="true">Sep 25<span>th</span>, 2012</time>
       
 
 <span class="categories">
@@ -496,10 +496,9 @@ time might warrant it</li>
 
   <section>
     <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <div id="comments_note" aria-live="polite"><p>If you have any questions or feedback, please feel free to share it with me on Twitter: <a href="https://twitter.com/m_3">@m_3</a></p>
 </div>
   </section>
-
 </div>
 
 <aside class="sidebar">
@@ -555,28 +554,12 @@ time might warrant it</li>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'markmims';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html';
-        var disqus_url = 'http://markmims.com/cloud/2012/09/25/linuxplumbers-juju.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 
