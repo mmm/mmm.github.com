@@ -105,7 +105,7 @@ resource "google_project" "gsuite_project" {
 }
 
 resource "google_project_iam_binding" "gsuite_project_owner" {
-  project = "gsuite-project-0"
+  project = "${google_project.gsuite_project.project_id}"
   role    = "roles/owner"
 
   members = [
