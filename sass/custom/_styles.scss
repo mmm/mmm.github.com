@@ -16,3 +16,11 @@ body>div#main {
 #content li{
  margin-left: 1.3em !important;
 }
+#mugshot img {
+  display: block;
+  margin: 0 auto;
+  height: 400px;
+}
+#bio div.contacts ul li {
+  display:inline;
+}
