@@ -12,3 +12,7 @@ list_tasks:
 generate:
 	@echo "--- $@ ---"
 	@$(run_rake) generate
+
+publish:
+	@echo "--- $@ ---"
+	@$(run_rake) publish
