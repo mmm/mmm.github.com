@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cloud | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/cloud/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-05-29T01:32:40+00:00</updated>
+  <updated>2020-05-29T01:41:31+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -253,7 +253,16 @@ Terraform templates as well, but that&#8217;s another story.</p>
     <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
 walks through using the new version of the juju local provider.  It&#8217;s cool!
-{% youtube 3AiQhHIBQJk %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 3AiQhHIBQJk</div>
+</a>
+<div class="video-info" >embedded youtube video 3AiQhHIBQJk</div>
+</div>
+
+</p>
 
 <!--more-->
 
@@ -271,7 +280,16 @@ schools we&#8217;ve been able to capture on video.</p>
     <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
 is a little more detail on juju events&#8230;
-{% youtube vPBrpMcXHN0 %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video vPBrpMcXHN0</div>
+</a>
+<div class="video-info" >embedded youtube video vPBrpMcXHN0</div>
+</div>
+
+</p>
 
 <!--more-->
 
@@ -289,7 +307,16 @@ schools we&#8217;ve been able to capture on video.</p>
     <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week&#8217;s charmschool
 we just sort of sat around and discussed best practices&#8230;
-{% youtube 08dOs3eO04M %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video 08dOs3eO04M</div>
+</a>
+<div class="video-info" >embedded youtube video 08dOs3eO04M</div>
+</div>
+
+</p>
 
 <!--more-->
 
@@ -315,15 +342,42 @@ series, but the idea&#8217;s still sound.</p>
 case we lost networking during the demo).</p>
 
 <p>migrate local to hp
-{% youtube Jfnxl1Kh9SY %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('Jfnxl1Kh9SY');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/Jfnxl1Kh9SY?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/Jfnxl1Kh9SY/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=Jfnxl1Kh9SY" id="Jfnxl1Kh9SY" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video Jfnxl1Kh9SY</div>
+</a>
+<div class="video-info" >embedded youtube video Jfnxl1Kh9SY</div>
+</div>
+
+</p>
 
 <!--more-->
 
 <p>migrate ec2 to hpcloud
-{% youtube HUtR3_YlKXU %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('HUtR3_YlKXU');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/HUtR3_YlKXU?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/HUtR3_YlKXU/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=HUtR3_YlKXU" id="HUtR3_YlKXU" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video HUtR3_YlKXU</div>
+</a>
+<div class="video-info" >embedded youtube video HUtR3_YlKXU</div>
+</div>
+
+</p>
 
 <p>Local provider
-{% youtube EpIP4ly4E0E %}</p>
+
+<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('EpIP4ly4E0E');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/EpIP4ly4E0E?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
+<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/EpIP4ly4E0E/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=EpIP4ly4E0E" id="EpIP4ly4E0E" onclick="return false;">
+<div class="youtube-lazy-link-div"></div>
+<div class="youtube-lazy-link-info">embedded youtube video EpIP4ly4E0E</div>
+</a>
+<div class="video-info" >embedded youtube video EpIP4ly4E0E</div>
+</div>
+
+</p>
 
 ]]></content>
   </entry>
