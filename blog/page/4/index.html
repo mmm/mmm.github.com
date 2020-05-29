@@ -9,11 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="a1 138G root
-a2 swap
-b1 1T /opt
-c1 1.5T /usr/local
-d1 2T /home ">
+  <meta name="description" content="defaults write com.apple.dock workspaces-wrap-arrows -boolean NO ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -114,6 +110,44 @@ d1 2T /home ">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/03/09/howto-fix-spaces-osx.html">Fix Spaces in Osx</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-09T00:00:00+00:00" pubdate data-updated="true">Mar 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>defaults write com.apple.dock workspaces-wrap-arrows -boolean NO
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -665,90 +699,6 @@ Set 'PowerCtrl' to 'forceoff'
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/21/howto-dia-units.html">Units in Dia</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-21T00:00:00+00:00" pubdate data-updated="true">Jan 21<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ok, dia is totally screwed up with units&#8230; 
-here&#8217;s how to make it work well.</p>
-
-<p>open dia</p>
-
-<p>File -&gt; Preferences </p>
-
-<pre><code>User Interface
-  length unit: Centimeter
-  Font-size unit: Point
-Diagram Defaults
-  Portrait
-  Paper type: Letter
-  Connection Points:
-    Visible
-    Snap to object
-View Defaults
-  Width: 800
-  Height: 600
-  Magnify: 100
-  Page breaks:
-    uncheck "Visible"
-  Antialias:
-    uncheck "view antialiased"
-Grid Lines
-  Visible
-  Snap to
-  uncheck Dynamic grid resizing
-  X Size: 1.0
-  Y Size: 1.0
-  Lines per major line: 5
-</code></pre>
-
-<p>on the diagram window&#8230; File-&gt;Page Setup</p>
-
-<pre><code>Paper Size: Letter
-orientation again portrait
-Margins
-  2.54cm all around
-Scale: 100.0
-</code></pre>
-
-<p>View-&gt;Hide Rulers</p>
-
-<p>This results in a window with 100x100pixel gridlines
-(when exported as png w/ or w/o alpha)</p>
-
-<p>results in 5cmx5cm grids when exported directly to pdf</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -783,6 +733,10 @@ Scale: 100.0
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
+      </li>
+    
+      <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
       </li>
     
@@ -798,10 +752,6 @@ Scale: 100.0
         <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
-      <li class="post">
-        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -811,7 +761,7 @@ Scale: 100.0
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2020 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

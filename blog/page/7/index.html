@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="sshfs -C mmm@hawk:/home/torrent/downloads /opt/torrent/downloads -o reconnect,uid=103,gid=107 ">
+  <meta name="description" content="password is expired? chage -I -1 -m 0 -M 99999 -E -1 username ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,6 +110,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/07/13/howto-fix-password-expiration.html">Fix Password Expirations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-13T00:00:00+00:00" pubdate data-updated="true">Jul 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>password is expired?</p>
+
+<pre><code>chage -I -1 -m 0 -M 99999 -E -1 username
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -971,121 +1011,6 @@ launchctl start hawk.videos.sshfs
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/vm-build-notes.html">VM Buildout Notes for Dlb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>added sources.list</p>
-
-<p>packages:</p>
-
-<pre><code>ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3
-libsqlite3-dev
-mysql-server (had to force this for some reason ... bitching about locale not being set)
-libmysql-ruby1.8
-libdbd-mysql-ruby
-libmysqlclient15-dev
-rsync
-screen
-libopenssl-ruby
-
-
-apt-get update
-apt-get -u upgrade
-apt-get -u dist-upgrade
-</code></pre>
-
-<p>install rubygems in /usr/local</p>
-
-<p>install gems
-    rails
-    mongrel
-    mongrel_cluster
-    passenger
-    capistrano
-    capistrano-ext
-    fcgi
-    ferret
-    haml
-    hpricot
-    htmlentities
-    nokogiri
-    mechanize
-    cucumber
-    mocha
-    open4
-    runt
-    spreadsheet
-    sqlite3
-    termios
-    will_paginate</p>
-
-<pre><code>adduser --home /usr/local/dlb dlb
-</code></pre>
-
-<p>rsync <code>/usr/local/dlb</code> over to VM</p>
-
-<p>scp <code>/etc/apache2/sites-available/dlb-sites</code> over to VM</p>
-
-<p>test to get apache up</p>
-
-<p>test to get rails up</p>
-
-<p>apache config for mods-enabled:
-    ln -s ../mods-available/deflate.conf .
-    ln -s ../mods-available/deflate.load .
-    ln -s ../mods-available/file_cache.load .
-    ln -s ../mods-available/mem_cache.load .
-    ln -s ../mods-available/mem_cache.conf .
-    ln -s ../mods-available/headers.load .
-    ln -s ../mods-available/proxy_balancer.load .
-    ln -s ../mods-available/proxy.conf
-    ln -s ../mods-available/proxy_http.load .
-    ln -s ../mods-available/proxy.load .
-    ln -s ../mods-available/rewrite.load .
-    ln -s ../mods-available/include.load .
-    ln -s ../mods-available/cache.load .</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1120,6 +1045,10 @@ apt-get -u dist-upgrade
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
+      </li>
+    
+      <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
       </li>
     
@@ -1135,10 +1064,6 @@ apt-get -u dist-upgrade
         <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
-      <li class="post">
-        <a href="/cloud/2013/07/12/charmschool-events-in-depth.html">CharmSchool Hangout - Juju Events in Depth</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -1148,7 +1073,7 @@ apt-get -u dist-upgrade
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2019 - Mark M Mims, Ph.D. -
+  Copyright &copy; 2020 - Mark M Mims, Ph.D. -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

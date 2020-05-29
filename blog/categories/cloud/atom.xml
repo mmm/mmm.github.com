@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cloud | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/cloud/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2019-06-05T03:49:24+00:00</updated>
+  <updated>2020-05-29T01:32:40+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -14,22 +14,246 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Projects in GCP using Central Billing Accounts]]></title>
+    <link href="http://markmims.com/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html"/>
+    <updated>2019-06-05T00:00:00+00:00</updated>
+    <id>http://markmims.com/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp</id>
+    <content type="html"><![CDATA[<p>Many organizations recognize the benefits of empowering their developers. In a
+cloud environment, that often means giving developers the ability to create and
+manage their own infrastructure.</p>
+
+<p>Of course, developers can easily create their own individual or G-Suite GCP
+accounts.  They can take advantage of the free trial that Google Cloud offers.
+That&#8217;s great, and everything&#8217;s hunky-dory until the credit runs out. What then?</p>
+
+<p>In this post I describe a really simple way to set up and use centralized
+billing on GCP&#8230; even across external development accounts.  Way better than
+trying to get me to fill out expense reports for infradev!</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>Organizations and account setup</li>
+  <li>Users and IAM roles</li>
+  <li>Terraform templates</li>
+  <li>Try it out</li>
+</ul>
+
+<h2 id="organizations-and-account-setup">Organizations and account setup</h2>
+
+<p>Let&#8217;s consider a common example with two separate organizations in the mix.</p>
+
+<ol>
+  <li>
+    <p>A <code>bigcorp.com</code> organization that&#8217;s footing the bill for everything</p>
+  </li>
+  <li>
+    <p>An individual developer&#8217;s G-Suite organization, <code>pinkponies.io</code>, where
+we&#8217;ll be doing the development</p>
+  </li>
+</ol>
+
+<p>In this example, we&#8217;re assuming the developer organization <code>pinkponies.io</code> is a
+full G-Suite account and not just an ordinary GCP account created using a
+single email.</p>
+
+<p>It&#8217;s easy for an individual developer to create a new G-Suite account and that
+turns out to be the more typical situation for this kind of cross billing
+example. I also really recommend using developer G-Suite accounts for cloud
+development in general since they&#8217;ll have the same IAM capabilities and
+concerns as the <code>bigcorp.com</code> account.</p>
+
+<h2 id="users-and-iam-roles">Users and IAM roles</h2>
+
+<p>Each developer will need accounts in both orgs to start with.</p>
+
+<p>Take Sam for example. Sam&#8217;s already an Owner of <code>pinkponies.io</code>&#8230;  with
+<code>sam@pinkponies.io</code> as a login.</p>
+
+<p>Sam works for BigCorp and is also <code>sam@bigcorp.com</code> where they live in some
+folder within the <code>bigcorp.com</code> organization&#8217;s GCP IAM.</p>
+
+<h3 id="in-your-billing-org-bigcorpcom">In your billing org: <code>bigcorp.com</code></h3>
+
+<p>So the <code>billing_account_user</code> (<code>sam@bigcorp.com</code>) needs to be able to create
+billing accounts within the BigCorp org.</p>
+
+<p>Sam will need to be assigned a <code>BillingAccountCreator</code> role within the
+<code>bigcorp.com</code> org&#8217;s IAM on GCP.</p>
+
+<h3 id="in-your-gsuite-org-pinkponiesio">In your gsuite org: <code>pinkponies.io</code></h3>
+
+<p>It&#8217;s no surprise, the <code>gsuite_user</code> (<code>sam@pinkponies.io</code>) needs to be an
+<code>OrganizationAdministrator</code> on that org.</p>
+
+<p>The <code>billing_account_user</code> (<code>sam@bigcorp.com</code>) needs permissions on the
+<code>pinkponies.io</code> org too. They need to be:</p>
+
+<ul>
+  <li>a <code>BillingAccountAdministrator</code> for the <code>pinkponies.io</code> org</li>
+  <li>a <code>ProjectCreator</code> on the <code>pinkponies.io</code> org</li>
+  <li>and I added them as an <code>OrganizationAdministrator</code> on <code>pinkponies.org</code> for
+good measure</li>
+</ul>
+
+<h2 id="terraform-templates">Terraform templates</h2>
+
+<p>I like to manage infrastructure using <a href="terraform.io">Terraform</a> and keep
+all my templates and modules checked into GitHub.</p>
+
+<p>The Terraform templates to create these projects are super simple. There&#8217;s a
+provider, a resource for the managed project we want to create, and then a
+couple of role binding resources</p>
+
+<p>```
+provider &#8220;google&#8221; {
+  region      = &#8220;${var.region}&#8221;
+}</p>
+
+<p>resource &#8220;google_project&#8221; &#8220;gsuite_project&#8221; {
+  name       = &#8220;gsuite-project-0&#8221;
+  project_id = &#8220;gsuite-project-0&#8221;</p>
+
+<p>org_id = &#8220;${var.gsuite_org_id}&#8221;
+  billing_account = &#8220;${var.billing_account_id}&#8221;
+}</p>
+
+<p>resource &#8220;google_project_iam_binding&#8221; &#8220;gsuite_project_owner&#8221; {
+  project = &#8220;${google_project.gsuite_project.project_id}&#8221;
+  role    = &#8220;roles/owner&#8221;</p>
+
+<p>members = [
+    &#8220;user:${var.gsuite_user}&#8221;,
+    &#8220;user:${var.billing_account_user}&#8221;,
+  ]
+}
+```</p>
+
+<p>There&#8217;s no need to get Terraform to slurp in data sources for the GCP orgs,
+folders, billing accounts, etc. In this example, we&#8217;ll just create variables
+for them</p>
+
+<p>```
+variable &#8220;region&#8221; {
+  default = &#8220;us-central1&#8221;
+}</p>
+
+<p>variable &#8220;billing_account_user&#8221; {}
+variable &#8220;billing_folder_id&#8221; {}
+variable &#8220;billing_account_id&#8221; {}</p>
+
+<p>variable &#8220;gsuite_user&#8221; {}
+variable &#8220;gsuite_org_id&#8221; {}
+```</p>
+
+<p>and look up the values from the cloud consoles for both our <code>bigcorp.com</code> and
+<code>pinkponies.io</code> accounts.  We&#8217;ll add these to <code>terraform.tfvars</code></p>
+
+<p>```
+billing_account_user = &#8220;sam@bigcorp.com&#8221;
+billing_folder_id = &#8220;234567890123&#8221; # my-billing-folder
+billing_account_id = &#8220;aaaaaa-bbbbbb-cccccc&#8221; # my-billing-account</p>
+
+<p>gsuite_user = &#8220;sam@pinkponies.io&#8221;
+gsuite_org_id = &#8220;345678901234&#8221; # pinkponies.io
+```</p>
+
+<p>Note that there&#8217;s a <code>terraform.tfvars.template</code> included in the example repo
+but the actual <code>*.tfvars</code> files, with sensitive account details, are ignored by
+revision control so you&#8217;ll have to copy the template and create your own
+<code>terraform.tfvars</code>.</p>
+
+<h2 id="try-it-out">Try it out</h2>
+
+<h3 id="example-repo">Example repo</h3>
+
+<p>You can clone and configure the example templates</p>
+
+<ul>
+  <li>clone <a href="https://github.com/mmm/gcp-managed-projects">https://github.com/mmm/gcp-managed-projects</a></li>
+  <li>copy the tfvars template over to <code>terraform.tfvars</code> and edit it with your info</li>
+</ul>
+
+<h3 id="gcloud"><code>gcloud</code></h3>
+
+<p>Terraform&#8217;s provider for GCP needs GCP credentials for your account.  The
+easiest thing to do to get that working before trying to run Terraform is to
+make sure gcloud is working correctly.</p>
+
+<p>You can do that by installing gcloud and running <code>gcloud init</code> to go through
+the oauth dance&#8230; that works.  You&#8217;d need to export your
+<code>GOOGLE_APPLICATION_CREDENTIALS</code> as well&#8230; usual stuff.</p>
+
+<p>However, as an easier alternative, use the cloud shell in the cloud console for
+your <code>bigcorp.com</code> equivalent account.  The gcloud config and applcation
+credentials are all already set up for you.</p>
+
+<p>Side note: The cloud shell is <em>really</em> useful&#8230; check it out if you haven&#8217;t!</p>
+
+<p>Make sure you&#8217;re driving terraform using credentials (your <code>gcloud</code> config)
+from the equivalent of your <code>bigcorp.com</code> account and <em>not</em> your
+<code>pinkponies.io</code> G-Suite org account.</p>
+
+<h3 id="terraform">Terraform</h3>
+
+<p>Download Terraform from <a href="https://terraform.io/">https://terraform.io/</a>.  Terraform is a standalone
+binary so it&#8217;s simple to install&#8230; even in your GCP Cloud Shell.</p>
+
+<p>Init terraform&#8217;s providers and state management</p>
+
+<pre><code>terraform init
+</code></pre>
+
+<p>Then check out what changes we&#8217;re _plan_ning to make</p>
+
+<pre><code>terraform plan
+</code></pre>
+
+<p>If all looks good from there, then <em>apply</em> that plan to actually create our
+project</p>
+
+<pre><code>terraform apply
+</code></pre>
+
+<p>Check out the project we just created</p>
+
+<pre><code>gcloud beta billing projects list --billing-account=&lt;billing_account_id&gt;
+</code></pre>
+
+<p>Check out the same project from the Cloud Console for your <code>pinkponies.io</code>
+G-Suite account.</p>
+
+<p>Now you can use that account within your <code>pinkponies.io</code> G-Suite account and
+any charges go straight to your BigCorp billing account.</p>
+
+<h3 id="cleanup">Cleanup</h3>
+
+<p>When you&#8217;re all done, you can clean up after yourself by removing the project
+and role bindings we created</p>
+
+<pre><code>terraform destroy
+</code></pre>
+
+<p>then deleting the billing account through the Cloud Console.  You could (and
+should) totally manage the billing accounts themselves in the bigcorp.org using
+Terraform templates as well, but that&#8217;s another story.</p>
+
+<h2 id="disclaimer">Disclaimer</h2>
+
+<p>No big corps or pink ponies were harmed in the production of this post.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[CharmSchool Hangout - Juju Local Provider]]></title>
     <link href="http://markmims.com/cloud/2013/08/23/charmschool-local-provider.html"/>
     <updated>2013-08-23T13:02:00+00:00</updated>
     <id>http://markmims.com/cloud/2013/08/23/charmschool-local-provider</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
 walks through using the new version of the juju local provider.  It&#8217;s cool!
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('3AiQhHIBQJk');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/3AiQhHIBQJk?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/3AiQhHIBQJk/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=3AiQhHIBQJk" id="3AiQhHIBQJk" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video 3AiQhHIBQJk</div>
-</a>
-<div class="video-info" >embedded youtube video 3AiQhHIBQJk</div>
-</div>
-
-</p>
+{% youtube 3AiQhHIBQJk %}</p>
 
 <!--more-->
 
@@ -47,16 +271,7 @@ schools we&#8217;ve been able to capture on video.</p>
     <id>http://markmims.com/cloud/2013/07/12/charmschool-events-in-depth</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  This week&#8217;s video
 is a little more detail on juju events&#8230;
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('vPBrpMcXHN0');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/vPBrpMcXHN0?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/vPBrpMcXHN0/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=vPBrpMcXHN0" id="vPBrpMcXHN0" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video vPBrpMcXHN0</div>
-</a>
-<div class="video-info" >embedded youtube video vPBrpMcXHN0</div>
-</div>
-
-</p>
+{% youtube vPBrpMcXHN0 %}</p>
 
 <!--more-->
 
@@ -74,16 +289,7 @@ schools we&#8217;ve been able to capture on video.</p>
     <id>http://markmims.com/cloud/2013/06/28/charmschool-charm-best-practices</id>
     <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In this week&#8217;s charmschool
 we just sort of sat around and discussed best practices&#8230;
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('08dOs3eO04M');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/08dOs3eO04M?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/08dOs3eO04M/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=08dOs3eO04M" id="08dOs3eO04M" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video 08dOs3eO04M</div>
-</a>
-<div class="video-info" >embedded youtube video 08dOs3eO04M</div>
-</div>
-
-</p>
+{% youtube 08dOs3eO04M %}</p>
 
 <!--more-->
 
@@ -109,74 +315,16 @@ series, but the idea&#8217;s still sound.</p>
 case we lost networking during the demo).</p>
 
 <p>migrate local to hp
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('Jfnxl1Kh9SY');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/Jfnxl1Kh9SY?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/Jfnxl1Kh9SY/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=Jfnxl1Kh9SY" id="Jfnxl1Kh9SY" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video Jfnxl1Kh9SY</div>
-</a>
-<div class="video-info" >embedded youtube video Jfnxl1Kh9SY</div>
-</div>
-
-</p>
+{% youtube Jfnxl1Kh9SY %}</p>
 
 <!--more-->
 
 <p>migrate ec2 to hpcloud
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('HUtR3_YlKXU');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/HUtR3_YlKXU?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/HUtR3_YlKXU/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=HUtR3_YlKXU" id="HUtR3_YlKXU" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video HUtR3_YlKXU</div>
-</a>
-<div class="video-info" >embedded youtube video HUtR3_YlKXU</div>
-</div>
-
-</p>
+{% youtube HUtR3_YlKXU %}</p>
 
 <p>Local provider
+{% youtube EpIP4ly4E0E %}</p>
 
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('EpIP4ly4E0E');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/EpIP4ly4E0E?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/EpIP4ly4E0E/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=EpIP4ly4E0E" id="EpIP4ly4E0E" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video EpIP4ly4E0E</div>
-</a>
-<div class="video-info" >embedded youtube video EpIP4ly4E0E</div>
-</div>
-
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CharmSchool Hangout - Charming from scratch]]></title>
-    <link href="http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html"/>
-    <updated>2013-06-05T13:02:00+00:00</updated>
-    <id>http://markmims.com/cloud/2013/06/05/charmschool-hangout-charming-from-scratch</id>
-    <content type="html"><![CDATA[<p>Continuing the series of regular CharmSchool Hangouts.  In last week&#8217;s video
-we wrote a charm from scratch&#8230;
-
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('NQmxuzdc4Zg');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/NQmxuzdc4Zg?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/NQmxuzdc4Zg/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=NQmxuzdc4Zg" id="NQmxuzdc4Zg" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video NQmxuzdc4Zg</div>
-</a>
-<div class="video-info" >embedded youtube video NQmxuzdc4Zg</div>
-</div>
-
-</p>
-
-<p>Starting from a simple node.js application, we put together &#8220;just enough&#8221; charm
-to get things working.  Watch for future episodes where we&#8217;ll refactor and
-refine both the application and the charm.</p>
-
-<!--more-->
-
-<p>As before, there are links to the whole series of charmschool hangouts in the juju
-<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
-where we also have videos and screencasts of demos, talks,  and any other charm
-schools we&#8217;ve been able to capture on video.</p>
 ]]></content>
   </entry>
   

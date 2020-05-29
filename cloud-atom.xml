@@ -3,12 +3,280 @@
  <title>Mark Mims</title>
  <link href="http://markmims.com/cloud-atom.xml" rel="self"/>
  <link href="http://markmims.com/"/>
- <updated>2019-06-05T03:49:24+00:00</updated>
+ <updated>2020-05-29T01:32:34+00:00</updated>
  <id>http://markmims.com/</id>
  <author>
    <name>Mark Mims</name>
    <email>mark.mims@canonical.com</email>
  </author>
+ 
+ <entry>
+   <title>Projects in GCP using Central Billing Accounts</title>
+   <link href="http://markmims.com/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html"/>
+   <updated>2019-06-05T00:00:00+00:00</updated>
+   <id>http://markmims.com/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp</id>
+   <content type="html">&lt;p&gt;Many organizations recognize the benefits of empowering their developers. In a
+cloud environment, that often means giving developers the ability to create and
+manage their own infrastructure.&lt;/p&gt;
+
+&lt;p&gt;Of course, developers can easily create their own individual or G-Suite GCP
+accounts.  They can take advantage of the free trial that Google Cloud offers.
+That&amp;#8217;s great, and everything&amp;#8217;s hunky-dory until the credit runs out. What then?&lt;/p&gt;
+
+&lt;p&gt;In this post I describe a really simple way to set up and use centralized
+billing on GCP&amp;#8230; even across external development accounts.  Way better than
+trying to get me to fill out expense reports for infradev!&lt;/p&gt;
+
+&lt;!&#8211;more&#8211;&gt;
+
+&lt;h2 id=&quot;contents&quot;&gt;Contents&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Organizations and account setup&lt;/li&gt;
+  &lt;li&gt;Users and IAM roles&lt;/li&gt;
+  &lt;li&gt;Terraform templates&lt;/li&gt;
+  &lt;li&gt;Try it out&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;organizations-and-account-setup&quot;&gt;Organizations and account setup&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;#8217;s consider a common example with two separate organizations in the mix.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;A &lt;code&gt;bigcorp.com&lt;/code&gt; organization that&amp;#8217;s footing the bill for everything&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;An individual developer&amp;#8217;s G-Suite organization, &lt;code&gt;pinkponies.io&lt;/code&gt;, where
+we&amp;#8217;ll be doing the development&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In this example, we&amp;#8217;re assuming the developer organization &lt;code&gt;pinkponies.io&lt;/code&gt; is a
+full G-Suite account and not just an ordinary GCP account created using a
+single email.&lt;/p&gt;
+
+&lt;p&gt;It&amp;#8217;s easy for an individual developer to create a new G-Suite account and that
+turns out to be the more typical situation for this kind of cross billing
+example. I also really recommend using developer G-Suite accounts for cloud
+development in general since they&amp;#8217;ll have the same IAM capabilities and
+concerns as the &lt;code&gt;bigcorp.com&lt;/code&gt; account.&lt;/p&gt;
+
+&lt;h2 id=&quot;users-and-iam-roles&quot;&gt;Users and IAM roles&lt;/h2&gt;
+
+&lt;p&gt;Each developer will need accounts in both orgs to start with.&lt;/p&gt;
+
+&lt;p&gt;Take Sam for example. Sam&amp;#8217;s already an Owner of &lt;code&gt;pinkponies.io&lt;/code&gt;&amp;#8230;  with
+&lt;code&gt;sam@pinkponies.io&lt;/code&gt; as a login.&lt;/p&gt;
+
+&lt;p&gt;Sam works for BigCorp and is also &lt;code&gt;sam@bigcorp.com&lt;/code&gt; where they live in some
+folder within the &lt;code&gt;bigcorp.com&lt;/code&gt; organization&amp;#8217;s GCP IAM.&lt;/p&gt;
+
+&lt;h3 id=&quot;in-your-billing-org-bigcorpcom&quot;&gt;In your billing org: &lt;code&gt;bigcorp.com&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;So the &lt;code&gt;billing_account_user&lt;/code&gt; (&lt;code&gt;sam@bigcorp.com&lt;/code&gt;) needs to be able to create
+billing accounts within the BigCorp org.&lt;/p&gt;
+
+&lt;p&gt;Sam will need to be assigned a &lt;code&gt;BillingAccountCreator&lt;/code&gt; role within the
+&lt;code&gt;bigcorp.com&lt;/code&gt; org&amp;#8217;s IAM on GCP.&lt;/p&gt;
+
+&lt;h3 id=&quot;in-your-gsuite-org-pinkponiesio&quot;&gt;In your gsuite org: &lt;code&gt;pinkponies.io&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;It&amp;#8217;s no surprise, the &lt;code&gt;gsuite_user&lt;/code&gt; (&lt;code&gt;sam@pinkponies.io&lt;/code&gt;) needs to be an
+&lt;code&gt;OrganizationAdministrator&lt;/code&gt; on that org.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;billing_account_user&lt;/code&gt; (&lt;code&gt;sam@bigcorp.com&lt;/code&gt;) needs permissions on the
+&lt;code&gt;pinkponies.io&lt;/code&gt; org too. They need to be:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;a &lt;code&gt;BillingAccountAdministrator&lt;/code&gt; for the &lt;code&gt;pinkponies.io&lt;/code&gt; org&lt;/li&gt;
+  &lt;li&gt;a &lt;code&gt;ProjectCreator&lt;/code&gt; on the &lt;code&gt;pinkponies.io&lt;/code&gt; org&lt;/li&gt;
+  &lt;li&gt;and I added them as an &lt;code&gt;OrganizationAdministrator&lt;/code&gt; on &lt;code&gt;pinkponies.org&lt;/code&gt; for
+good measure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;terraform-templates&quot;&gt;Terraform templates&lt;/h2&gt;
+
+&lt;p&gt;I like to manage infrastructure using &lt;a href=&quot;terraform.io&quot;&gt;Terraform&lt;/a&gt; and keep
+all my templates and modules checked into GitHub.&lt;/p&gt;
+
+&lt;p&gt;The Terraform templates to create these projects are super simple. There&amp;#8217;s a
+provider, a resource for the managed project we want to create, and then a
+couple of role binding resources&lt;/p&gt;
+
+&lt;div class=&quot;bogus-wrapper&quot;&gt;&lt;notextile&gt;&lt;figure class=&quot;code&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&quot;line-number&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;5&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;6&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;7&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;8&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;9&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;11&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;12&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;13&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;14&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;15&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;16&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;17&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;18&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;19&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;20&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;21&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;code class=&quot;&quot;&gt;&lt;span class=&quot;line&quot;&gt;provider &quot;google&quot; {
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  region      = &quot;${var.region}&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;resource &quot;google_project&quot; &quot;gsuite_project&quot; {
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  name       = &quot;gsuite-project-0&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  project_id = &quot;gsuite-project-0&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  org_id = &quot;${var.gsuite_org_id}&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  billing_account = &quot;${var.billing_account_id}&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;resource &quot;google_project_iam_binding&quot; &quot;gsuite_project_owner&quot; {
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  project = &quot;${google_project.gsuite_project.project_id}&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  role    = &quot;roles/owner&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  members = [
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;    &quot;user:${var.gsuite_user}&quot;,
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;    &quot;user:${var.billing_account_user}&quot;,
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  ]
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+&lt;p&gt;There&amp;#8217;s no need to get Terraform to slurp in data sources for the GCP orgs,
+folders, billing accounts, etc. In this example, we&amp;#8217;ll just create variables
+for them&lt;/p&gt;
+
+&lt;div class=&quot;bogus-wrapper&quot;&gt;&lt;notextile&gt;&lt;figure class=&quot;code&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&quot;line-number&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;5&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;6&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;7&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;8&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;9&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;10&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;code class=&quot;&quot;&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;region&quot; {
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;  default = &quot;us-central1&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;billing_account_user&quot; {}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;billing_folder_id&quot; {}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;billing_account_id&quot; {}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;gsuite_user&quot; {}
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;variable &quot;gsuite_org_id&quot; {}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+&lt;p&gt;and look up the values from the cloud consoles for both our &lt;code&gt;bigcorp.com&lt;/code&gt; and
+&lt;code&gt;pinkponies.io&lt;/code&gt; accounts.  We&amp;#8217;ll add these to &lt;code&gt;terraform.tfvars&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;bogus-wrapper&quot;&gt;&lt;notextile&gt;&lt;figure class=&quot;code&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&quot;line-number&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;3&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;5&lt;/span&gt;
+&lt;span class=&quot;line-number&quot;&gt;6&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;code class=&quot;&quot;&gt;&lt;span class=&quot;line&quot;&gt;billing_account_user = &quot;sam@bigcorp.com&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;billing_folder_id = &quot;234567890123&quot; # my-billing-folder
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;billing_account_id = &quot;aaaaaa-bbbbbb-cccccc&quot; # my-billing-account
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;gsuite_user = &quot;sam@pinkponies.io&quot;
+&lt;/span&gt;&lt;span class=&quot;line&quot;&gt;gsuite_org_id = &quot;345678901234&quot; # pinkponies.io&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that there&amp;#8217;s a &lt;code&gt;terraform.tfvars.template&lt;/code&gt; included in the example repo
+but the actual &lt;code&gt;*.tfvars&lt;/code&gt; files, with sensitive account details, are ignored by
+revision control so you&amp;#8217;ll have to copy the template and create your own
+&lt;code&gt;terraform.tfvars&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;try-it-out&quot;&gt;Try it out&lt;/h2&gt;
+
+&lt;h3 id=&quot;example-repo&quot;&gt;Example repo&lt;/h3&gt;
+
+&lt;p&gt;You can clone and configure the example templates&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;clone &lt;a href=&quot;https://github.com/mmm/gcp-managed-projects&quot;&gt;https://github.com/mmm/gcp-managed-projects&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;copy the tfvars template over to &lt;code&gt;terraform.tfvars&lt;/code&gt; and edit it with your info&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;gcloud&quot;&gt;&lt;code&gt;gcloud&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Terraform&amp;#8217;s provider for GCP needs GCP credentials for your account.  The
+easiest thing to do to get that working before trying to run Terraform is to
+make sure gcloud is working correctly.&lt;/p&gt;
+
+&lt;p&gt;You can do that by installing gcloud and running &lt;code&gt;gcloud init&lt;/code&gt; to go through
+the oauth dance&amp;#8230; that works.  You&amp;#8217;d need to export your
+&lt;code&gt;GOOGLE_APPLICATION_CREDENTIALS&lt;/code&gt; as well&amp;#8230; usual stuff.&lt;/p&gt;
+
+&lt;p&gt;However, as an easier alternative, use the cloud shell in the cloud console for
+your &lt;code&gt;bigcorp.com&lt;/code&gt; equivalent account.  The gcloud config and applcation
+credentials are all already set up for you.&lt;/p&gt;
+
+&lt;p&gt;Side note: The cloud shell is &lt;em&gt;really&lt;/em&gt; useful&amp;#8230; check it out if you haven&amp;#8217;t!&lt;/p&gt;
+
+&lt;p&gt;Make sure you&amp;#8217;re driving terraform using credentials (your &lt;code&gt;gcloud&lt;/code&gt; config)
+from the equivalent of your &lt;code&gt;bigcorp.com&lt;/code&gt; account and &lt;em&gt;not&lt;/em&gt; your
+&lt;code&gt;pinkponies.io&lt;/code&gt; G-Suite org account.&lt;/p&gt;
+
+&lt;h3 id=&quot;terraform&quot;&gt;Terraform&lt;/h3&gt;
+
+&lt;p&gt;Download Terraform from &lt;a href=&quot;https://terraform.io/&quot;&gt;https://terraform.io/&lt;/a&gt;.  Terraform is a standalone
+binary so it&amp;#8217;s simple to install&amp;#8230; even in your GCP Cloud Shell.&lt;/p&gt;
+
+&lt;p&gt;Init terraform&amp;#8217;s providers and state management&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;terraform init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then check out what changes we&amp;#8217;re _plan_ning to make&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;terraform plan
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If all looks good from there, then &lt;em&gt;apply&lt;/em&gt; that plan to actually create our
+project&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;terraform apply
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check out the project we just created&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gcloud beta billing projects list &#8211;billing-account=&amp;lt;billing_account_id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check out the same project from the Cloud Console for your &lt;code&gt;pinkponies.io&lt;/code&gt;
+G-Suite account.&lt;/p&gt;
+
+&lt;p&gt;Now you can use that account within your &lt;code&gt;pinkponies.io&lt;/code&gt; G-Suite account and
+any charges go straight to your BigCorp billing account.&lt;/p&gt;
+
+&lt;h3 id=&quot;cleanup&quot;&gt;Cleanup&lt;/h3&gt;
+
+&lt;p&gt;When you&amp;#8217;re all done, you can clean up after yourself by removing the project
+and role bindings we created&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;terraform destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;then deleting the billing account through the Cloud Console.  You could (and
+should) totally manage the billing accounts themselves in the bigcorp.org using
+Terraform templates as well, but that&amp;#8217;s another story.&lt;/p&gt;
+
+&lt;h2 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;/h2&gt;
+
+&lt;p&gt;No big corps or pink ponies were harmed in the production of this post.&lt;/p&gt;
+</content>
+   <author>
+     <name>Mark Mims</name>
+     <uri>http://markmims.com/</uri>
+   </author>
+ </entry>
  
  <entry>
    <title>CharmSchool Hangout - Juju Local Provider</title>
@@ -1022,49 +1290,6 @@ Are there transactional features in more recent versions of zk that we can use?&
     &lt;p&gt;use spot instances on ec2.  This is harder because you&amp;#8217;ve gotta incorporate price monitoring.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
-
-</content>
-   <author>
-     <name>Mark Mims</name>
-     <uri>http://markmims.com/</uri>
-   </author>
- </entry>
- 
- <entry>
-   <title>Charm School!</title>
-   <link href="http://markmims.com/cloud/2011/11/22/charm-school.html"/>
-   <updated>2011-11-22T00:00:00+00:00</updated>
-   <id>http://markmims.com/cloud/2011/11/22/charm-school</id>
-   <content type="html">&lt;p&gt;Wanna learn more about &lt;a href=&quot;http://juju.ubuntu.com&quot;&gt;juju&lt;/a&gt;?&lt;/p&gt;
-
-&lt;p&gt;Drop by &lt;a href=&quot;https://juju.ubuntu.com/CharmSchool/2December11&quot;&gt;Charm School&lt;/a&gt;:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://juju.ubuntu.com/CharmSchool/2December11&quot;&gt;
-  &lt;img src=&quot;/images/charmschool.png&quot; width=&quot;220px&quot; /&gt;
-&lt;/a&gt;&lt;/p&gt;
-
-&lt;!&#8211;more&#8211;&gt;
-
-&lt;p&gt;Details from &lt;a href=&quot;http://tumblr.com/ZKG8NyCGhHZR&quot;&gt;Jorge&amp;#8217;s post&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;We&#39;re holding a Charm School on IRC.
-
-juju Charm School is a virtual event where a juju expert
-is available to answer questions about writing your own
-juju charms. The intended audience are people who deploy
-software and want to contribute charms to the wider devops
-community to make deploying in the public and private
-cloud easy.
-
-Attendees are more than welcome to:
-
-Ask questions about juju and charms
-Ask for help modifying existing scripts and make charms out of them
-Ask for peer review on existing charms you might be working on
-
-Though not required, we recommend that you have juju installed
-and configured if you want to get deep into the event.
-&lt;/code&gt;&lt;/pre&gt;
 
 </content>
    <author>
