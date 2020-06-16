@@ -9,7 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Ugh&#8230; drutil eject ">
+  <meta name="description" content="from http://www.redhatlinux.info/2010/11/lvm-logical-volume-manager.html LVM (LOGICAL VOLUME MANAGER)
+1. TO CREATE LVM 1.fdisk /dev/sda -&gt;create 3 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,6 +111,337 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/12/12/howto-lvm.html">Lvm Cheats and Notes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-12T00:00:00+00:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>from http://www.redhatlinux.info/2010/11/lvm-logical-volume-manager.html</p>
+
+<p>LVM (LOGICAL VOLUME MANAGER)
+1. TO CREATE LVM</p>
+
+<pre><code>1.fdisk /dev/sda   -&gt;create 3 partitions + label to 8e
+2.partprobe
+3.fdisk -l
+4.pvcreate /dev/sda8 /dev/sda9
+5.pvdisplay /dev/sda8
+6.pvdisplay /dev/sda9
+7.vgcreate vg0 /dev/sda8 /dev/sda9
+8.vgdisplay 
+9.lvcreate -L +200M -n /dev/vg0/home1
+10.lvdisplay /dev/vg0/home1
+11.lvcreate -L +300M -n /dev/vg0/var1
+12.lvdisplay /dev/vg0/var1 
+13.mkfs.ext3 /dev/vg0/var1
+14 mkfs.ext3 /dev/vg0/home1 
+15.mkdir /home1
+16.mkdir /var1
+17.mount /dev/vg0/home1 /home1
+18.mount /dev/vg0/var1 /var1
+19.cp /etc/a* /home1
+20.cp /etc/b* /var1
+21.vim /etc/fstab 
+22.mount -a
+</code></pre>
+
+<p>TO EXTEND LVM</p>
+
+<pre><code>1.lvdisplay /dev/vg0/home1
+2.lvextend -L +200M /dev/vg0/home1
+3.ls /home1
+4.resize2fs /dev/vg0/home1
+5.ls /home1
+</code></pre>
+
+<p>TO REDUCE LVM</p>
+
+<pre><code>1. lvdisplay 
+2. umount /var1
+3. e2fsck -f /dev/vg0/var1
+4. resize2fs /dev/vg0/var1 100M
+5. lvreduce -L -100M -n /dev/vg0/var1
+6. mount /dev/vg0/var1 /var1
+7. df -h 
+</code></pre>
+
+<p>LVM SNAPSHOT</p>
+
+<pre><code>1.  lvcreate  -L 200M -s -n lv2 /dev/llc/lv1
+</code></pre>
+
+<p>TO EXTEND PV
+    1.pvcreate /dev/sda10
+    2.pvdisplay</p>
+
+<p>TO EXTEND VG
+    1.vgextend vg0 /dev/sda10
+    2.vgdisplay vg0</p>
+
+<p>TO REDUCE VG
+    1.vgreduce vg0 /dev/sda10
+    2.vgdisplay </p>
+
+<p>TO REDUCE PV
+    1.pvremove /dev/sda10
+    2.pvdisplay </p>
+
+<p>REMOVE LVM
+    1.lvdisplay 
+    2.umount /dev/vg0/home1 
+    3.umount /dev/vg0/var1
+    4.vim /etc/fstab 
+    5.lvremove /dev/vg0/home1 
+    6.lvremove /dev/vg0/var1 
+    7.lvdisplay </p>
+
+<p>REMOVE VG
+    1.vgdisplay 
+    2.vgremove /dev/vg0
+    3.vgdisplay </p>
+
+<p>REMOVE PV
+    1.pvdisplay 
+    2.pvremove /dev/sda9
+    3.pvremove /dev/sda8</p>
+
+<hr />
+
+<p>from http://www.linux-mag.com/cache/7454/1.html</p>
+
+<pre><code># fdisk -l /dev/sdb
+
+Disk /dev/sdb: 500.1 GB, 500107862016 bytes
+255 heads, 63 sectors/track, 60801 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1       30400   244187968+  8e  Linux LVM
+/dev/sdb2           30401       60801   244196032+  8e  Linux LVM
+   
+
+# pvcreate /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+Physical volume "/dev/sdb1" successfully created
+Physical volume "/dev/sdb2" successfully created
+Physical volume "/dev/sdc1" successfully created
+Physical volume "/dev/sdc2" successfully created
+
+
+# pvdisplay
+
+
+# vgcreate primary_vg /dev/sdb1 /dev/sdb2 /dev/sdc1 /dev/sdc2
+  Volume group "primary_vg" successfully created
+
+
+# vgdisplay
+
+# vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "primary_vg" using metadata type lvm2
+  
+# lvcreate --name /dev/primary_vg/home_lv --size 450G
+  Logical volume "home_lv" created
+
+# lvdisplay
+
+# lvscan
+
+# mkfs.ext3 /dev/primary_vg/home_lv
+
+
+# lvcreate -L500M -s -n home_backup_080309 /dev/primary_vg/home_lv
+  Logical volume "home_backup_080309" created
+
+
+# lvscan
+  ACTIVE   Original '/dev/primary_vg/home_lv' [450.00 GB] inherit
+    ACTIVE   Snapshot '/dev/primary_vg/home_backup_080309' [500.00 MB] inherit
+
+
+# mkdir /mnt/backup/home_backup_080309
+# mount /dev/primary_vg/home_lv/home_backup_080309 /mnt/backup/home_backup_080309
+# mount
+/dev/hda3 on / type ext3 (rw)
+proc on /proc type proc (rw)
+sysfs on /sys type sysfs (rw)
+devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+/dev/hda1 on /boot type ext2 (rw)
+tmpfs on /dev/shm type tmpfs (rw)
+none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)
+/dev/mapper/primary_vg-home_lv on /home type ext3 (rw,data=ordered)
+/dev/mapper/primary_vg-home_backup_080309 on /mnt/backup/home_backup_080309 type ext3 (rw)
+
+# ls -s /mnt/backup/home_backup_080309/
+total 20
+16 lost+found   4 user5
+# ls -s /mnt/backup/home_backup_080309/user5
+total 74080
+    4 linux-2.6.30  74076 linux-2.6.30.tar.gz
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/12/02/howto-ipmi.html">Ipmi Stuff</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-02T00:00:00+00:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>OMG&#8230;. finally!</p>
+
+<pre><code>http://wiki.adamsweet.org/doku.php?id=ipmi_on_linux
+
+http://www.cyberciti.biz/tips/tag/ipmiclix86-command
+http://www.cyberciti.biz/tips/linux-freebsd-ipmi-login-session.html
+http://www.intel.com/design/servers/ipmi/ipmi.htm
+http://wikitech-static.wikimedia.org/articles/i/p/m/IPMI_8730.html
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/10/27/howto-sshfs-mount-from-python.html">Sshfs-mount-from-python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-27T00:00:00+00:00" pubdate data-updated="true">Oct 27<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>#!/usr/bin/python
+#
+# from http://ubuntuforums.org/showthread.php?p=1932551
+#
+
+import os
+import sys
+import getopt
+
+host = '10.37.129.2'
+
+mount_points = [('/Users/dave/Music', '/home/dave/Music'),
+        ('/Users/dave/Documents', '/home/dave/Documents'),
+        ('/Users/dave/Pictures', '/home/dave/Pictures')]
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    try:
+        opts, args = getopt.getopt(argv[1:], 'u', ['unmount'])
+    except getopt.error, msg:
+        print msg
+        print 'for help use --help'
+        sys.exit(2)
+    mount_op = mount
+    for option, a in opts:
+        if option in ('-u', '--unmount'):
+            mount_op = unmount
+    mount_op()    
+    return 0
+
+def mount():
+    argv = ['/usr/bin/sshfs', None, None]
+    for mount in mount_points:
+        argv[1] = '%s:%s' % (host, mount[0])
+        argv[2] = mount[1]
+        cmd = ' '.join(argv)
+        print cmd
+        os.system(cmd)
+
+def unmount():
+    argv = ['/usr/bin/fusermount', '-u', None]
+    for mount in mount_points:
+        argv[2] = mount[1]
+        cmd = ' '.join(argv)
+        print cmd
+        os.system(cmd)
+
+if __name__ == '__main__':
+    sys.exit(main())
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -534,202 +866,6 @@ done
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/15/howto-rails-on-ec2.html">Rails on Ec2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>http://ec2onrails.rubyforge.org/http://ec2onrails.rubyforge.org/</p>
-
-<p>http://www.zabada.com/tutorials/deploying-a-rails-application-to-production-on-amazon-ec2.php</p>
-
-<p>http://pauldowman.com/projects/ruby-on-rails-ec2/</p>
-
-<p>http://davidcancel.com/rubber-complex-multi-instance-rails-ec2-deployments/</p>
-
-<p>http://auser.github.com/poolparty/</p>
-
-<p>http://wiki.opscode.com/display/chef/Home</p>
-
-<p>http://wiki.github.com/wr0ngway/rubber/</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/09/howto-recover-grub.html">Recover Grub</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>grub rescue&gt; set
-</code></pre>
-
-<p>see what current settings are&#8230;</p>
-
-<pre><code>set prefix=(hd2,1)/boot/grub
-set root=(hd2,1)
-
-insmod /boot/grub/linux.mod
-linux /vmlinuz root=/dev/sde1 ro
-initrd /initrd.img
-boot
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/09/howto-pxeboot.html">Pxeboot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1 id="dhcpd-config">dhcpd config</h1>
-
-<pre><code>apt-get install dhcp3-server
-</code></pre>
-
-<p>edit dhcpd.conf&#8230; to add</p>
-
-<pre><code>ddns-update-style none;
-option domain-name "blah.blah";
-option domain-name-servers 10.128.92.32, 10.129.92.32;
-default-lease-time 600;
-max-lease-time 7200;
-log-facility local7;
-
-subnet 10.67.93.0 netmask 255.255.255.0 {
-  host moe {
-    hardware ethernet 00:14:4F:49:E5:DA;
-    fixed-address 10.67.93.5;
-    filename "pxelinux.0";
-    next-server 10.67.93.13;
-    option subnet-mask 255.255.255.0;
-    option routers 10.67.93.1;
-  }
-}
-</code></pre>
-
-<h1 id="tftpd-config">tftpd config</h1>
-
-<pre><code>apt-get install tftp-hpa tftpd-hda
-</code></pre>
-
-<p>copy from ubuntu dist to /srv/tftp</p>
-
-<pre><code>lrwxrwxrwx 1 root root   33 2010-06-04 09:44 pxelinux.0 -&gt; ubuntu-installer/amd64/pxelinux.0
-lrwxrwxrwx 1 root root   35 2010-06-04 09:44 pxelinux.cfg -&gt; ubuntu-installer/amd64/pxelinux.cfg
-dr-xr-xr-x 3 root root 4096 2010-06-04 09:44 ubuntu-installer
--r--r--r-- 1 root root   58 2010-06-04 09:44 version.info
-</code></pre>
-
-<h1 id="apache-config">apache config</h1>
-
-<pre><code>apt-get install apache2 
-</code></pre>
-
-<p>unpack install image into /var/www/ubuntu/</p>
-
-<pre><code>root@rory:/var/www/ubuntu-10.04# ls -al
-total 176
-dr-xr-xr-x 10 root root   4096 2010-04-27 05:56 .
-drwxr-xr-x  3 root root   4096 2010-06-04 09:11 ..
--r-xr-xr-x  1 root root   1115 2010-04-23 21:29 cdromupgrade
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 .disk
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 dists
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 doc
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:56 install
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:56 isolinux
--r--r--r--  1 root root 129953 2010-04-27 05:56 md5sum.txt
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 pics
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 pool
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 preseed
--r--r--r--  1 root root    235 2010-04-27 05:55 README.diskdefines
-lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -764,23 +900,23 @@ lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/sciml/ml/ai/datascience/2020/06/05/sciml.html">Scientific ML/AI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html">Covid HPC Panel</a>
+      </li>
+    
+      <li class="post">
+        <a href="/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html">Course Stuff</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
       <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>

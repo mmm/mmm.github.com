@@ -9,16 +9,9 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="added sources.list packages: ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3 &hellip;">
+  <meta name="description" content="/usr/local/sbin/run_mongrel_cluster_ctl.sh #!/bin/bash export RUBYGEMS=/usr/local/rubygems
+export GEM_HOME=${RUBYGEMS}/gems
+export GEM_PATH=${ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -119,6 +112,240 @@ sqlite3 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-autostart-mongrel-in-slice.html">Autostart Mongrel in Slice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00+00:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>/usr/local/sbin/run_mongrel_cluster_ctl.sh</p>
+
+<pre><code>#!/bin/bash
+
+export RUBYGEMS=/usr/local/rubygems
+export GEM_HOME=${RUBYGEMS}/gems
+export GEM_PATH=${RUBYGEMS}/gems
+export RUBYLIB=${RUBYGEMS}/lib
+export PATH=${RUBYGEMS}/gems/bin:${RUBYGEMS}/bin:$PATH
+
+mongrel_cluster_ctl $*
+</code></pre>
+
+<p>/etc/init.d/jsas_cluster</p>
+
+<pre><code>#!/bin/sh
+#
+# mongrel jsas cluster init script
+#
+### BEGIN INIT INFO
+# Provides:          jsas_cluster
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: init-Script for jsas mongrel_cluster
+### END INIT INFO
+
+#sudo -i -u jsas $DAEMON_CTL help
+
+set -e
+
+# Defaults
+PATH=/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin
+DAEMON_CTL=/usr/local/sbin/run_mongrel_cluster_ctl.sh
+USER=jsas
+OPTIONS=""
+
+PIDFILE="/var/run/mongrel_cluster.pid"
+
+test -f $DAEMON_CTL || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+    sudo -i -u jsas $DAEMON_CTL start
+		;;
+	stop)
+    sudo -i -u jsas $DAEMON_CTL stop
+		;;
+	force-reload|restart)
+    sudo -i -u jsas $DAEMON_CTL restart
+		;;
+	status)
+    sudo -i -u jsas $DAEMON_CTL status
+		;;
+	*)
+		log_warning_msg "Usage: /etc/init.d/jsas_cluster {start|stop|restart}"
+		log_warning_msg "  start - starts system-wide jsas_cluster service"
+		log_warning_msg "  stop  - stops system-wide jsas_cluster service"
+		log_warning_msg "  restart, force-reload - starts a new system-wide jsas_cluster service"
+		log_warning_msg "  status  - status of system-wide jsas_cluster service"
+		log_warning_msg "    system-wide jsas cluster service"
+		exit 1
+		;;
+esac
+
+exit 0
+</code></pre>
+
+<p>then update the rc scripts&#8230;</p>
+
+<pre><code>update-rc.d jsas_cluster defaults 98 02
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-add-user-osx-cli.html">Add User in Osx From the Cli</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00+00:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>totally fucking ridiculous!</p>
+
+<pre><code>bipp-dcd:/Users root# niutil -create / /users/markv
+bipp-dcd:/Users root# niutil -create / /groups/markv
+bipp-dcd:/Users root# niutil -createprop / /users/markv uid 504
+bipp-dcd:/Users root# niutil -createprop / /groups/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv realname "Mark Vaughan"
+bipp-dcd:/Users root# niutil -createprop / /users/markv shell "/bin/bash"      
+bipp-dcd:/Users root# niutil -createprop / /users/markv home "/Users/markv"
+bipp-dcd:/Users root# cp -R /System/Library/User\ Template/English.lproj /Users/markv
+bipp-dcd:/Users root# chown -Rf markv:markv /Users/markv
+bipp-dcd:/Users root# passwd markv
+</code></pre>
+
+<p>also</p>
+
+<pre><code>niutil -appendprop / /groups/admin users markv
+
+niutil -list . /
+
+niutil -read / /users/markv
+
+niutil -read / /groups/admin
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/17/howto-osx-startup.html">Osx Startup Scripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-17T00:00:00+00:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>edit <code>Library/LaunchAgents/hawk.videos.sshfs.plist</code></p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;hawk.videos.sshfs&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;/usr/local/bin/sshfs-authsock&lt;/string&gt;
+                &lt;string&gt;mmm@hawk:/home/mmm/Videos&lt;/string&gt;
+                &lt;string&gt;/mnt/hawk&lt;/string&gt;
+                &lt;string&gt;-oreconnect&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;AbandonProcessGroup&lt;/key&gt;
+        &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>now, just</p>
+
+<pre><code>launchctl load ~/Library/LaunchAgents/hawk.videos.sshfs.plist
+launchctl start hawk.videos.sshfs
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -578,250 +805,6 @@ virt-clone --connect=qemu:///system -o oldvm -n newvm -f /usr/local/kvm/newvm/ro
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/05/09/howto-best-format-external-drive.html">Best Format for External Drive</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-09T00:00:00+00:00" pubdate data-updated="true">May 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>/dev/sdi1 on /media/Elements type fuseblk (rw,nosuid,nodev,allow_other,default_permissions,blksize=4096)
-</code></pre>
-
-<p>wtf is fuseblk?
-looks like it&#8217;s fuse&#8217;s version of an ntfs mount</p>
-
-<hr />
-
-<pre><code>hawk():/media/Elements # fdisk -l /dev/sdi
-
-Disk /dev/sdi: 1000.2 GB, 1000202043392 bytes
-255 heads, 63 sectors/track, 121600 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-Disk identifier: 0x00021631
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sdi1               1      121601   976758784    7  HPFS/NTFS
-</code></pre>
-
-<hr />
-
-<p>some shit on the net about when it&#8217;s in an fstab, it needs to be ntfs-3g</p>
-
-<pre><code>/dev/sda1               /mnt/winxp              ntfs-3g user,umask=0000 0 0
-/dev/sda2               /mnt/fat32              vfat    user,umask=0000 0 0
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/01/28/howto-share-wireless-through-eth0.html">Share Wireless Through Eth0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-28T00:00:00+00:00" pubdate data-updated="true">Jan 28<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1 id="share-ganymedes-wifi-eth1-connection-out-through-eth0">Share ganymede&#8217;s wifi (eth1) connection out through eth0</h1>
-
-<p>Bonus: plug helga into eth0 and re-share wireless over helganet</p>
-
-<p>on ganymede, set up eth0.</p>
-
-<p>/etc/network/interfaces&#8230; add:</p>
-
-<pre><code>auto eth0
-#iface eth0 inet dhcp
-iface eth0 inet static
-  address 192.168.20.254
-  netmask 255.255.255.0
-</code></pre>
-
-<p>/etc/default/iptables&#8230; should read:</p>
-
-<pre><code>*nat
-:PREROUTING ACCEPT [7126:609382]
-:POSTROUTING ACCEPT [25:2066]
-:OUTPUT ACCEPT [32:4056]
--A POSTROUTING -o eth1 -s 192.168.20.0/24 -d ! 192.168.20.0/24 -j MASQUERADE 
-#-A PREROUTING -d 216.82.212.101/32 -p tcp --dport 80 -j DNAT --to 10.12.10.1:80
-COMMIT
-
-*filter
-:INPUT DROP [0:0]
-:FORWARD DROP [0:0]
-:OUTPUT ACCEPT [8409:705642]
-:LOGDROP - [0:0]
-:NEVER - [0:0]
-:external-if - [0:0]
-:external-internal - [0:0]
-:icmp-accept - [0:0]
-:internal-external - [0:0]
-:internal-if - [0:0]
-
--A LOGDROP -m limit --limit 3/hour -j LOG --log-prefix "filter: " 
--A LOGDROP -j DROP 
-
--A NEVER -j LOG --log-prefix "filter ERROR: " --log-level 1 
--A NEVER -j DROP 
-
--A external-if -m state --state RELATED,ESTABLISHED -j ACCEPT 
--A external-if -p icmp -m icmp --icmp-type 0 -j ACCEPT 
--A external-if -j icmp-accept 
--A external-if -j DROP 
-
-#-A internal-if -s 192.168.20.0/24 -p tcp --dport 22 -j ACCEPT
--A internal-if -s 192.168.20.0/24 -j ACCEPT
--A internal-if -p icmp -m icmp --icmp-type 0 -j ACCEPT 
--A internal-if -j icmp-accept 
--A internal-if -j DROP 
-
--A icmp-accept -p icmp -m icmp --icmp-type 8 -j ACCEPT 
--A icmp-accept -p icmp -m icmp --icmp-type 11 -j ACCEPT 
--A icmp-accept -p icmp -m icmp --icmp-type 3 -j ACCEPT 
--A icmp-accept -p icmp -m icmp --icmp-type 4 -j ACCEPT 
--A icmp-accept -p icmp -m icmp --icmp-type 11 -j ACCEPT 
--A icmp-accept -p icmp -m icmp --icmp-type 12 -j ACCEPT 
-
--A external-internal -m state --state RELATED,ESTABLISHED -j ACCEPT 
--A external-internal -p tcp -m tcp --sport 22 ! --tcp-flags FIN,SYN,RST,ACK SYN -j ACCEPT 
-#-A external-internal -p tcp -o eth0 -d 192.168.100.2 --dport 22 -m state --state NEW -j ACCEPT
--A external-internal -p icmp -m icmp --icmp-type 0 -j ACCEPT 
--A external-internal -j DROP 
-
--A internal-external -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT 
--A internal-external -j DROP 
-
--A INPUT -i eth1 -j external-if 
--A INPUT -i eth0 -j internal-if 
-
--A FORWARD -i eth1 -o eth0 -j external-internal 
--A FORWARD -i eth0 -o eth1 -j internal-external 
--A FORWARD -j NEVER 
-
-COMMIT
-</code></pre>
-
-<p>of course you need to turn on ip forwarding</p>
-
-<pre><code>echo "1" &gt; /proc/sys/net/ipv4/ip_forwarding
-</code></pre>
-
-<p>and uncomment lines in /etc/sysctl.conf</p>
-
-<p>Also need a dhcpd server running with /etc/dhcp3/dhcpd.conf containing</p>
-
-<pre><code>subnet 192.168.20.0 netmask 255.255.255.0 {
-  range 192.168.20.10 192.168.20.20;
-  option routers 192.168.20.254;
-  option domain-name "globalsuite.net";
-  option domain-name-servers 4.2.2.1;
-}
-</code></pre>
-
-<p>but could probably do this easier with dnsmasq.</p>
-
-<p>Ca y est!</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/01/27/howto-streamvlc-from-hawk.html">Stream VLC From Hawk</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>this sets up a remote control on 7001 over an ssh tunnel</p>
-
-<pre><code>hawk:~ $ vlc -Ihttp --http-host :7001 -vvv /tmp/howimetyourmother-S1d1-t1.mp4 --udp-caching 1500 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=800,ab=128}:standard{access=http{mime=video/x-ms-asf},mux=asf,dst:8080}'
-</code></pre>
-
-<p>this client hits hawk:8080 which forwards the port to hawk&#8217;s vlc process</p>
-
-<p>insecure data stream (control stream still safe) but seems to work better than tunneling over 8080 too</p>
-
-<p>next up is to try it over some other protocol than http&#8230; 
-need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -856,23 +839,23 @@ need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/sciml/ml/ai/datascience/2020/06/05/sciml.html">Scientific ML/AI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html">Covid HPC Panel</a>
+      </li>
+    
+      <li class="post">
+        <a href="/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html">Course Stuff</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
       <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>

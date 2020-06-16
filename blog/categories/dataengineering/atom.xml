@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: dataengineering | Software, Physics, Data, Mountains]]></title>
+  <link href="http://markmims.com/blog/categories/dataengineering/atom.xml" rel="self"/>
+  <link href="http://markmims.com/"/>
+  <updated>2020-06-16T09:53:39+00:00</updated>
+  <id>http://markmims.com/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Course Stuff]]></title>
+    <link href="http://markmims.com/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html"/>
+    <updated>2020-06-05T00:00:00+00:00</updated>
+    <id>http://markmims.com/teaching/data/datascience/dataengineering/2020/06/05/course-stuff</id>
+    <content type="html"><![CDATA[<p>Blah blah blah</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>One</li>
+  <li>Two</li>
+  <li>Three</li>
+  <li>Four</li>
+</ul>
+
+<h2 id="one">One</h2>
+
+<hr />
+
+]]></content>
+  </entry>
+  
+</feed>

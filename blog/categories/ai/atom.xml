@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ai | Software, Physics, Data, Mountains]]></title>
+  <link href="http://markmims.com/blog/categories/ai/atom.xml" rel="self"/>
+  <link href="http://markmims.com/"/>
+  <updated>2020-06-16T09:53:39+00:00</updated>
+  <id>http://markmims.com/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Scientific ML/AI]]></title>
+    <link href="http://markmims.com/sciml/ml/ai/datascience/2020/06/05/sciml.html"/>
+    <updated>2020-06-05T00:00:00+00:00</updated>
+    <id>http://markmims.com/sciml/ml/ai/datascience/2020/06/05/sciml</id>
+    <content type="html"><![CDATA[<p>Blah blah blah</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>One</li>
+  <li>Two</li>
+  <li>Three</li>
+  <li>Four</li>
+</ul>
+
+<h2 id="one">One</h2>
+
+<hr />
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Covid HPC Panel]]></title>
+    <link href="http://markmims.com/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html"/>
+    <updated>2020-06-05T00:00:00+00:00</updated>
+    <id>http://markmims.com/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel</id>
+    <content type="html"><![CDATA[<p>Blah blah blah</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>One</li>
+  <li>Two</li>
+  <li>Three</li>
+  <li>Four</li>
+</ul>
+
+<h2 id="one">One</h2>
+
+<hr />
+
+]]></content>
+  </entry>
+  
+</feed>

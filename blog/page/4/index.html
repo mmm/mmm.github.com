@@ -9,7 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="defaults write com.apple.dock workspaces-wrap-arrows -boolean NO ">
+  <meta name="description" content="From Michael Noll&#8217;s hadoop on ubuntu post mkdir /var/lib/hadoop
+chown mmm.mmm /var/lib/hadoop hadoop datanode -format bin/start-all.sh hadoop &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,6 +111,253 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/06/22/howto-test-hadoop.html">Hadoop-test-install</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-22T00:00:00+00:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>From <a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/">Michael Noll&#8217;s hadoop on ubuntu post</a></p>
+
+<pre><code>mkdir /var/lib/hadoop
+chown mmm.mmm /var/lib/hadoop
+
+hadoop datanode -format
+
+bin/start-all.sh 
+
+hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
+
+hadoop dfs -ls
+
+hadoop jar /usr/local/hadoop/hadoop-mapred-examples-0.21.0.jar wordcount gutenberg gutenberg-output
+
+hadoop dfs -ls
+hadoop dfs -ls gutenberg-output
+
+bin/hadoop dfs -cat gutenberg-output/part-r-00000
+mkdir /tmp/gutenberg-output
+bin/hadoop dfs -getmerge gutenberg-output /tmp/gutenberg-output
+head /tmp/gutenberg-output/gutenberg-output
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/30/howto-cucumber-from-vim.html">Howto-cucumber-from-vim</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-30T00:00:00+00:00" pubdate data-updated="true">Mar 30<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>just run :Rake from a feature and it does what it&#8217;s supposed to do</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/03/09/howto-multiuser-screen-sessions.html">Multiuser Screen Sessions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-09T00:00:00+00:00" pubdate data-updated="true">Mar 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ok, trying to do this for real&#8230;</p>
+
+<p>I set suid on screen, so</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwxr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwsr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>and then /var/run/screen needs to be 755 instead of 775&#8230; i.e.,</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxrwxr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxr-xr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>Now, user1:</p>
+
+<pre><code>user1@kojiro:~$ screen -x -S junk -t junk
+</code></pre>
+
+<p>or just</p>
+
+<pre><code>user1@kojiro:~$ screen -S junk
+</code></pre>
+
+<p>user1 sets multiusermode</p>
+
+<pre><code>Ctrl-A :multiuser on
+Ctrl-A :acladd user2
+Ctrl-A :acladd user3
+</code></pre>
+
+<p>user2</p>
+
+<pre><code>user2@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<p>user3</p>
+
+<pre><code>user3@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<hr />
+
+<p>another version</p>
+
+<pre><code>For security reasons, screen by default is installed so that other users within the system can not attach to your screen sessions. To allow this to be changed one must set screen to run SUID root by doing the following (once):
+sudo chmod +s /usr/bin/screen
+sudo chmod 755 /var/run/screen
+Then user1 can share their session on host as follows:
+screen -S shared-session
+Ctrla :multiuser on
+Ctrla :acladd user2
+
+user2 on host can then connect to the shared session like:
+ssh user2@host
+screen -x user1/shared-session
+</code></pre>
+
+<hr />
+
+<p>first view
+    screen -S junk</p>
+
+<p>second view
+    screen -x -R junk</p>
+
+<hr />
+
+<p>maybe this&#8217;ll work&#8230;</p>
+
+<p>user1</p>
+
+<pre><code>screen -t junk
+</code></pre>
+
+<p>user2 becomes user1</p>
+
+<pre><code>screen -x -t junk
+</code></pre>
+
+<hr />
+
+<p>looks like this works&#8230; maybe overkill but wtf?</p>
+
+<p>screen -xR -t junk -S junk</p>
+
+<p>allegedly, 
+screen -t junk
+screen -x -t junk
+should work</p>
+
+<h2 id="below-is-old">below is old</h2>
+
+<p>It&#8217;s possible for two users to share a screen session. This is particularly useful if multiple people want to monitor a long running task, and it&#8217;s easy to do.</p>
+
+<p>user #1:</p>
+
+<p>screen -R longbuild</p>
+
+<p>user #2:</p>
+
+<p>screen -x -R longbuild</p>
+
+<p>The -x flag tells screen to allow you to attach to an already attached session. This is also good for crazy stuff like a collaborative Vim session (if you&#8217;re into that sort of thing).</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -537,168 +785,6 @@ $ git bzr push upstream
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/31/howto-ruby-gdata.html">Gdata-ruby</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-31T00:00:00+00:00" pubdate data-updated="true">Jan 31<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>From:</p>
-
-<pre><code>https://github.com/dsisnero/gdata-ruby.git
-https://github.com/tsenying/gdata-ruby-util.git
-http://code.google.com/apis/gdata/articles/gdata_on_rails.html
-</code></pre>
-
-<hr />
-
-<p>gdata-samples in ~/src</p>
-
-<pre><code>svn checkout http://gdata-samples.googlecode.com/svn/trunk/ gdata-samples-read-only
-</code></pre>
-
-<p>or</p>
-
-<pre><code>git svn init http://gdata-samples.googlecode.com/svn/trunk/
-git svn fetch
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/30/howto-sunfire-ilom.html">Sunfire Ilom</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-30T00:00:00+00:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>log into the agent</p>
-
-<pre><code>SP -&gt; set /SP/SystemInfo/CtrlInfo PowerCtrl=reset  
-The System will be Reset.
-Do you wish to Continue..?(y/n)y
-Set 'PowerCtrl' to 'reset'
-/SP -&gt; 
-
-start /SP/AgentInfo/console
-
-
-
-/SP -&gt; set /SP/SystemInfo/CtrlInfo PowerCtrl=forceoff
-The System will be force Powered Off.
-Do you wish to Continue..?(y/n)y
-Set 'PowerCtrl' to 'forceoff'
-/SP -&gt; show /SP/SystemInfo/CtrlInfo                  
-
-  /SP/SystemInfo/CtrlInfo
-    Targets:
-
-    Properties:
-        PowerStatus = off
-        PowerCtrl = (Cannot show property)
-        BootCtrl = regular
-        IdLedCtrl = off
-
-    Target Commands:
-        show
-        set
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/29/howto-git-track-remote-branch.html">Howto-git-track-remote-branch</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-29T00:00:00+00:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>short story:</p>
-
-<pre><code>git branch --set-upstream separate origin/separate
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -733,23 +819,23 @@ Set 'PowerCtrl' to 'forceoff'
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/sciml/ml/ai/datascience/2020/06/05/sciml.html">Scientific ML/AI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html">Covid HPC Panel</a>
+      </li>
+    
+      <li class="post">
+        <a href="/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html">Course Stuff</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
       <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
-      </li>
-    
-      <li class="post">
-        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>
