@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-06-16T09:53:39+00:00</updated>
+  <updated>2020-07-27T19:22:51+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -12,81 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Scientific ML/AI]]></title>
-    <link href="http://markmims.com/sciml/ml/ai/datascience/2020/06/05/sciml.html"/>
-    <updated>2020-06-05T00:00:00+00:00</updated>
-    <id>http://markmims.com/sciml/ml/ai/datascience/2020/06/05/sciml</id>
-    <content type="html"><![CDATA[<p>Blah blah blah</p>
-
-<!--more-->
-
-<h2 id="contents">Contents</h2>
-
-<ul>
-  <li>One</li>
-  <li>Two</li>
-  <li>Three</li>
-  <li>Four</li>
-</ul>
-
-<h2 id="one">One</h2>
-
-<hr />
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Covid HPC Panel]]></title>
-    <link href="http://markmims.com/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html"/>
-    <updated>2020-06-05T00:00:00+00:00</updated>
-    <id>http://markmims.com/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel</id>
-    <content type="html"><![CDATA[<p>Blah blah blah</p>
-
-<!--more-->
-
-<h2 id="contents">Contents</h2>
-
-<ul>
-  <li>One</li>
-  <li>Two</li>
-  <li>Three</li>
-  <li>Four</li>
-</ul>
-
-<h2 id="one">One</h2>
-
-<hr />
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Course Stuff]]></title>
-    <link href="http://markmims.com/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html"/>
-    <updated>2020-06-05T00:00:00+00:00</updated>
-    <id>http://markmims.com/teaching/data/datascience/dataengineering/2020/06/05/course-stuff</id>
-    <content type="html"><![CDATA[<p>Blah blah blah</p>
-
-<!--more-->
-
-<h2 id="contents">Contents</h2>
-
-<ul>
-  <li>One</li>
-  <li>Two</li>
-  <li>Three</li>
-  <li>Four</li>
-</ul>
-
-<h2 id="one">One</h2>
-
-<hr />
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Projects in GCP using Central Billing Accounts]]></title>
@@ -2528,6 +2453,1110 @@ $ OS_ARCH=amd64 make
 <pre><code>$ autoreconf --force --install
 </code></pre>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Node.js and MongoDB on Ubuntu]]></title>
+    <link href="http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu.html"/>
+    <updated>2011-09-07T00:00:00+00:00</updated>
+    <id>http://markmims.com/cloud/2011/09/07/node-mongo-ubuntu</id>
+    <content type="html"><![CDATA[<p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu&#8230; 
+it was quite a new experience.
+Figured I&#8217;d post details of the talk here.</p>
+
+<h2 id="an-example-stack">An example stack</h2>
+
+<p>We&#8217;ll use <a href="http://juju.ubuntu.com/">juju</a> to deploy a basic
+<a href="http://nodejs.org">node.js</a>
+app along with a couple of typical surrounding services..
+- <a href="http://haproxy.1wt.eu/">haproxy</a> to catch inbound web traffic and route it to our node.js app cluster
+- <a href="http://mongodb.org/">mongodb</a> for app storage</p>
+
+<p>Along the way, we&#8217;ll see what it takes to connect and scale this particular stack
+of services.  I&#8217;ll err on the side of too much detail over simplicity in this
+example, but I&#8217;ll try to make it clear when there&#8217;s a sidebar topic.</p>
+
+<!--more-->
+
+<p>At the end of the day, the deployment for our application
+would look like the usual juju deployment</p>
+
+<pre><code>$ juju bootstrap
+</code></pre>
+
+<p>(with a pregnant pause to allow EC2 to catch up)</p>
+
+<pre><code>$ juju deploy --repository ~/charms local:mongodb
+$ juju deploy --repository ~/charms local:node-app myapp
+$ juju add-relation mongodb myapp
+
+$ juju deploy --repository ~/charms local:haproxy
+$ juju add-relation myapp haproxy
+$ juju expose haproxy
+</code></pre>
+
+<p>(with another pregnant pause to allow EC2 to catch up)</p>
+
+<p>We can get the service URLs from</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>and hit the head of the haproxy service to see the app in action.</p>
+
+<p>We can scale it out with</p>
+
+<pre><code>$ for i in {1..4}; do
+$   juju add-unit myapp
+$ done
+</code></pre>
+
+<p>and we&#8217;ll soon have a cluster of one haproxy node balancing
+between five application nodes all talking to a single mongo
+node in the backend.  Of course, we can scale mongo too,
+but that&#8217;s another post.</p>
+
+<h2 id="juju-application-charms">juju &#8220;Application&#8221; charms</h2>
+
+<p>There are two types of juju charms used in this example:</p>
+
+<p>&#8220;Canned Charms&#8221;, like the
+<a href="http://github.com/mmm/juju-haproxy">haproxy charm</a>
+and the
+<a href="http://github.com/mmm/juju-mongodb">mongodb charm</a>,
+and &#8220;Application Charms&#8221;, like
+the <a href="http://github.com/mmm/juju-node-app">node.js app charm</a>.</p>
+
+<p>Canned charms can be used as-is right off the shelf.</p>
+
+<p>Application charms are used to manage your custom application
+as an juju service.  We haven&#8217;t nailed down the language on
+this, but these charms create a contained environment,
+&#8220;framework&#8221;, or &#8220;wrapper&#8221; around your custom application and
+help it to play nicely with other services.</p>
+
+<p>The 
+<a href="http://github.com/mmm/juju-node-app">node-app charm</a>
+we use here
+is meant to be an example that you can fork/adapt and use
+to maintain custom components of your infrastructure.</p>
+
+<h2 id="the-node-app-charm">The <code>node-app</code> charm</h2>
+
+<p>The <code>node-app</code> charm is the key feature we want to look at.
+It&#8217;s a charm that will pull your app from revision control
+and config/deploy/maintain it as a service within your
+infrastructure.</p>
+
+<p>Setup and clone this charm</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+~/charms$ git clone http://github.com/charms/node-app
+</code></pre>
+
+<p>and we&#8217;ll walk through it.</p>
+
+<pre><code>README.markdown
+config.yaml
+copyright
+metadata.yaml
+revision
+hooks/
+  install
+  mongodb-relation-changed
+  mongodb-relation-departed
+  mongodb-relation-joined
+  start
+  stop
+  website-relation-joined
+</code></pre>
+
+<p>We can see the usual <code>install</code>, <code>start</code>, and <code>stop</code> hooks for the
+node.js service, along with a couple of other hooks for relating to
+other services.</p>
+
+<p>Before we go into this in detail, let&#8217;s take a little sidebar on
+the Node.js app we&#8217;ll be deploying&#8230;</p>
+
+<h3 id="example-nodejs-app">Example node.js app</h3>
+
+<p>The example app I&#8217;m using for this</p>
+
+<pre><code>http://github.com/mmm/testnode
+</code></pre>
+
+<p>just logs page hits in mongo and reports results.</p>
+
+<p>As usual, I have absolutely no graphic design gifts so things look a little
+bare-bones.  Don&#8217;t let that fool you&#8230; it&#8217;s quite easy to dress this up
+with some svg maps and some client-side js a la topfunky&#8217;s (peepcode.com)
+node examples.</p>
+
+<p>This is a really basic node app that&#8230;</p>
+
+<p>Reads config info</p>
+
+<pre><code>var config = require('./config/config'),
+    mongo = require('mongodb'),
+    http = require('http');
+</code></pre>
+
+<p>from a file <code>config/config.js</code></p>
+
+<pre><code>module.exports = config = {
+   "name" : "mynodeapp"
+  ,"listen_port" : 8000
+  ,"mongo_host" : "localhost"
+  ,"mongo_port" : 27017
+}
+</code></pre>
+
+<p>attaches to the mongo instance specified in the config file</p>
+
+<pre><code>var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+</code></pre>
+
+<p>spins up a webservice</p>
+
+<pre><code>var server = http.createServer(function (request, response) {
+
+  var url = require('url').parse(request.url);
+
+  if(url.pathname === '/hits') {
+    show_log(request, response);
+  } else {
+    track_hit(request, response);
+  }
+
+});
+server.listen(config.listen_port);
+</code></pre>
+
+<p>and handles requests.</p>
+
+<p>The entire app would look something like</p>
+
+<pre><code>//require.paths.unshift(__dirname + '/lib');
+//require.paths.unshift(__dirname);
+
+var config = require('./config/config'),
+    mongo = require('mongodb'),
+    http = require('http');
+
+var show_log = function(request, response){
+  var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+  db.addListener("error", function(error) { console.log("Error connecting to mongo"); });
+  db.open(function(err, db){
+    db.collection('addresses', function(err, collection){
+      collection.find({}, {limit:10, sort:[['_id','desc']]}, function(err, cursor){
+        cursor.toArray(function(err, items){
+          response.writeHead(200, {'Content-Type': 'text/plain'});
+          for(i=0; i&lt;items.length;i++){
+            response.write(JSON.stringify(items[i]) + "\n");
+          }
+          response.end();
+        });
+      });
+    });
+  });
+}
+
+var track_hit = function(request, response){
+  var db = new mongo.Db('mynodeapp', new mongo.Server(config.mongo_host, config.mongo_port, {}), {});
+  db.addListener("error", function(error) { console.log("Error connecting to mongo"); });
+  db.open(function(err, db){
+    db.collection('addresses', function(err, collection){
+      var address = request.headers['x-forwarded-for'] || request.connection.remoteAddress;
+
+      hit_record = { 'client': address,'ts': new Date() };
+
+      collection.insert( hit_record, {safe:true}, function(err){
+        if(err) { 
+          console.log(err.stack);
+        }
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.write(JSON.stringify(hit_record));
+        response.end("Tracked hit from " + address + "\n");
+      });
+    });
+  });
+}
+
+var server = http.createServer(function (request, response) {
+
+  var url = require('url').parse(request.url);
+
+  if(url.pathname === '/hits') {
+    show_log(request, response);
+  } else {
+    track_hit(request, response);
+  }
+
+});
+server.listen(config.listen_port);
+
+console.log("Server running at http://0.0.0.0:" + config.listen_port + "/");
+</code></pre>
+
+<p>We won&#8217;t get into my node.js skillz at the moment&#8230; 
+it&#8217;s a deployment example.</p>
+
+<p>I&#8217;ve also got a <code>package.json</code> in there to let <code>npm</code> resolve
+some example dependencies upon install.</p>
+
+<p>Now, there&#8217;s no standard way to handle configuration in node
+apps, so it&#8217;s quite likely your app&#8217;s config looks a bit 
+different.  No problem, it&#8217;s pretty straightforward to adapt
+this example charm to handle the way your app works&#8230;
+and use your own config file paths, and config parameter names.</p>
+
+<p>End-of-sidebar&#8230; Back to the <code>node-app</code> charm.</p>
+
+<h3 id="hooks">Hooks</h3>
+
+<p>Let&#8217;s go through the hooks as they would be executing during
+deployment and service relation.</p>
+
+<p>The <code>install</code> hook is kicked off upon deployment,
+reads its config from <code>config.yaml</code> and then will</p>
+
+<ul>
+  <li>install <code>node</code>/<code>npm</code></li>
+  <li>clone your node app from the repo specified in <code>app_repo</code></li>
+  <li>run <code>npm</code> if your app contains <code>package.json</code></li>
+  <li>configure networking if your app contains <code>config/config.js</code></li>
+  <li>create a startup service for your app</li>
+  <li>wait to startup once we&#8217;re joined to a <code>mongodb</code> service</li>
+</ul>
+
+<p><code>start</code> and <code>stop</code> are trivial in this charm because
+we want to wait for mongo to join before we actually run
+the app.  If your app was simpler and didn&#8217;t depend on
+a backing store, then you could use these hooks to
+manage the service created during installation.</p>
+
+<h3 id="mongodb">MongoDB</h3>
+
+<p>The key to almost every charm is in the relation hooks.</p>
+
+<p>This particular app is written against mongodb
+so the app&#8217;s charm has hooks that get fired when
+the &#8220;app&#8221; service is related to the mongo service.</p>
+
+<p>This relation was defined when we did</p>
+
+<pre><code>$ juju add-relation mongodb myapp
+</code></pre>
+
+<p>and the <code>relation-joined/changed</code> hooks
+get fired after the <code>install</code> and <code>start</code>
+hooks have successfully completed for both
+ends of the relationship.</p>
+
+<p>The <code>mongodb-relation-changed</code> hook in this charm
+will read config from <code>config.yaml</code></p>
+
+<ul>
+  <li>get relation info from the mongo service (i.e., hostname)</li>
+  <li>configure the app to use that host for mongo connections</li>
+  <li>start the node app service we created during <code>install</code></li>
+</ul>
+
+<p>That&#8217;s it really&#8230; our app is up and running at this
+point.</p>
+
+<p>Note that the example here depends on mongo,
+but juju makes it easy to relate to some other backend db.
+Just like we have <code>mongodb-relation-changed</code> hooks, we
+could just as easily have <code>cassandra-relation-changed</code> hooks
+that would look strikingly similar.  Of course, our app would
+have to be written in such a way that it could use either,
+but that&#8217;s another topic.  The deployment tool supports
+the choice being made dynamically when relations are joined.
+I&#8217;d say &#8220;at deployment time&#8221; but it&#8217;s even better than that
+because I can remove relations and add other ones at 
+any time throughout the lifetime of the service&#8230; and the
+correct hooks get called.</p>
+
+<h3 id="haproxy">HAProxy</h3>
+
+<p>For this example, I&#8217;d like to use haproxy to load balance</p>
+
+<p>This example stack uses haproxy to handle initial
+web requests from outside.  haproxy will load balance
+across multiple instances of our app.  That way we
+could just attach an elastic ip to haproxy, configure
+dns, and we&#8217;re cruising 
+(of course we&#8217;re leaving out
+plenty of infrastructure aspects like 
+monitoring/logging/backups/etc that are
+pretty important for a production deployment
+in the cloud).</p>
+
+<p>The app charm has
+hooks that get fired when
+the &#8220;app&#8221; service is related to the haproxy service.
+Just as above, this relation was defined when we did</p>
+
+<pre><code>$ juju add-relation haproxy myapp
+</code></pre>
+
+<p>and the <code>relation-joined/changed</code> hooks
+get fired after the <code>install</code> and <code>start</code>
+hooks have successfully completed for both
+ends of the relationship.</p>
+
+<p>The <code>website-relation-changed</code> hook in this charm
+in its entirety:</p>
+
+<pre><code>#!/bin/sh
+ 
+app_port=`config-get app_port`
+relation-set port=$app_port hostname=`hostname -f`
+</code></pre>
+
+<p>simply tells the haproxy service which 
+address and port our application uses to handle
+requests.</p>
+
+<p>We could of course configure our app to listen on port
+80, tell the charm to open port 80 in its firewall,
+and then expose port 80 for our app service to the
+outside world.  That&#8217;d be fine if we never needed to
+scale or we were planning to load balance multiple
+units of our app using dns, elastic load balancer instances,
+or something else external.</p>
+
+<p>Again, note that the example here uses haproxy, but
+we could easily swap that out with any other service
+that consumed the juju <code>http</code> interface.</p>
+
+<h3 id="charm-configuration">Charm configuration</h3>
+
+<p>Ok, so I lied a little up above when I said that the hooks
+read config info from <code>config.yaml</code>.  Yes, they do read config
+information from there, but that&#8217;s not the whole story.
+The values of the configurable parameters can be set/overidden
+in a number of different ways throughout the lifecycle of
+the service.</p>
+
+<p>You can pass in dynamic configuration during deployment or later
+at runtime using the cli</p>
+
+<pre><code>`juju set &lt;service_name&gt; &lt;config_param&gt;=&lt;value&gt;`
+</code></pre>
+
+<p>or configure the charm at deployment time via a <code>yaml</code> file
+passed to the <code>juju deploy --config</code> command.</p>
+
+<h3 id="scaling-tips">Scaling tips</h3>
+
+<p>Scaling with juju works really well.  The key
+to this lies in the boundaries between
+configuration for the service itself, versus configuration for
+the service <em>in the context of</em> a relation with another service.</p>
+
+<p>When these two types of configuration are well isolated,
+scaling with juju just works.  I&#8217;ve caught myself several
+times working on just getting a service charm working, with
+no real thought to scalability, and being pleasantly surprised
+to find out that the service pretty much scales as written.</p>
+
+<p>The best way to grok this is to walk through the process
+of joining your relations as single unit services&#8230;</p>
+
+<p>In our example,</p>
+
+<pre><code>haproxy &lt;-&gt; myapp &lt;-&gt; mongodb
+</code></pre>
+
+<p>containers for each service get instantiated, then the <code>install</code>
+and <code>start</code> hooks are run for each service.  Once both sides
+of relations are <code>started</code> then the relation hooks get called:
+<code>joined</code> and then usually several rounds of <code>changed</code> depending
+on the relation parameters being set.  Once these are complete,
+the services are up, related, and running.</p>
+
+<p>Ok, now comes scaling.  <code>juju add-unit myapp</code> adds a new
+<code>myapp</code> service node and goes through the whole cycle above.
+The &#8220;services&#8221; are already related, so the relation hooks are
+automatically fired as each new unit is <code>started</code>.
+Since we divided up
+the installation/configuration/setup/startup of the service
+into the parts that are specific to the service and parts that
+are specific to the relation with another service, then each
+new unit runs &#8220;just enough&#8221; configuration to join it to the
+cluster.</p>
+
+<p>Not all tools can be configured like that, but that&#8217;s the key
+to strive for when writing relation hooks.
+Identify the components of your application
+configuration that really depend on another service, and 
+isolate them as much as possible.
+Only configure 
+relation-specific things in the relation hooks.
+The more minimal the relation hooks,
+the more scalable the service.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia]]></title>
+    <link href="http://markmims.com/cloud/2011/09/03/terasort-ganglia.html"/>
+    <updated>2011-09-03T00:00:00+00:00</updated>
+    <id>http://markmims.com/cloud/2011/09/03/terasort-ganglia</id>
+    <content type="html"><![CDATA[<p>Here I&#8217;m using new features of
+<a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
+(namely <a href="http://juju.ubuntu.com">juju</a>)
+to easily deploy
+<a href="http://ganglia.sourceforge.net">Ganglia</a>
+alongside
+a small <a href="http://hadoop.apache.org">Hadoop</a> cluster
+to play around with monitoring some
+<a href="http://sortbenchmark.org/">benchmarks</a>
+like
+<a href="http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/">Terasort</a>.</p>
+
+<!--more-->
+
+<hr />
+
+<p><em>Updated on 2011-11-08:</em>
+The ubuntu project &#8220;ensemble&#8221; is now known as &#8220;juju&#8221;.
+This post has been updated to reflect the new names and updates to the api.</p>
+
+<hr />
+
+<h2 id="short-story">Short Story</h2>
+
+<p>Deploy hadoop and ganglia using juju:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository "~/charms"  local:hadoop-master namenode
+$ juju deploy --repository "~/charms"  local:ganglia jobmonitor
+$ juju deploy --repository "~/charms"  local:hadoop-slave datacluster
+$ juju add-relation namenode datacluster
+$ juju add-relation jobmonitor datacluster
+$ for i in {1..6}; do
+$   juju add-unit datacluster
+$ done
+$ juju expose jobmonitor
+</code></pre>
+
+<p>When all is said and done (and EC2 has caught up),
+run the jobs</p>
+
+<pre><code>$ juju ssh namenode/0
+ubuntu$ sudo -su hdfs
+hdfs$ hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 100000000 in_dir
+hdfs$ hadoop jar hadoop-*-examples.jar terasort -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 in_dir out_dir
+</code></pre>
+
+<p>While these are running, we can run</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>to get the URL for the jobmonitor ganglia web frontend</p>
+
+<pre><code>http://&lt;jobmonitor-instance-ec2-url&gt;/ganglia/
+</code></pre>
+
+<p>and see&#8230;</p>
+
+<p><a href="http://markmims.com/images/terasort-ganglia-1.png">
+<img src="http://markmims.com/images/terasort-ganglia-1.png" width="720px" />
+</a></p>
+
+<p>and a little later as the jobs run&#8230;</p>
+
+<p><a href="http://markmims.com/images/terasort-ganglia-2.png">
+<img src="http://markmims.com/images/terasort-ganglia-2.png" width="720px" />
+</a></p>
+
+<p>Of course, I&#8217;m just playing around with ganglia at the moment&#8230;
+For real performance, I&#8217;d change my juju config file
+to choose larger (and ephemeral) EC2 instances instead of
+the defaults.</p>
+
+<h2 id="a-few-details">A Few Details&#8230;</h2>
+
+<p>Let&#8217;s grab the charms necessary to reproduce this.</p>
+
+<p>First, let&#8217;s install juju and set up a our charms.</p>
+
+<pre><code>$ sudo apt-get install juju charm-tools
+</code></pre>
+
+<p>Note that I&#8217;m describing all this using an Ubuntu laptop to run
+the juju cli because that&#8217;s how I roll, but you can certainly
+use a Mac to drive your Ubuntu services in the cloud.
+The juju CLI is already available in ports, but I&#8217;m not sure
+the version.  Homebrew packages are in the works.
+Windows should work too, but I don&#8217;t have a clue.</p>
+
+<pre><code>$ mkdir -p ~/charms/oneiric
+$ cd ~/charms/oneiric
+$ charm get hadoop-master
+$ charm get hadoop-slave
+$ charm get ganglia
+</code></pre>
+
+<p>That&#8217;s about all that&#8217;s really necessary to get you up and
+benchmarking/monitoring.</p>
+
+<p>I&#8217;ll do another post on how to adapt your own charms to use monitoring
+and the <code>monitor</code> juju interface as part of the &#8220;Core Infrastructure&#8221;
+series I&#8217;m writing for charm developers.  I&#8217;ll go over the process of
+what I had to do to get the <code>hadoop-slave</code> service talking to monitoring
+services like <code>ganglia</code>.</p>
+
+<p>Until then, clone/test/enjoy&#8230; or better yet, fork/adapt/use!</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Core Infrastructure Part 1 - Adding NFS to juju charms]]></title>
+    <link href="http://markmims.com/cloud/2011/08/25/juju-nfs.html"/>
+    <updated>2011-08-25T00:00:00+00:00</updated>
+    <id>http://markmims.com/cloud/2011/08/25/juju-nfs</id>
+    <content type="html"><![CDATA[<p>Several features have recently landed in juju that make 
+it easier to convert some common infrastructure-level components 
+over and use them within your stack of services.
+I figured it&#8217;s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc&#8230;  and how they
+fit into the juju ecosystem.</p>
+
+<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
+core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
+look.  Many friends keep ancient boxes around as dedicated NFS 
+fileserver appliances that are usually in fairly critical roles.
+Well, how would this fit into a sexy new juju stack of services?</p>
+
+<!--more-->
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>In this post I&#8217;ll walk through adapting a basic mediawiki
+charm to enable using nfs mounts for shared resource directories.
+The steps here should work pretty closely for a lot of different
+service charms that might benefit from a NFS hooks.</p>
+
+<p>At the end of the day, an example stack might look something like </p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<p>which will result in a mediawiki setup with <code>images</code>
+stored on an nfs server.</p>
+
+<p>As expected,</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>will scale mediawiki instances.</p>
+
+<p>Since the <code>mywiki</code>
+service is related to the <code>myimages</code> service,
+then all <code>mywiki</code> instances will share the same
+resource directory on the nfs server.  This works
+months into the deployment&#8230; we add another unit
+and the relation hooks perform the mount.</p>
+
+<p>The nfs server charm is pretty canned, it&#8217;ll take 
+config options, but has sane defaults.  There&#8217;s 
+little need to adjust anything in there.</p>
+
+<p>To adapt your charm to use a juju-managed
+NFS service, we copy two hooks from an nfs-client
+example charm and adapt to suit the needs of
+the charm we&#8217;re working on (mediawiki in this
+example).</p>
+
+<h2 id="detailed-walk-through">Detailed walk-through</h2>
+
+<p>Let&#8217;s go through this process of adapting our charms
+to use NFS mounts.</p>
+
+<h3 id="the-problem">The Problem</h3>
+
+<p>Start with a simple mediawiki deploy,</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju expose mywiki
+</code></pre>
+
+<p>With juju, it&#8217;s easy to spin up multiple mediawiki
+instances (or &#8220;service units&#8221; in juju-speak).</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>Now, since the <code>mywiki</code> service is related to the <code>mysql</code> service,
+then all these mywiki units share the same database and hence
+content.  Groovy.</p>
+
+<p>Ok, well there&#8217;s a problem.  Each wiki instance has its
+own filesystem-store for various things&#8230; images, uploads, etc.
+This is pretty common practice across different CMSes that
+results in scaling pain.
+The content in the database will point to resources that
+only exist on one of the instances.</p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p>A common solution to this
+is to just put these resource directories on a fileserver and
+share them out to each of the wiki instances using NFS.</p>
+
+<p>This, of course, isn&#8217;t limited to content management
+systems.  Just about every infrastructure has some sort of need
+for shared storage.</p>
+
+<p>Ubuntu packages for mediawiki install mediawiki&#8217;s resource
+directories with respect to <code>/var/lib/mediawiki/</code>.
+So let&#8217;s just set adapt the basic mediawiki charm to use
+an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
+
+<p>Each mediawiki
+service unit has a <code>/var/lib/mediawiki/images</code> directory
+that points to 
+up multiple mediawiki instances, they&#8217;ll all share the
+same <code>images</code> directory.</p>
+
+<h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
+
+<p>Let&#8217;s grab some code and get cranking&#8230;</p>
+
+<p>First, pull mediawiki as an example (or any charm you&#8217;re
+currently working on that might need shared storage)</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+$ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
+</code></pre>
+
+<p>This gives us</p>
+
+<pre><code>/home/mmm/charms/mediawiki
+|-- copyright
+|-- hooks
+|   |-- ...
+|   |-- db-relation-changed
+|   |-- install
+|   |-- start
+|   |-- stop
+|   |-- website-relation-changed
+|   |-- website-relation-joined
+|   `-- ...
+|-- metadata.yaml
+`-- revision
+</code></pre>
+
+<p>a bare mediawiki charm that we can use as a starting
+point to add our nfs client hooks.
+Note that even though this is an &#8216;nfsdemo&#8217; branch just for this demo, 
+the real mediawiki charm should now have nfs support in the trunk.</p>
+
+<p>Now, we can copy sample nfs client hooks from</p>
+
+<pre><code>http://bazaar.launchpad.net/~mark-mims/+junk/principia-nfs-client/files/head:/hooks/
+</code></pre>
+
+<p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
+and save them as mediawiki hooks&#8230; I&#8217;d rename them to something
+that makes sense to future readers of our mediawiki charm.
+Let&#8217;s call them <code>nfs-imagestore-relation-joined</code> and 
+<code>nfs-imagestore-relation-changed</code>.</p>
+
+<h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
+
+<p>Let&#8217;s look at the
+<code>nfs-imagestore-relation-joined</code> hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+apt-get install -y nfs-common
+
+sed -i -e "s/NEED_IDMAPD.*/NEED_IDMAPD=yes/" /etc/default/nfs-common
+service idmapd restart || service idmapd start
+
+relation-set client=`hostname -f`
+</code></pre>
+
+<p>This looks pretty normal.
+It installs some stuff nfs stuff when the relation is joined&#8230;
+this is good it doesn&#8217;t really install it until it&#8217;s needed.
+Then it tells the nfs server who we are for access control.
+Ok, so no changes need to be made to get this working
+on our mediawiki service unit&#8230; we can leave it as-is.</p>
+
+<p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>Ok, when parameters used within charm hooks are likely to change
+from one service deployment to the next, they can be externalized
+into a <code>config.yaml</code> for the charm.  This also allows you to
+pass them in at deploy-time or change them throughout the lifetime
+of the service using juju cli <code>--config</code> options and <code>set</code>
+commands.  See the <a href="http://juju.ubuntu.com/docs/">juju docs</a> for
+how to do all of this.</p>
+
+<p>There are two parameters in the <code>nfs-imagestore-relation-changed</code>
+hook that are set using <code>config-get</code>:</p>
+
+<pre><code>local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+</code></pre>
+
+<p>Well, for mediawiki
+these parameters aren&#8217;t really going to change.  It&#8217;s reasonable
+to just hard-code them here as:</p>
+
+<pre><code>mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+</code></pre>
+
+<p>We could certainly just add these parameters to a <code>config.yaml</code>
+for the mediawiki charm, but in this case, they&#8217;re not really
+interesting &#8220;tweakable&#8221; aspects of the mediawiki charm, so let&#8217;s
+keep the mediawiki config simple.
+For other charms this might not be the case,
+but make that call in context.</p>
+
+<p>Now, at this point, our version of the <code>nfs-imagestore-relation-changed</code>
+hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>will run fine.  It&#8217;ll mount the <code>images</code> share and mediawiki
+will run normally.</p>
+
+<h3 id="additional-configuration">Additional configuration</h3>
+
+<p>This next step depends greatly on your particular charm/service.
+With mediawiki, the <code>images</code> directory isn&#8217;t really used until
+you tell mediawiki to turn on uploads.  This is true regardless
+of whether <code>images</code> is an nfs mount or you&#8217;re just using the
+directory on the local filesystem.</p>
+
+<p>The time to do this though is after the <code>images</code> share is mounted, 
+so putting it in the <code>nfs-imagestore-relation-changed</code> hook after
+the mount is a good place for it.</p>
+
+<pre><code>juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>So we end up with</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+
+juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>the same hook that&#8217;s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+
+<h3 id="update-charm-metadata">Update charm metadata</h3>
+
+<p>So we have hooks that should do what we&#8217;d like&#8230; 
+(I&#8217;ll developing and debugging hooks in another post).
+Next we need to update the charm metadata so juju
+knows when to fire them.</p>
+
+<p>My <code>mediawiki/metadata.yaml</code> currently looks like</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>let&#8217;s add our nfs requirement (<em>requirement</em> is a strong word&#8230; they&#8217;re
+all optional),</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+  nfs-imagestore:
+    interface: mount
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>The relation name&#8217;s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm&#8217;s metadata:</p>
+
+<pre><code>...
+provides:
+  nfs:
+    interface: mount
+...
+</code></pre>
+
+<p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
+
+<p>We can use the interface as a sanity check to insure we&#8217;re providing
+and using the right parameters when communicating with the nfs server
+service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
+
+<h3 id="spin-it-up">Spin it up</h3>
+
+<p>Let&#8217;s deploy our new charm:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<h3 id="spread-it-out">Spread it out</h3>
+
+<p>Add a few more mediawiki instances&#8230;</p>
+
+<pre><code>$ for i in {1..10}; do
+$ juju add-unit mywiki
+$ done
+</code></pre>
+
+<p>When everything&#8217;s up, these should all share the same database
+and image store.</p>
+
+<p>In real life you&#8217;d probably want to start adding mysql slaves
+to this.  Of course, in real life you&#8217;ll also add remote logging,
+monitoring, and other core infrastructure components too.
+Keep an eye out for subsequent posts in this series.</p>
+
+<h3 id="nfs-server-config">NFS server config</h3>
+
+<p>Up until now we&#8217;ve only talked about the NFS client.
+The NFS <em>server</em> charm is pretty simple.</p>
+
+<p>It lives at
+<a href="http://bazaar.launchpad.net/~juju-composers/principia/oneiric/nfs/trunk/files">lp:principia/nfs</a>
+and supports configuration options at deploy(or run)-time via</p>
+
+<pre><code>$ juju deploy --repository . --config ./mydata.yaml local:nfs mydata
+</code></pre>
+
+<p>where <code>mydata.yaml</code> looks like</p>
+
+<pre><code>mydata:
+  initial_daemon_count: 43
+  storage_root: /srv/mydata
+  export_options: rw,sync,no_root_squash,no_all_squash
+</code></pre>
+
+<h3 id="whats-left">What&#8217;s left?</h3>
+
+<p>This might not be an ideal NFS setup for your particular service.
+What are some other ways we can tweak this?</p>
+
+<p>Currently, the nfs server creates a separate share for each named service
+that attaches to it.</p>
+
+<p>We deployed mediawiki as <code>mywiki</code>, so all <code>mywiki</code> service units would
+share an export.  Well, you could deploy another mediawiki service unit
+called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
+share a different export.  The new export is created on the service when
+the first unit of a new service name joins&#8230; subsequent units of that named
+service are just connected to that new export.</p>
+
+<p>Of course, this works for entirely separate services too.  Relating a 
+<code>hadoop-master</code> service named <code>job27</code> to that same nfs service would result in 
+the <code>job27</code> units sharing a new nfs export.</p>
+
+<p>This behavior is a reasonable default, but there may be a need to do this a 
+little differently in your infrastructure.  You could change the nfs server
+charm to provide different levels of export sharing&#8230; either by some
+additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
+An nfs client might request a unique export, for backups
+say, or a named export for sharing.</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>I work on the Ubuntu juju project for Canonical.</p>
 ]]></content>
   </entry>
   

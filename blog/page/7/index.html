@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="http://ec2onrails.rubyforge.org/http://ec2onrails.rubyforge.org/ http://www.zabada.com/tutorials/deploying-a-rails-application-to-production-on- &hellip;">
+  <meta name="description" content="password is expired? chage -I -1 -m 0 -M 99999 -E -1 username ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,202 +110,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/15/howto-rails-on-ec2.html">Rails on Ec2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-15T00:00:00+00:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>http://ec2onrails.rubyforge.org/http://ec2onrails.rubyforge.org/</p>
-
-<p>http://www.zabada.com/tutorials/deploying-a-rails-application-to-production-on-amazon-ec2.php</p>
-
-<p>http://pauldowman.com/projects/ruby-on-rails-ec2/</p>
-
-<p>http://davidcancel.com/rubber-complex-multi-instance-rails-ec2-deployments/</p>
-
-<p>http://auser.github.com/poolparty/</p>
-
-<p>http://wiki.opscode.com/display/chef/Home</p>
-
-<p>http://wiki.github.com/wr0ngway/rubber/</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/09/howto-recover-grub.html">Recover Grub</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>grub rescue&gt; set
-</code></pre>
-
-<p>see what current settings are&#8230;</p>
-
-<pre><code>set prefix=(hd2,1)/boot/grub
-set root=(hd2,1)
-
-insmod /boot/grub/linux.mod
-linux /vmlinuz root=/dev/sde1 ro
-initrd /initrd.img
-boot
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/09/howto-pxeboot.html">Pxeboot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1 id="dhcpd-config">dhcpd config</h1>
-
-<pre><code>apt-get install dhcp3-server
-</code></pre>
-
-<p>edit dhcpd.conf&#8230; to add</p>
-
-<pre><code>ddns-update-style none;
-option domain-name "blah.blah";
-option domain-name-servers 10.128.92.32, 10.129.92.32;
-default-lease-time 600;
-max-lease-time 7200;
-log-facility local7;
-
-subnet 10.67.93.0 netmask 255.255.255.0 {
-  host moe {
-    hardware ethernet 00:14:4F:49:E5:DA;
-    fixed-address 10.67.93.5;
-    filename "pxelinux.0";
-    next-server 10.67.93.13;
-    option subnet-mask 255.255.255.0;
-    option routers 10.67.93.1;
-  }
-}
-</code></pre>
-
-<h1 id="tftpd-config">tftpd config</h1>
-
-<pre><code>apt-get install tftp-hpa tftpd-hda
-</code></pre>
-
-<p>copy from ubuntu dist to /srv/tftp</p>
-
-<pre><code>lrwxrwxrwx 1 root root   33 2010-06-04 09:44 pxelinux.0 -&gt; ubuntu-installer/amd64/pxelinux.0
-lrwxrwxrwx 1 root root   35 2010-06-04 09:44 pxelinux.cfg -&gt; ubuntu-installer/amd64/pxelinux.cfg
-dr-xr-xr-x 3 root root 4096 2010-06-04 09:44 ubuntu-installer
--r--r--r-- 1 root root   58 2010-06-04 09:44 version.info
-</code></pre>
-
-<h1 id="apache-config">apache config</h1>
-
-<pre><code>apt-get install apache2 
-</code></pre>
-
-<p>unpack install image into /var/www/ubuntu/</p>
-
-<pre><code>root@rory:/var/www/ubuntu-10.04# ls -al
-total 176
-dr-xr-xr-x 10 root root   4096 2010-04-27 05:56 .
-drwxr-xr-x  3 root root   4096 2010-06-04 09:11 ..
--r-xr-xr-x  1 root root   1115 2010-04-23 21:29 cdromupgrade
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 .disk
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 dists
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 doc
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:56 install
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:56 isolinux
--r--r--r--  1 root root 129953 2010-04-27 05:56 md5sum.txt
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 pics
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 pool
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 preseed
--r--r--r--  1 root root    235 2010-04-27 05:55 README.diskdefines
-lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -973,6 +777,240 @@ backup	root@192.168.100.2:/usr/local/	hawk/
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-autostart-mongrel-in-slice.html">Autostart Mongrel in Slice</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00+00:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>/usr/local/sbin/run_mongrel_cluster_ctl.sh</p>
+
+<pre><code>#!/bin/bash
+
+export RUBYGEMS=/usr/local/rubygems
+export GEM_HOME=${RUBYGEMS}/gems
+export GEM_PATH=${RUBYGEMS}/gems
+export RUBYLIB=${RUBYGEMS}/lib
+export PATH=${RUBYGEMS}/gems/bin:${RUBYGEMS}/bin:$PATH
+
+mongrel_cluster_ctl $*
+</code></pre>
+
+<p>/etc/init.d/jsas_cluster</p>
+
+<pre><code>#!/bin/sh
+#
+# mongrel jsas cluster init script
+#
+### BEGIN INIT INFO
+# Provides:          jsas_cluster
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: init-Script for jsas mongrel_cluster
+### END INIT INFO
+
+#sudo -i -u jsas $DAEMON_CTL help
+
+set -e
+
+# Defaults
+PATH=/sbin:/usr/sbin:/usr/local/sbin:/bin:/usr/bin:/usr/local/bin
+DAEMON_CTL=/usr/local/sbin/run_mongrel_cluster_ctl.sh
+USER=jsas
+OPTIONS=""
+
+PIDFILE="/var/run/mongrel_cluster.pid"
+
+test -f $DAEMON_CTL || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+	start)
+    sudo -i -u jsas $DAEMON_CTL start
+		;;
+	stop)
+    sudo -i -u jsas $DAEMON_CTL stop
+		;;
+	force-reload|restart)
+    sudo -i -u jsas $DAEMON_CTL restart
+		;;
+	status)
+    sudo -i -u jsas $DAEMON_CTL status
+		;;
+	*)
+		log_warning_msg "Usage: /etc/init.d/jsas_cluster {start|stop|restart}"
+		log_warning_msg "  start - starts system-wide jsas_cluster service"
+		log_warning_msg "  stop  - stops system-wide jsas_cluster service"
+		log_warning_msg "  restart, force-reload - starts a new system-wide jsas_cluster service"
+		log_warning_msg "  status  - status of system-wide jsas_cluster service"
+		log_warning_msg "    system-wide jsas cluster service"
+		exit 1
+		;;
+esac
+
+exit 0
+</code></pre>
+
+<p>then update the rc scripts&#8230;</p>
+
+<pre><code>update-rc.d jsas_cluster defaults 98 02
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/26/howto-add-user-osx-cli.html">Add User in Osx From the Cli</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-26T00:00:00+00:00" pubdate data-updated="true">Jun 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>totally fucking ridiculous!</p>
+
+<pre><code>bipp-dcd:/Users root# niutil -create / /users/markv
+bipp-dcd:/Users root# niutil -create / /groups/markv
+bipp-dcd:/Users root# niutil -createprop / /users/markv uid 504
+bipp-dcd:/Users root# niutil -createprop / /groups/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv gid 504
+bipp-dcd:/Users root# niutil -createprop / /users/markv realname "Mark Vaughan"
+bipp-dcd:/Users root# niutil -createprop / /users/markv shell "/bin/bash"      
+bipp-dcd:/Users root# niutil -createprop / /users/markv home "/Users/markv"
+bipp-dcd:/Users root# cp -R /System/Library/User\ Template/English.lproj /Users/markv
+bipp-dcd:/Users root# chown -Rf markv:markv /Users/markv
+bipp-dcd:/Users root# passwd markv
+</code></pre>
+
+<p>also</p>
+
+<pre><code>niutil -appendprop / /groups/admin users markv
+
+niutil -list . /
+
+niutil -read / /users/markv
+
+niutil -read / /groups/admin
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/17/howto-osx-startup.html">Osx Startup Scripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-17T00:00:00+00:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>edit <code>Library/LaunchAgents/hawk.videos.sshfs.plist</code></p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;hawk.videos.sshfs&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;/usr/local/bin/sshfs-authsock&lt;/string&gt;
+                &lt;string&gt;mmm@hawk:/home/mmm/Videos&lt;/string&gt;
+                &lt;string&gt;/mnt/hawk&lt;/string&gt;
+                &lt;string&gt;-oreconnect&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;AbandonProcessGroup&lt;/key&gt;
+        &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>now, just</p>
+
+<pre><code>launchctl load ~/Library/LaunchAgents/hawk.videos.sshfs.plist
+launchctl start hawk.videos.sshfs
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1007,23 +1045,23 @@ backup	root@192.168.100.2:/usr/local/	hawk/
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/sciml/ml/ai/datascience/2020/06/05/sciml.html">Scientific ML/AI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html">Covid HPC Panel</a>
-      </li>
-    
-      <li class="post">
-        <a href="/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html">Course Stuff</a>
-      </li>
-    
-      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
       <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>

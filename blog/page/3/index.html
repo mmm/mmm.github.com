@@ -9,8 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu&#8230; it was quite a new experience.
-Figured I&#8217;d post &hellip;">
+  <meta name="description" content="Just some notes to myself for later. I want a little better sounding audio on screencasts so I dusted off
+the firewire soundcard I got a few years &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -111,164 +111,6 @@ Figured I&#8217;d post &hellip;">
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cloud/2011/09/07/node-mongo-ubuntu.html">Node.js and MongoDB on Ubuntu</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-07T00:00:00+00:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I gave my first talk on IRC the other day on deploying Node.js &amp; Mongo in Ubuntu&#8230; 
-it was quite a new experience.
-Figured I&#8217;d post details of the talk here.</p>
-
-<h2 id="an-example-stack">An example stack</h2>
-
-<p>We&#8217;ll use <a href="http://juju.ubuntu.com/">juju</a> to deploy a basic
-<a href="http://nodejs.org">node.js</a>
-app along with a couple of typical surrounding services..
-- <a href="http://haproxy.1wt.eu/">haproxy</a> to catch inbound web traffic and route it to our node.js app cluster
-- <a href="http://mongodb.org/">mongodb</a> for app storage</p>
-
-<p>Along the way, we&#8217;ll see what it takes to connect and scale this particular stack
-of services.  I&#8217;ll err on the side of too much detail over simplicity in this
-example, but I&#8217;ll try to make it clear when there&#8217;s a sidebar topic.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/cloud/2011/09/07/node-mongo-ubuntu.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cloud/2011/09/03/terasort-ganglia.html">Monitoring Hadoop Benchmarks TeraGen/TeraSort With Ganglia</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-03T00:00:00+00:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here I&#8217;m using new features of
-<a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
-(namely <a href="http://juju.ubuntu.com">juju</a>)
-to easily deploy
-<a href="http://ganglia.sourceforge.net">Ganglia</a>
-alongside
-a small <a href="http://hadoop.apache.org">Hadoop</a> cluster
-to play around with monitoring some
-<a href="http://sortbenchmark.org/">benchmarks</a>
-like
-<a href="http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/">Terasort</a>.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/cloud/2011/09/03/terasort-ganglia.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cloud/2011/08/25/juju-nfs.html">Core Infrastructure Part 1 - Adding NFS to Juju Charms</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-25T00:00:00+00:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Several features have recently landed in juju that make 
-it easier to convert some common infrastructure-level components 
-over and use them within your stack of services.
-I figured it&#8217;s worth a series of posts about core services,
-storage, logging, monitoring, messaging, etc&#8230;  and how they
-fit into the juju ecosystem.</p>
-
-<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
-core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
-look.  Many friends keep ancient boxes around as dedicated NFS 
-fileserver appliances that are usually in fairly critical roles.
-Well, how would this fit into a sexy new juju stack of services?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/cloud/2011/08/25/juju-nfs.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
   
   
     <article>
@@ -725,6 +567,253 @@ gnome-screensaver-command --poke
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/06/22/howto-test-hadoop.html">Hadoop-test-install</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-22T00:00:00+00:00" pubdate data-updated="true">Jun 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>From <a href="http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/">Michael Noll&#8217;s hadoop on ubuntu post</a></p>
+
+<pre><code>mkdir /var/lib/hadoop
+chown mmm.mmm /var/lib/hadoop
+
+hadoop datanode -format
+
+bin/start-all.sh 
+
+hadoop dfs -copyFromLocal /tmp/gutenberg gutenberg
+
+hadoop dfs -ls
+
+hadoop jar /usr/local/hadoop/hadoop-mapred-examples-0.21.0.jar wordcount gutenberg gutenberg-output
+
+hadoop dfs -ls
+hadoop dfs -ls gutenberg-output
+
+bin/hadoop dfs -cat gutenberg-output/part-r-00000
+mkdir /tmp/gutenberg-output
+bin/hadoop dfs -getmerge gutenberg-output /tmp/gutenberg-output
+head /tmp/gutenberg-output/gutenberg-output
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/30/howto-cucumber-from-vim.html">Howto-cucumber-from-vim</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-30T00:00:00+00:00" pubdate data-updated="true">Mar 30<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>just run :Rake from a feature and it does what it&#8217;s supposed to do</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/03/09/howto-multiuser-screen-sessions.html">Multiuser Screen Sessions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-09T00:00:00+00:00" pubdate data-updated="true">Mar 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ok, trying to do this for real&#8230;</p>
+
+<p>I set suid on screen, so</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwxr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwsr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>and then /var/run/screen needs to be 755 instead of 775&#8230; i.e.,</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxrwxr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxr-xr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>Now, user1:</p>
+
+<pre><code>user1@kojiro:~$ screen -x -S junk -t junk
+</code></pre>
+
+<p>or just</p>
+
+<pre><code>user1@kojiro:~$ screen -S junk
+</code></pre>
+
+<p>user1 sets multiusermode</p>
+
+<pre><code>Ctrl-A :multiuser on
+Ctrl-A :acladd user2
+Ctrl-A :acladd user3
+</code></pre>
+
+<p>user2</p>
+
+<pre><code>user2@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<p>user3</p>
+
+<pre><code>user3@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<hr />
+
+<p>another version</p>
+
+<pre><code>For security reasons, screen by default is installed so that other users within the system can not attach to your screen sessions. To allow this to be changed one must set screen to run SUID root by doing the following (once):
+sudo chmod +s /usr/bin/screen
+sudo chmod 755 /var/run/screen
+Then user1 can share their session on host as follows:
+screen -S shared-session
+Ctrla :multiuser on
+Ctrla :acladd user2
+
+user2 on host can then connect to the shared session like:
+ssh user2@host
+screen -x user1/shared-session
+</code></pre>
+
+<hr />
+
+<p>first view
+    screen -S junk</p>
+
+<p>second view
+    screen -x -R junk</p>
+
+<hr />
+
+<p>maybe this&#8217;ll work&#8230;</p>
+
+<p>user1</p>
+
+<pre><code>screen -t junk
+</code></pre>
+
+<p>user2 becomes user1</p>
+
+<pre><code>screen -x -t junk
+</code></pre>
+
+<hr />
+
+<p>looks like this works&#8230; maybe overkill but wtf?</p>
+
+<p>screen -xR -t junk -S junk</p>
+
+<p>allegedly, 
+screen -t junk
+screen -x -t junk
+should work</p>
+
+<h2 id="below-is-old">below is old</h2>
+
+<p>It&#8217;s possible for two users to share a screen session. This is particularly useful if multiple people want to monitor a long running task, and it&#8217;s easy to do.</p>
+
+<p>user #1:</p>
+
+<p>screen -R longbuild</p>
+
+<p>user #2:</p>
+
+<p>screen -x -R longbuild</p>
+
+<p>The -x flag tells screen to allow you to attach to an already attached session. This is also good for crazy stuff like a collaborative Vim session (if you&#8217;re into that sort of thing).</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -759,23 +848,23 @@ gnome-screensaver-command --poke
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/sciml/ml/ai/datascience/2020/06/05/sciml.html">Scientific ML/AI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/sciml/ml/ai/datascience/covid/2020/06/05/covid-hpc-panel.html">Covid HPC Panel</a>
-      </li>
-    
-      <li class="post">
-        <a href="/teaching/data/datascience/dataengineering/2020/06/05/course-stuff.html">Course Stuff</a>
-      </li>
-    
-      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
       <li class="post">
         <a href="/data-engineering/spark/hadoop/devops/2016/03/17/hwtb-sessions.html">Identifying User Activity from Streams of Raw Events</a>
+      </li>
+    
+      <li class="post">
+        <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>
