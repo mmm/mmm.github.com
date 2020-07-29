@@ -9,7 +9,12 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Ugh&#8230; drutil eject ">
+  <meta name="description" content="#!/usr/bin/python
+#
+# from http://ubuntuforums.org/showthread.php?p=1932551
+# import os
+import sys
+import getopt host = '10.37.129.2' mount_points &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,6 +115,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/10/27/howto-sshfs-mount-from-python.html">Sshfs-mount-from-python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-27T00:00:00+00:00" pubdate data-updated="true">Oct 27<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><pre><code>#!/usr/bin/python
+#
+# from http://ubuntuforums.org/showthread.php?p=1932551
+#
+
+import os
+import sys
+import getopt
+
+host = '10.37.129.2'
+
+mount_points = [('/Users/dave/Music', '/home/dave/Music'),
+        ('/Users/dave/Documents', '/home/dave/Documents'),
+        ('/Users/dave/Pictures', '/home/dave/Pictures')]
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    try:
+        opts, args = getopt.getopt(argv[1:], 'u', ['unmount'])
+    except getopt.error, msg:
+        print msg
+        print 'for help use --help'
+        sys.exit(2)
+    mount_op = mount
+    for option, a in opts:
+        if option in ('-u', '--unmount'):
+            mount_op = unmount
+    mount_op()    
+    return 0
+
+def mount():
+    argv = ['/usr/bin/sshfs', None, None]
+    for mount in mount_points:
+        argv[1] = '%s:%s' % (host, mount[0])
+        argv[2] = mount[1]
+        cmd = ' '.join(argv)
+        print cmd
+        os.system(cmd)
+
+def unmount():
+    argv = ['/usr/bin/fusermount', '-u', None]
+    for mount in mount_points:
+        argv[2] = mount[1]
+        cmd = ' '.join(argv)
+        print cmd
+        os.system(cmd)
+
+if __name__ == '__main__':
+    sys.exit(main())
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -631,105 +722,6 @@ boot
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/08/09/howto-pxeboot.html">Pxeboot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-09T00:00:00+00:00" pubdate data-updated="true">Aug 9<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1 id="dhcpd-config">dhcpd config</h1>
-
-<pre><code>apt-get install dhcp3-server
-</code></pre>
-
-<p>edit dhcpd.conf&#8230; to add</p>
-
-<pre><code>ddns-update-style none;
-option domain-name "blah.blah";
-option domain-name-servers 10.128.92.32, 10.129.92.32;
-default-lease-time 600;
-max-lease-time 7200;
-log-facility local7;
-
-subnet 10.67.93.0 netmask 255.255.255.0 {
-  host moe {
-    hardware ethernet 00:14:4F:49:E5:DA;
-    fixed-address 10.67.93.5;
-    filename "pxelinux.0";
-    next-server 10.67.93.13;
-    option subnet-mask 255.255.255.0;
-    option routers 10.67.93.1;
-  }
-}
-</code></pre>
-
-<h1 id="tftpd-config">tftpd config</h1>
-
-<pre><code>apt-get install tftp-hpa tftpd-hda
-</code></pre>
-
-<p>copy from ubuntu dist to /srv/tftp</p>
-
-<pre><code>lrwxrwxrwx 1 root root   33 2010-06-04 09:44 pxelinux.0 -&gt; ubuntu-installer/amd64/pxelinux.0
-lrwxrwxrwx 1 root root   35 2010-06-04 09:44 pxelinux.cfg -&gt; ubuntu-installer/amd64/pxelinux.cfg
-dr-xr-xr-x 3 root root 4096 2010-06-04 09:44 ubuntu-installer
--r--r--r-- 1 root root   58 2010-06-04 09:44 version.info
-</code></pre>
-
-<h1 id="apache-config">apache config</h1>
-
-<pre><code>apt-get install apache2 
-</code></pre>
-
-<p>unpack install image into /var/www/ubuntu/</p>
-
-<pre><code>root@rory:/var/www/ubuntu-10.04# ls -al
-total 176
-dr-xr-xr-x 10 root root   4096 2010-04-27 05:56 .
-drwxr-xr-x  3 root root   4096 2010-06-04 09:11 ..
--r-xr-xr-x  1 root root   1115 2010-04-23 21:29 cdromupgrade
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 .disk
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 dists
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 doc
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:56 install
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:56 isolinux
--r--r--r--  1 root root 129953 2010-04-27 05:56 md5sum.txt
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 pics
-dr-xr-xr-x  3 root root   4096 2010-04-27 05:55 pool
-dr-xr-xr-x  2 root root   4096 2010-04-27 05:55 preseed
--r--r--r--  1 root root    235 2010-04-27 05:55 README.diskdefines
-lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -764,6 +756,10 @@ lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2020/07/29/screencasts-with-ffmpeg.html">Screencasts With Ffmpeg</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
@@ -777,10 +773,6 @@ lrwxrwxrwx  1 root root      1 2010-04-27 05:55 ubuntu -&gt; .
     
       <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>
