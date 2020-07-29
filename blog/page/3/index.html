@@ -9,7 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Several features have recently landed in juju that make it easier to convert some common infrastructure-level components over and use them within &hellip;">
+  <meta name="description" content="Just some notes to myself for later. I want a little better sounding audio on screencasts so I dusted off
+the firewire soundcard I got a few years &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,58 +111,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/cloud/2011/08/25/juju-nfs.html">Core Infrastructure Part 1 - Adding NFS to Juju Charms</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-25T00:00:00+00:00" pubdate data-updated="true">Aug 25<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Several features have recently landed in juju that make 
-it easier to convert some common infrastructure-level components 
-over and use them within your stack of services.
-I figured it&#8217;s worth a series of posts about core services,
-storage, logging, monitoring, messaging, etc&#8230;  and how they
-fit into the juju ecosystem.</p>
-
-<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
-core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
-look.  Many friends keep ancient boxes around as dedicated NFS 
-fileserver appliances that are usually in fairly critical roles.
-Well, how would this fit into a sexy new juju stack of services?</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/cloud/2011/08/25/juju-nfs.html">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
   
   
     <article>
@@ -714,6 +663,157 @@ head /tmp/gutenberg-output/gutenberg-output
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2011/03/09/howto-multiuser-screen-sessions.html">Multiuser Screen Sessions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-09T00:00:00+00:00" pubdate data-updated="true">Mar 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ok, trying to do this for real&#8230;</p>
+
+<p>I set suid on screen, so</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwxr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /usr/bin/screen
+-rwsr-sr-x 1 root utmp 340604 2010-08-17 10:55 /usr/bin/screen
+</code></pre>
+
+<p>and then /var/run/screen needs to be 755 instead of 775&#8230; i.e.,</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxrwxr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>becomes</p>
+
+<pre><code>mmm@kojiro:~/projects/ttu/doc$ ls -al /var/run | grep screen
+drwxr-xr-x  5 root     utmp      100 2011-02-08 10:17 screen
+</code></pre>
+
+<p>Now, user1:</p>
+
+<pre><code>user1@kojiro:~$ screen -x -S junk -t junk
+</code></pre>
+
+<p>or just</p>
+
+<pre><code>user1@kojiro:~$ screen -S junk
+</code></pre>
+
+<p>user1 sets multiusermode</p>
+
+<pre><code>Ctrl-A :multiuser on
+Ctrl-A :acladd user2
+Ctrl-A :acladd user3
+</code></pre>
+
+<p>user2</p>
+
+<pre><code>user2@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<p>user3</p>
+
+<pre><code>user3@kojiro:~$ screen -x mmm/
+</code></pre>
+
+<hr />
+
+<p>another version</p>
+
+<pre><code>For security reasons, screen by default is installed so that other users within the system can not attach to your screen sessions. To allow this to be changed one must set screen to run SUID root by doing the following (once):
+sudo chmod +s /usr/bin/screen
+sudo chmod 755 /var/run/screen
+Then user1 can share their session on host as follows:
+screen -S shared-session
+Ctrla :multiuser on
+Ctrla :acladd user2
+
+user2 on host can then connect to the shared session like:
+ssh user2@host
+screen -x user1/shared-session
+</code></pre>
+
+<hr />
+
+<p>first view
+    screen -S junk</p>
+
+<p>second view
+    screen -x -R junk</p>
+
+<hr />
+
+<p>maybe this&#8217;ll work&#8230;</p>
+
+<p>user1</p>
+
+<pre><code>screen -t junk
+</code></pre>
+
+<p>user2 becomes user1</p>
+
+<pre><code>screen -x -t junk
+</code></pre>
+
+<hr />
+
+<p>looks like this works&#8230; maybe overkill but wtf?</p>
+
+<p>screen -xR -t junk -S junk</p>
+
+<p>allegedly, 
+screen -t junk
+screen -x -t junk
+should work</p>
+
+<h2 id="below-is-old">below is old</h2>
+
+<p>It&#8217;s possible for two users to share a screen session. This is particularly useful if multiple people want to monitor a long running task, and it&#8217;s easy to do.</p>
+
+<p>user #1:</p>
+
+<p>screen -R longbuild</p>
+
+<p>user #2:</p>
+
+<p>screen -x -R longbuild</p>
+
+<p>The -x flag tells screen to allow you to attach to an already attached session. This is also good for crazy stuff like a collaborative Vim session (if you&#8217;re into that sort of thing).</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -748,10 +848,6 @@ head /tmp/gutenberg-output/gutenberg-output
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">Screencasts on Ubuntu using ffmpeg</a>
-      </li>
-    
-      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
@@ -765,6 +861,10 @@ head /tmp/gutenberg-output/gutenberg-output
     
       <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-07-29T23:00:24+00:00</updated>
+  <updated>2020-07-29T23:04:01+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -12,453 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Screencasts on Ubuntu using ffmpeg]]></title>
-    <link href="http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html"/>
-    <updated>2020-07-29T00:00:00+00:00</updated>
-    <id>http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg</id>
-    <content type="html"><![CDATA[<p>We developed these scripts for recording the screencast components of the class
-we co-developed a couple of years ago.</p>
-
-<p>In this post I describe the capture setup we use to create professional quality
-screencasts using an Ubuntu Linux desktop. This just describes the recording
-process itself. We discuss the overall screencast development process and
-editing in separate posts.</p>
-
-<!--more-->
-
-<h2 id="contents">Contents</h2>
-
-<ul>
-  <li>Overview</li>
-  <li>Desktop</li>
-  <li>Slides</li>
-  <li>Terminal</li>
-  <li>Camera</li>
-  <li>Audio</li>
-  <li>Putting it all together</li>
-</ul>
-
-<h2 id="overview">Overview</h2>
-
-<p>The screencasts recorded for the class encompassed both high-level conceptual
-material as well as detailed examples or tutorials.</p>
-
-<p>To do that we really wanted to have the flexibility of showing both slides as
-well as terminal or web interactions at the same time. We also figured it&#8217;s a
-good idea to have the ability to overlay a talking head when there&#8217;s not much
-other detailed interaction going on, so we also wanted to be sure we captured
-camera footage during the recordings as well.</p>
-
-<p>This setup is designed to capture raw footage of all of those channels at once.
-We looked around, but couldn&#8217;t find any off-the-shelf tools that really met our
-needs for this.  It turns out this is actually pretty easy to accomplish just
-using <code>ffmpeg</code> directly from a script.</p>
-
-<h2 id="desktop">Desktop</h2>
-
-<p>Note the desktop setup:</p>
-
-<ul>
-  <li>
-    <p>Ubuntu desktop with three monitors set up within a single X session</p>
-  </li>
-  <li>
-    <p>Each desktop is <code>1920x1080</code>, so the total big desktop size is <code>3x1920</code> pixels
-wide and 1080 pixels tall</p>
-  </li>
-  <li>
-    <p>Terminals/Browsers run on the left-hand monitor</p>
-  </li>
-  <li>
-    <p>Slides are full-screen on the center monitor</p>
-  </li>
-  <li>
-    <p>Webcam lives on top of the left monitor so we&#8217;re looking roughly towards the
-camera when going through a detailed example</p>
-  </li>
-  <li>
-    <p>Sound is coming from a lavalier mic plugged into a USB audio interface made
-available via standard Linux alsa devices</p>
-  </li>
-  <li>
-    <p>I use the right-hand monitor to hold terminal windows to start/stop these scripts,
-but nothing from there is recorded</p>
-  </li>
-</ul>
-
-<p>Below, we&#8217;ll go through each of the different capture channels used 
-and then wrap it all up with a bow into a single script that follows
-the <code>screencasts -&gt; shots -&gt; takes</code> file organization that we used to keep
-track of all of this.</p>
-
-<h2 id="slides">Slides</h2>
-
-<p>To capture a stream of slides, we&#8217;re using the <code>x11grab</code> ffmpeg interface. This
-is designed to just sample what the X server sees every so often (<code>$framerate</code>)
-and then encode and save that as a video stream.</p>
-
-<p>The tricky part is creating a command to record the correct monitor for slides.
-Since the middle monitor is running slides, we tell <code>ffmpeg</code> to capture a
-single monitor&#8217;s <code>1920x1080</code> worth of screen but <em>start</em> that from the geometry
-offset <code>+1920,0</code>&#8230; the top of the middle monitor.</p>
-
-<p>The command </p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ffmpeg \
-</span><span class="line">  -hide_banner -nostats -loglevel warning \
-</span><span class="line">  -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
-</span><span class="line">  -vcodec libx264 \
-</span><span class="line">  -preset ultrafast \
-</span><span class="line">  $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>gets wrapped in a bash function to capture slides:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">capture_slides() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
-</span><span class="line">    -vcodec libx264 \
-</span><span class="line">    -preset ultrafast \
-</span><span class="line">    $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1
-</span><span class="line">  echo "slides done"
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>This saves to the files <code>slides.mkv</code> and <code>slides.log</code>.</p>
-
-<h2 id="terminal">Terminal</h2>
-
-<p>We&#8217;ll use <code>x11grab</code> to record the left-hand monitor as well. The offset here is
-just the top of the left-hand monitor, so <code>+0,0</code> in X geometry speak:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">capture_terminal() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f x11grab -r $framerate -s hd1080 -i :0.0+0,0 \
-</span><span class="line">    -vcodec libx264 \
-</span><span class="line">    -preset ultrafast \
-</span><span class="line">    $output_dir/terminal.mkv &gt; $output_dir/terminal.log 2&gt;&amp;1
-</span><span class="line">  echo "terminal done"
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>This saves to the files <code>terminal.mkv</code> and <code>terminal.log</code>.</p>
-
-<h2 id="camera">Camera</h2>
-
-<p>To capture the stream from the webcam, we&#8217;re relying heavily on the fact that
-the 
-<a href="https://www.amazon.com/gp/product/B006JH8T3S/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">Logitech HD Pro Webcam C920</a>
-does hardware h264 encoding on the fly and we&#8217;re just tapping into that using
-ffmpeg&#8217;s <code>v4l2</code> interface to simply <code>copy</code> the video stream out to a file.</p>
-
-<p>I also had some problems understanding the timestamps that the camera&#8217;s
-hardware encoder used, so I include the set of <code>ffmpeg</code> args that fixed that.
-YMMV depending on your camera.</p>
-
-<p>Probably the most important thing to recognize is that the capture relied on
-the hardware encoding.  If we were getting raw video and having to encode on
-the fly, then the desktop&#8217;s computational capabilities my come more into play.
-This usually results is limiting the framerate you can actually record.</p>
-
-<p>Here&#8217;s the function to capture the camera footage:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">capture_webcam() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f v4l2 -framerate $framerate -input_format h264 -video_size hd1080 -ts mono2abs -i /dev/video0 \
-</span><span class="line">    -c copy -copyts -start_at_zero \
-</span><span class="line">    $output_dir/webcam.mkv &gt; $output_dir/webcam.log 2&gt;&amp;1
-</span><span class="line">  echo "webcam done"
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>This saves to <code>webcam.mkv</code> and <code>webcam.log</code>.</p>
-
-<h2 id="audio">Audio</h2>
-
-<p>Audio is coming in through a 
-<a href="https://www.amazon.com/gp/product/B00MIXF2RS/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">TASCAM US-2x2</a>
-USB-audio interface, where I have a 
-<a href="https://www.amazon.com/gp/product/B01GSVQN6Y/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">lavalier mic</a>
-plugged in.  This &#8220;just worked&#8221; through the <code>alsa</code> interface for <code>ffmpeg</code> so we
-just need to copy the raw audio stream from the device:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">capture_audio() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f alsa -i default \
-</span><span class="line">    -c copy -copyts -start_at_zero \
-</span><span class="line">    $output_dir/audio.wav &gt; $output_dir/audio.log 2&gt;&amp;1
-</span><span class="line">  echo "audio done"
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>which saves <code>audio.wav</code> and <code>audio.log</code>.</p>
-
-<h2 id="putting-this-all-together">Putting this all together</h2>
-
-<p>So all of the above functions get rolled up into a single script named
-<code>capture</code>.</p>
-
-<p>This script kicks off the <code>ffmpeg</code> recordings at roughly the same
-time and saves all the output to</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">output_dir="screencasts/${scene_name}/shot-${shot_number}/take-${timestamp}"</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>where the variables in there either are defaults (like the shot number) or are
-specified as arguments to the script.  I typically use it like</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cd /opt/screencasts/introducing-spark-streaming
-</span><span class="line">capture</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>which kicks off the recording and streams outputs to files such as</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">- shot-010
-</span><span class="line">  - take-2018-03-12-165010
-</span><span class="line">    - audio.log
-</span><span class="line">    - audio.wav
-</span><span class="line">    - slides.log
-</span><span class="line">    - slides.mkv
-</span><span class="line">    - terminal.log
-</span><span class="line">    - terminal.mkv
-</span><span class="line">    - webcam.log
-</span><span class="line">    - webcam.mkv</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>This folder structure lets us keep things nice and tidy for editing.</p>
-
-<p>So here&#8217;s the final script:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-<span class="line-number">47</span>
-<span class="line-number">48</span>
-<span class="line-number">49</span>
-<span class="line-number">50</span>
-<span class="line-number">51</span>
-<span class="line-number">52</span>
-<span class="line-number">53</span>
-<span class="line-number">54</span>
-<span class="line-number">55</span>
-<span class="line-number">56</span>
-<span class="line-number">57</span>
-<span class="line-number">58</span>
-<span class="line-number">59</span>
-<span class="line-number">60</span>
-<span class="line-number">61</span>
-<span class="line-number">62</span>
-<span class="line-number">63</span>
-<span class="line-number">64</span>
-<span class="line-number">65</span>
-<span class="line-number">66</span>
-<span class="line-number">67</span>
-<span class="line-number">68</span>
-<span class="line-number">69</span>
-<span class="line-number">70</span>
-<span class="line-number">71</span>
-<span class="line-number">72</span>
-<span class="line-number">73</span>
-<span class="line-number">74</span>
-<span class="line-number">75</span>
-<span class="line-number">76</span>
-<span class="line-number">77</span>
-<span class="line-number">78</span>
-<span class="line-number">79</span>
-<span class="line-number">80</span>
-<span class="line-number">81</span>
-<span class="line-number">82</span>
-<span class="line-number">83</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">#!/bin/bash
-</span><span class="line">
-</span><span class="line">set -o errexit -o nounset -o pipefail
-</span><span class="line">
-</span><span class="line">usage() {
-</span><span class="line">	echo "Usage: $0 &lt;scene_name&gt; [&lt;shot_number&gt;]
-</span><span class="line">    where:
-</span><span class="line">      &lt;scene_name&gt; is something like intro-what-is-data-eng
-</span><span class="line">      &lt;shot_number&gt; optional, default is 010"
-</span><span class="line">}
-</span><span class="line">(( $# &lt; 1 )) &amp;&amp; usage &amp;&amp; exit 1
-</span><span class="line">scene_name=$1
-</span><span class="line">shot_number=${2:-010}
-</span><span class="line">
-</span><span class="line">timestamp=`date +%Y-%m-%d-%H%M%S`
-</span><span class="line">output_dir="screencasts/${scene_name}/shot-${shot_number}/take-${timestamp}"
-</span><span class="line">framerate=30
-</span><span class="line">
-</span><span class="line">capture_slides() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
-</span><span class="line">    -vcodec libx264 \
-</span><span class="line">    -preset ultrafast \
-</span><span class="line">    $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1
-</span><span class="line">  echo "slides done"
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">capture_terminal() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f x11grab -r $framerate -s hd1080 -i :0.0+0,0 \
-</span><span class="line">    -vcodec libx264 \
-</span><span class="line">    -preset ultrafast \
-</span><span class="line">    $output_dir/terminal.mkv &gt; $output_dir/terminal.log 2&gt;&amp;1
-</span><span class="line">  echo "terminal done"
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">capture_audio() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f alsa -i default \
-</span><span class="line">    -c copy -copyts -start_at_zero \
-</span><span class="line">    $output_dir/audio.wav &gt; $output_dir/audio.log 2&gt;&amp;1
-</span><span class="line">  echo "audio done"
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">capture_webcam() {
-</span><span class="line">  local output_dir=$1
-</span><span class="line">  ~/bin/ffmpeg \
-</span><span class="line">    -hide_banner -nostats -loglevel warning \
-</span><span class="line">    -f v4l2 -framerate $framerate -input_format h264 -video_size hd1080 -ts mono2abs -i /dev/video0 \
-</span><span class="line">    -c copy -copyts -start_at_zero \
-</span><span class="line">    $output_dir/webcam.mkv &gt; $output_dir/webcam.log 2&gt;&amp;1
-</span><span class="line">  echo "webcam done"
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">##################
-</span><span class="line">
-</span><span class="line">echo "starting ${scene_name}/shot-${shot_number}/take-${timestamp}"
-</span><span class="line">
-</span><span class="line">mkdir -p $output_dir
-</span><span class="line">
-</span><span class="line">echo "capturing slides"
-</span><span class="line">capture_slides $output_dir &amp;
-</span><span class="line">
-</span><span class="line">echo "capturing terminal"
-</span><span class="line">capture_terminal $output_dir &amp;
-</span><span class="line">
-</span><span class="line">echo "capturing webcam"
-</span><span class="line">capture_webcam $output_dir &amp;
-</span><span class="line">
-</span><span class="line">echo "capturing audio"
-</span><span class="line">capture_audio $output_dir &amp;
-</span><span class="line">
-</span><span class="line">for job in `jobs -p`; do
-</span><span class="line">  wait $job
-</span><span class="line">done
-</span><span class="line">
-</span><span class="line">echo "done"</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Note that each function is run in the background so they&#8217;re effectively kicked
-off in parallel.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Projects in GCP using Central Billing Accounts]]></title>
@@ -3463,6 +3016,547 @@ services like <code>ganglia</code>.</p>
 
 <p>Until then, clone/test/enjoy&#8230; or better yet, fork/adapt/use!</p>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Core Infrastructure Part 1 - Adding NFS to juju charms]]></title>
+    <link href="http://markmims.com/cloud/2011/08/25/juju-nfs.html"/>
+    <updated>2011-08-25T00:00:00+00:00</updated>
+    <id>http://markmims.com/cloud/2011/08/25/juju-nfs</id>
+    <content type="html"><![CDATA[<p>Several features have recently landed in juju that make 
+it easier to convert some common infrastructure-level components 
+over and use them within your stack of services.
+I figured it&#8217;s worth a series of posts about core services,
+storage, logging, monitoring, messaging, etc&#8230;  and how they
+fit into the juju ecosystem.</p>
+
+<p>We&#8217;ll start with NFS.  I&#8217;d consider that vanilla workhorse to be
+core infrastructure technology&#8230; it&#8217;s still pretty much everywhere you
+look.  Many friends keep ancient boxes around as dedicated NFS 
+fileserver appliances that are usually in fairly critical roles.
+Well, how would this fit into a sexy new juju stack of services?</p>
+
+<!--more-->
+
+<h2 id="the-goal">The Goal</h2>
+
+<p>In this post I&#8217;ll walk through adapting a basic mediawiki
+charm to enable using nfs mounts for shared resource directories.
+The steps here should work pretty closely for a lot of different
+service charms that might benefit from a NFS hooks.</p>
+
+<p>At the end of the day, an example stack might look something like </p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<p>which will result in a mediawiki setup with <code>images</code>
+stored on an nfs server.</p>
+
+<p>As expected,</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>will scale mediawiki instances.</p>
+
+<p>Since the <code>mywiki</code>
+service is related to the <code>myimages</code> service,
+then all <code>mywiki</code> instances will share the same
+resource directory on the nfs server.  This works
+months into the deployment&#8230; we add another unit
+and the relation hooks perform the mount.</p>
+
+<p>The nfs server charm is pretty canned, it&#8217;ll take 
+config options, but has sane defaults.  There&#8217;s 
+little need to adjust anything in there.</p>
+
+<p>To adapt your charm to use a juju-managed
+NFS service, we copy two hooks from an nfs-client
+example charm and adapt to suit the needs of
+the charm we&#8217;re working on (mediawiki in this
+example).</p>
+
+<h2 id="detailed-walk-through">Detailed walk-through</h2>
+
+<p>Let&#8217;s go through this process of adapting our charms
+to use NFS mounts.</p>
+
+<h3 id="the-problem">The Problem</h3>
+
+<p>Start with a simple mediawiki deploy,</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju expose mywiki
+</code></pre>
+
+<p>With juju, it&#8217;s easy to spin up multiple mediawiki
+instances (or &#8220;service units&#8221; in juju-speak).</p>
+
+<pre><code>$ juju add-unit mywiki
+$ juju add-unit mywiki
+</code></pre>
+
+<p>Now, since the <code>mywiki</code> service is related to the <code>mysql</code> service,
+then all these mywiki units share the same database and hence
+content.  Groovy.</p>
+
+<p>Ok, well there&#8217;s a problem.  Each wiki instance has its
+own filesystem-store for various things&#8230; images, uploads, etc.
+This is pretty common practice across different CMSes that
+results in scaling pain.
+The content in the database will point to resources that
+only exist on one of the instances.</p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p>A common solution to this
+is to just put these resource directories on a fileserver and
+share them out to each of the wiki instances using NFS.</p>
+
+<p>This, of course, isn&#8217;t limited to content management
+systems.  Just about every infrastructure has some sort of need
+for shared storage.</p>
+
+<p>Ubuntu packages for mediawiki install mediawiki&#8217;s resource
+directories with respect to <code>/var/lib/mediawiki/</code>.
+So let&#8217;s just set adapt the basic mediawiki charm to use
+an nfs share for <code>/var/lib/mediawiki/images</code>.</p>
+
+<p>Each mediawiki
+service unit has a <code>/var/lib/mediawiki/images</code> directory
+that points to 
+up multiple mediawiki instances, they&#8217;ll all share the
+same <code>images</code> directory.</p>
+
+<h3 id="copy-code-examples-over-as-a-template">Copy code examples over as a template</h3>
+
+<p>Let&#8217;s grab some code and get cranking&#8230;</p>
+
+<p>First, pull mediawiki as an example (or any charm you&#8217;re
+currently working on that might need shared storage)</p>
+
+<pre><code>$ mkdir ~/charms
+$ cd ~/charms
+$ bzr branch lp:~mark-mims/+junk/juju-mediawiki-nfsdemo mediawiki
+</code></pre>
+
+<p>This gives us</p>
+
+<pre><code>/home/mmm/charms/mediawiki
+|-- copyright
+|-- hooks
+|   |-- ...
+|   |-- db-relation-changed
+|   |-- install
+|   |-- start
+|   |-- stop
+|   |-- website-relation-changed
+|   |-- website-relation-joined
+|   `-- ...
+|-- metadata.yaml
+`-- revision
+</code></pre>
+
+<p>a bare mediawiki charm that we can use as a starting
+point to add our nfs client hooks.
+Note that even though this is an &#8216;nfsdemo&#8217; branch just for this demo, 
+the real mediawiki charm should now have nfs support in the trunk.</p>
+
+<p>Now, we can copy sample nfs client hooks from</p>
+
+<pre><code>http://bazaar.launchpad.net/~mark-mims/+junk/principia-nfs-client/files/head:/hooks/
+</code></pre>
+
+<p>Grab <code>storage-relation-joined</code> and <code>storage-relation-changed</code>, 
+and save them as mediawiki hooks&#8230; I&#8217;d rename them to something
+that makes sense to future readers of our mediawiki charm.
+Let&#8217;s call them <code>nfs-imagestore-relation-joined</code> and 
+<code>nfs-imagestore-relation-changed</code>.</p>
+
+<h3 id="adapt-the-example-code-to-our-charm">Adapt the example code to our charm</h3>
+
+<p>Let&#8217;s look at the
+<code>nfs-imagestore-relation-joined</code> hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+apt-get install -y nfs-common
+
+sed -i -e "s/NEED_IDMAPD.*/NEED_IDMAPD=yes/" /etc/default/nfs-common
+service idmapd restart || service idmapd start
+
+relation-set client=`hostname -f`
+</code></pre>
+
+<p>This looks pretty normal.
+It installs some stuff nfs stuff when the relation is joined&#8230;
+this is good it doesn&#8217;t really install it until it&#8217;s needed.
+Then it tells the nfs server who we are for access control.
+Ok, so no changes need to be made to get this working
+on our mediawiki service unit&#8230; we can leave it as-is.</p>
+
+<p>Next, what about the <code>nfs-imagestore-relation-changed</code> hook?</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>Ok, when parameters used within charm hooks are likely to change
+from one service deployment to the next, they can be externalized
+into a <code>config.yaml</code> for the charm.  This also allows you to
+pass them in at deploy-time or change them throughout the lifetime
+of the service using juju cli <code>--config</code> options and <code>set</code>
+commands.  See the <a href="http://juju.ubuntu.com/docs/">juju docs</a> for
+how to do all of this.</p>
+
+<p>There are two parameters in the <code>nfs-imagestore-relation-changed</code>
+hook that are set using <code>config-get</code>:</p>
+
+<pre><code>local_mountpoint=`config-get mountpoint`
+local_owner=`config-get owner`
+</code></pre>
+
+<p>Well, for mediawiki
+these parameters aren&#8217;t really going to change.  It&#8217;s reasonable
+to just hard-code them here as:</p>
+
+<pre><code>mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+</code></pre>
+
+<p>We could certainly just add these parameters to a <code>config.yaml</code>
+for the mediawiki charm, but in this case, they&#8217;re not really
+interesting &#8220;tweakable&#8221; aspects of the mediawiki charm, so let&#8217;s
+keep the mediawiki config simple.
+For other charms this might not be the case,
+but make that call in context.</p>
+
+<p>Now, at this point, our version of the <code>nfs-imagestore-relation-changed</code>
+hook:</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+</code></pre>
+
+<p>will run fine.  It&#8217;ll mount the <code>images</code> share and mediawiki
+will run normally.</p>
+
+<h3 id="additional-configuration">Additional configuration</h3>
+
+<p>This next step depends greatly on your particular charm/service.
+With mediawiki, the <code>images</code> directory isn&#8217;t really used until
+you tell mediawiki to turn on uploads.  This is true regardless
+of whether <code>images</code> is an nfs mount or you&#8217;re just using the
+directory on the local filesystem.</p>
+
+<p>The time to do this though is after the <code>images</code> share is mounted, 
+so putting it in the <code>nfs-imagestore-relation-changed</code> hook after
+the mount is a good place for it.</p>
+
+<pre><code>juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>So we end up with</p>
+
+<pre><code>#!/bin/bash
+set -ue
+
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    juju-log "remote host not set yet."
+    exit 0
+fi
+export_path=`relation-get mountpoint`
+fstype=`relation-get fstype`
+
+mw_root="/var/lib/mediawiki"
+local_mountpoint="$mw_root/images"
+local_owner="www-data"
+mount_options=""
+
+create_local_mountpoint() {
+  juju-log "creating local mountpoint"
+  umask 002
+  mkdir -p $local_mountpoint
+  # create owner if necessary?
+  chown -f $local_owner.$local_owner $local_mountpoint
+}
+[ -d $local_mountpoint ] || create_local_mountpoint 
+
+share_already_mounted() {
+  `mount | grep -q $local_mountpoint`
+}
+mount_share() {
+  for try in {1..3}; do
+
+    juju-log "mounting nfs share"
+    [ ! -z $mount_options ] &amp;&amp; options="-o ${mount_options}" || options=""
+    mount -t $fstype $options $remote_host:$export_path $local_mountpoint \
+      &amp;&amp; break
+
+    juju-log "mount failed: $local_mountpoint"
+    sleep 10
+
+  done
+}
+share_already_mounted || mount_share 
+
+# insure ownership
+chown -f $local_owner.$local_owner $local_mountpoint
+
+juju-log "updating mediawiki upload config"
+ 
+cat &gt; /etc/mediawiki/upload_settings.php &lt;&lt;'EOS'
+$wgEnableUploads = true;
+EOS
+ 
+service apache2 status &amp;&amp; service apache2 restart
+</code></pre>
+
+<p>the same hook that&#8217;s in <code>lp:~mark-mims/+junk/juju-mediawiki-nfs-imagestore</code>.</p>
+
+<h3 id="update-charm-metadata">Update charm metadata</h3>
+
+<p>So we have hooks that should do what we&#8217;d like&#8230; 
+(I&#8217;ll developing and debugging hooks in another post).
+Next we need to update the charm metadata so juju
+knows when to fire them.</p>
+
+<p>My <code>mediawiki/metadata.yaml</code> currently looks like</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>let&#8217;s add our nfs requirement (<em>requirement</em> is a strong word&#8230; they&#8217;re
+all optional),</p>
+
+<pre><code>...
+requires:
+  db:
+    interface: mysql
+  slave:
+    interface: mysql
+  cache:
+    interface: memcache
+  nfs-imagestore:
+    interface: mount
+provides:
+  website:
+    interface: http
+...
+</code></pre>
+
+<p>The relation name&#8217;s gotta match up with what we called the hooks.
+I got the interface name from the nfs server charm&#8217;s metadata:</p>
+
+<pre><code>...
+provides:
+  nfs:
+    interface: mount
+...
+</code></pre>
+
+<p>which provides the <a href="http://juju.ubuntu.com/Interfaces/mount">mount interface</a>.</p>
+
+<p>We can use the interface as a sanity check to insure we&#8217;re providing
+and using the right parameters when communicating with the nfs server
+service (using <code>relation-get</code> and <code>relation-set</code>) in our hooks.</p>
+
+<h3 id="spin-it-up">Spin it up</h3>
+
+<p>Let&#8217;s deploy our new charm:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository=~/charms local:nfs myimages
+$ juju deploy --repository=~/charms local:mysql
+$ juju deploy --repository=~/charms local:mediawiki mywiki
+$ juju add-relation mysql:db mywiki:db
+$ juju add-relation myimages mywiki
+$ juju expose mywiki
+</code></pre>
+
+<h3 id="spread-it-out">Spread it out</h3>
+
+<p>Add a few more mediawiki instances&#8230;</p>
+
+<pre><code>$ for i in {1..10}; do
+$ juju add-unit mywiki
+$ done
+</code></pre>
+
+<p>When everything&#8217;s up, these should all share the same database
+and image store.</p>
+
+<p>In real life you&#8217;d probably want to start adding mysql slaves
+to this.  Of course, in real life you&#8217;ll also add remote logging,
+monitoring, and other core infrastructure components too.
+Keep an eye out for subsequent posts in this series.</p>
+
+<h3 id="nfs-server-config">NFS server config</h3>
+
+<p>Up until now we&#8217;ve only talked about the NFS client.
+The NFS <em>server</em> charm is pretty simple.</p>
+
+<p>It lives at
+<a href="http://bazaar.launchpad.net/~juju-composers/principia/oneiric/nfs/trunk/files">lp:principia/nfs</a>
+and supports configuration options at deploy(or run)-time via</p>
+
+<pre><code>$ juju deploy --repository . --config ./mydata.yaml local:nfs mydata
+</code></pre>
+
+<p>where <code>mydata.yaml</code> looks like</p>
+
+<pre><code>mydata:
+  initial_daemon_count: 43
+  storage_root: /srv/mydata
+  export_options: rw,sync,no_root_squash,no_all_squash
+</code></pre>
+
+<h3 id="whats-left">What&#8217;s left?</h3>
+
+<p>This might not be an ideal NFS setup for your particular service.
+What are some other ways we can tweak this?</p>
+
+<p>Currently, the nfs server creates a separate share for each named service
+that attaches to it.</p>
+
+<p>We deployed mediawiki as <code>mywiki</code>, so all <code>mywiki</code> service units would
+share an export.  Well, you could deploy another mediawiki service unit
+called <code>someotherwiki</code> and all service units of <code>someotherwiki</code> would
+share a different export.  The new export is created on the service when
+the first unit of a new service name joins&#8230; subsequent units of that named
+service are just connected to that new export.</p>
+
+<p>Of course, this works for entirely separate services too.  Relating a 
+<code>hadoop-master</code> service named <code>job27</code> to that same nfs service would result in 
+the <code>job27</code> units sharing a new nfs export.</p>
+
+<p>This behavior is a reasonable default, but there may be a need to do this a 
+little differently in your infrastructure.  You could change the nfs server
+charm to provide different levels of export sharing&#8230; either by some
+additional <code>config.yaml</code> entries or by extending the <code>mount</code> interface.
+An nfs client might request a unique export, for backups
+say, or a named export for sharing.</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>I work on the Ubuntu juju project for Canonical.</p>
 ]]></content>
   </entry>
   
