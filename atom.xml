@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-07-29T22:58:13+00:00</updated>
+  <updated>2020-07-29T23:00:24+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -14,19 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Screencasts With Ffmpeg]]></title>
-    <link href="http://markmims.com/2020/07/29/screencasts-with-ffmpeg.html"/>
+    <title type="html"><![CDATA[Screencasts on Ubuntu using ffmpeg]]></title>
+    <link href="http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html"/>
     <updated>2020-07-29T00:00:00+00:00</updated>
-    <id>http://markmims.com/2020/07/29/screencasts-with-ffmpeg</id>
-    <content type="html"><![CDATA[<hr />
-<p>layout: post
-title: &#8220;Screencasts on Ubuntu using ffmpeg&#8221;
-date: 2020-07-29
-comments: true
-categories: [mids, ubuntu]
-&#8230;</p>
-
-<p>We developed these scripts for recording the screencast components of the class
+    <id>http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg</id>
+    <content type="html"><![CDATA[<p>We developed these scripts for recording the screencast components of the class
 we co-developed a couple of years ago.</p>
 
 <p>In this post I describe the capture setup we use to create professional quality

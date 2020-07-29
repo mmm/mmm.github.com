@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ubuntu | Software, Physics, Data, Mountains]]></title>
+  <link href="http://markmims.com/blog/categories/ubuntu/atom.xml" rel="self"/>
+  <link href="http://markmims.com/"/>
+  <updated>2020-07-29T23:00:24+00:00</updated>
+  <id>http://markmims.com/</id>
+  <author>
+    <name><![CDATA[Mark M Mims, Ph.D.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Screencasts on Ubuntu using ffmpeg]]></title>
+    <link href="http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html"/>
+    <updated>2020-07-29T00:00:00+00:00</updated>
+    <id>http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg</id>
+    <content type="html"><![CDATA[<p>We developed these scripts for recording the screencast components of the class
+we co-developed a couple of years ago.</p>
+
+<p>In this post I describe the capture setup we use to create professional quality
+screencasts using an Ubuntu Linux desktop. This just describes the recording
+process itself. We discuss the overall screencast development process and
+editing in separate posts.</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>Overview</li>
+  <li>Desktop</li>
+  <li>Slides</li>
+  <li>Terminal</li>
+  <li>Camera</li>
+  <li>Audio</li>
+  <li>Putting it all together</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>The screencasts recorded for the class encompassed both high-level conceptual
+material as well as detailed examples or tutorials.</p>
+
+<p>To do that we really wanted to have the flexibility of showing both slides as
+well as terminal or web interactions at the same time. We also figured it&#8217;s a
+good idea to have the ability to overlay a talking head when there&#8217;s not much
+other detailed interaction going on, so we also wanted to be sure we captured
+camera footage during the recordings as well.</p>
+
+<p>This setup is designed to capture raw footage of all of those channels at once.
+We looked around, but couldn&#8217;t find any off-the-shelf tools that really met our
+needs for this.  It turns out this is actually pretty easy to accomplish just
+using <code>ffmpeg</code> directly from a script.</p>
+
+<h2 id="desktop">Desktop</h2>
+
+<p>Note the desktop setup:</p>
+
+<ul>
+  <li>
+    <p>Ubuntu desktop with three monitors set up within a single X session</p>
+  </li>
+  <li>
+    <p>Each desktop is <code>1920x1080</code>, so the total big desktop size is <code>3x1920</code> pixels
+wide and 1080 pixels tall</p>
+  </li>
+  <li>
+    <p>Terminals/Browsers run on the left-hand monitor</p>
+  </li>
+  <li>
+    <p>Slides are full-screen on the center monitor</p>
+  </li>
+  <li>
+    <p>Webcam lives on top of the left monitor so we&#8217;re looking roughly towards the
+camera when going through a detailed example</p>
+  </li>
+  <li>
+    <p>Sound is coming from a lavalier mic plugged into a USB audio interface made
+available via standard Linux alsa devices</p>
+  </li>
+  <li>
+    <p>I use the right-hand monitor to hold terminal windows to start/stop these scripts,
+but nothing from there is recorded</p>
+  </li>
+</ul>
+
+<p>Below, we&#8217;ll go through each of the different capture channels used 
+and then wrap it all up with a bow into a single script that follows
+the <code>screencasts -&gt; shots -&gt; takes</code> file organization that we used to keep
+track of all of this.</p>
+
+<h2 id="slides">Slides</h2>
+
+<p>To capture a stream of slides, we&#8217;re using the <code>x11grab</code> ffmpeg interface. This
+is designed to just sample what the X server sees every so often (<code>$framerate</code>)
+and then encode and save that as a video stream.</p>
+
+<p>The tricky part is creating a command to record the correct monitor for slides.
+Since the middle monitor is running slides, we tell <code>ffmpeg</code> to capture a
+single monitor&#8217;s <code>1920x1080</code> worth of screen but <em>start</em> that from the geometry
+offset <code>+1920,0</code>&#8230; the top of the middle monitor.</p>
+
+<p>The command </p>
+
+<p><code>
+ffmpeg \
+  -hide_banner -nostats -loglevel warning \
+  -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
+  -vcodec libx264 \
+  -preset ultrafast \
+  $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1
+</code></p>
+
+<p>gets wrapped in a bash function to capture slides:</p>
+
+<p><code>
+capture_slides() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
+    -vcodec libx264 \
+    -preset ultrafast \
+    $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1
+  echo "slides done"
+}
+</code></p>
+
+<p>This saves to the files <code>slides.mkv</code> and <code>slides.log</code>.</p>
+
+<h2 id="terminal">Terminal</h2>
+
+<p>We&#8217;ll use <code>x11grab</code> to record the left-hand monitor as well. The offset here is
+just the top of the left-hand monitor, so <code>+0,0</code> in X geometry speak:</p>
+
+<p><code>
+capture_terminal() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f x11grab -r $framerate -s hd1080 -i :0.0+0,0 \
+    -vcodec libx264 \
+    -preset ultrafast \
+    $output_dir/terminal.mkv &gt; $output_dir/terminal.log 2&gt;&amp;1
+  echo "terminal done"
+}
+</code></p>
+
+<p>This saves to the files <code>terminal.mkv</code> and <code>terminal.log</code>.</p>
+
+<h2 id="camera">Camera</h2>
+
+<p>To capture the stream from the webcam, we&#8217;re relying heavily on the fact that
+the 
+<a href="https://www.amazon.com/gp/product/B006JH8T3S/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">Logitech HD Pro Webcam C920</a>
+does hardware h264 encoding on the fly and we&#8217;re just tapping into that using
+ffmpeg&#8217;s <code>v4l2</code> interface to simply <code>copy</code> the video stream out to a file.</p>
+
+<p>I also had some problems understanding the timestamps that the camera&#8217;s
+hardware encoder used, so I include the set of <code>ffmpeg</code> args that fixed that.
+YMMV depending on your camera.</p>
+
+<p>Probably the most important thing to recognize is that the capture relied on
+the hardware encoding.  If we were getting raw video and having to encode on
+the fly, then the desktop&#8217;s computational capabilities my come more into play.
+This usually results is limiting the framerate you can actually record.</p>
+
+<p>Here&#8217;s the function to capture the camera footage:</p>
+
+<p><code>
+capture_webcam() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f v4l2 -framerate $framerate -input_format h264 -video_size hd1080 -ts mono2abs -i /dev/video0 \
+    -c copy -copyts -start_at_zero \
+    $output_dir/webcam.mkv &gt; $output_dir/webcam.log 2&gt;&amp;1
+  echo "webcam done"
+}
+</code></p>
+
+<p>This saves to <code>webcam.mkv</code> and <code>webcam.log</code>.</p>
+
+<h2 id="audio">Audio</h2>
+
+<p>Audio is coming in through a 
+<a href="https://www.amazon.com/gp/product/B00MIXF2RS/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">TASCAM US-2x2</a>
+USB-audio interface, where I have a 
+<a href="https://www.amazon.com/gp/product/B01GSVQN6Y/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">lavalier mic</a>
+plugged in.  This &#8220;just worked&#8221; through the <code>alsa</code> interface for <code>ffmpeg</code> so we
+just need to copy the raw audio stream from the device:</p>
+
+<p><code>
+capture_audio() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f alsa -i default \
+    -c copy -copyts -start_at_zero \
+    $output_dir/audio.wav &gt; $output_dir/audio.log 2&gt;&amp;1
+  echo "audio done"
+}
+</code></p>
+
+<p>which saves <code>audio.wav</code> and <code>audio.log</code>.</p>
+
+<h2 id="putting-this-all-together">Putting this all together</h2>
+
+<p>So all of the above functions get rolled up into a single script named
+<code>capture</code>.</p>
+
+<p>This script kicks off the <code>ffmpeg</code> recordings at roughly the same
+time and saves all the output to</p>
+
+<p><code>
+output_dir="screencasts/${scene_name}/shot-${shot_number}/take-${timestamp}"
+</code></p>
+
+<p>where the variables in there either are defaults (like the shot number) or are
+specified as arguments to the script.  I typically use it like</p>
+
+<p><code>
+cd /opt/screencasts/introducing-spark-streaming
+capture
+</code></p>
+
+<p>which kicks off the recording and streams outputs to files such as</p>
+
+<p><code>
+- shot-010
+  - take-2018-03-12-165010
+    - audio.log
+    - audio.wav
+    - slides.log
+    - slides.mkv
+    - terminal.log
+    - terminal.mkv
+    - webcam.log
+    - webcam.mkv
+</code></p>
+
+<p>This folder structure lets us keep things nice and tidy for editing.</p>
+
+<p>So here&#8217;s the final script:</p>
+
+<p>```
+#!/bin/bash</p>
+
+<p>set -o errexit -o nounset -o pipefail</p>
+
+<p>usage() {
+	echo &#8220;Usage: $0 <scene_name> [<shot_number>]
+    where:
+      <scene_name> is something like intro-what-is-data-eng
+      <shot_number> optional, default is 010"
+}
+(( $# &lt; 1 )) &amp;&amp; usage &amp;&amp; exit 1
+scene_name=$1
+shot_number=${2:-010}</shot_number></scene_name></shot_number></scene_name></p>
+
+<p>timestamp=<code>date +%Y-%m-%d-%H%M%S</code>
+output_dir=&#8221;screencasts/${scene_name}/shot-${shot_number}/take-${timestamp}&#8221;
+framerate=30</p>
+
+<p>capture_slides() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
+    -vcodec libx264 \
+    -preset ultrafast \
+    $output_dir/slides.mkv &gt; $output_dir/slides.log 2&gt;&amp;1
+  echo &#8220;slides done&#8221;
+}</p>
+
+<p>capture_terminal() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f x11grab -r $framerate -s hd1080 -i :0.0+0,0 \
+    -vcodec libx264 \
+    -preset ultrafast \
+    $output_dir/terminal.mkv &gt; $output_dir/terminal.log 2&gt;&amp;1
+  echo &#8220;terminal done&#8221;
+}</p>
+
+<p>capture_audio() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f alsa -i default \
+    -c copy -copyts -start_at_zero \
+    $output_dir/audio.wav &gt; $output_dir/audio.log 2&gt;&amp;1
+  echo &#8220;audio done&#8221;
+}</p>
+
+<p>capture_webcam() {
+  local output_dir=$1
+  ~/bin/ffmpeg \
+    -hide_banner -nostats -loglevel warning \
+    -f v4l2 -framerate $framerate -input_format h264 -video_size hd1080 -ts mono2abs -i /dev/video0 \
+    -c copy -copyts -start_at_zero \
+    $output_dir/webcam.mkv &gt; $output_dir/webcam.log 2&gt;&amp;1
+  echo &#8220;webcam done&#8221;
+}</p>
+
+<h6 id="section">#</h6>
+
+<p>echo &#8220;starting ${scene_name}/shot-${shot_number}/take-${timestamp}&#8221;</p>
+
+<p>mkdir -p $output_dir</p>
+
+<p>echo &#8220;capturing slides&#8221;
+capture_slides $output_dir &amp;</p>
+
+<p>echo &#8220;capturing terminal&#8221;
+capture_terminal $output_dir &amp;</p>
+
+<p>echo &#8220;capturing webcam&#8221;
+capture_webcam $output_dir &amp;</p>
+
+<p>echo &#8220;capturing audio&#8221;
+capture_audio $output_dir &amp;</p>
+
+<p>for job in <code>jobs -p</code>; do
+  wait $job
+done</p>
+
+<p>echo &#8220;done&#8221;
+```</p>
+
+<p>Note that each function is run in the background so they&#8217;re effectively kicked
+off in parallel.</p>
+]]></content>
+  </entry>
+  
+</feed>
