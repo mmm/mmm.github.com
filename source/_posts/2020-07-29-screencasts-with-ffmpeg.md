@@ -4,7 +4,7 @@ title: "Screencasts on Ubuntu using ffmpeg"
 date: 2020-07-29
 comments: true
 categories: [mids, ubuntu]
-...
+---
 
 
 We developed these scripts for recording the screencast components of the class
