@@ -1,18 +1,15 @@
 ---
 layout: post
-title: "Screencasts on Ubuntu using ffmpeg"
+title: "Screencasts on Ubuntu using `ffmpeg`"
 date: 2020-07-29
 comments: true
 categories: [mids, ubuntu]
 ---
 
 
-We developed these scripts for recording the screencast components of the class
-we co-developed a couple of years ago.
-
-In this post I describe the capture setup we use to create professional quality
+In this post I describe the capture setup we used to create professional quality
 screencasts using an Ubuntu Linux desktop. This just describes the recording
-process itself. We discuss the overall screencast development process and
+process itself. I'll go over the overall screencast development process and
 editing in separate posts.
 
 <!--more-->
@@ -30,8 +27,9 @@ editing in separate posts.
 
 ## Overview
 
-The screencasts recorded for the class encompassed both high-level conceptual
-material as well as detailed examples or tutorials.
+These scripts were created to record screencasts for a class on Data
+Engineering, so they'll need to cover both high-level conceptual material as
+well as detailed examples or tutorials.
 
 To do that we really wanted to have the flexibility of showing both slides as
 well as terminal or web interactions at the same time. We also figured it's a
