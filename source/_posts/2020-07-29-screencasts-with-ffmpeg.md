@@ -84,7 +84,7 @@ offset `+1920,0`... the top of the middle monitor.
 
 The command 
 
-```
+``` bash
 ffmpeg \
   -hide_banner -nostats -loglevel warning \
   -f x11grab -r $framerate -s hd1080 -i :0.0+1920,0 \
@@ -95,7 +95,7 @@ ffmpeg \
 
 gets wrapped in a bash function to capture slides:
 
-```
+``` bash
 capture_slides() {
   local output_dir=$1
   ~/bin/ffmpeg \
@@ -116,7 +116,7 @@ This saves to the files `slides.mkv` and `slides.log`.
 We'll use `x11grab` to record the left-hand monitor as well. The offset here is
 just the top of the left-hand monitor, so `+0,0` in X geometry speak:
 
-```
+``` bash
 capture_terminal() {
   local output_dir=$1
   ~/bin/ffmpeg \
@@ -151,7 +151,7 @@ This usually results is limiting the framerate you can actually record.
 
 Here's the function to capture the camera footage:
 
-```
+``` bash
 capture_webcam() {
   local output_dir=$1
   ~/bin/ffmpeg \
@@ -175,7 +175,7 @@ USB-audio interface, where I have a
 plugged in.  This "just worked" through the `alsa` interface for `ffmpeg` so we
 just need to copy the raw audio stream from the device:
 
-```
+``` bash
 capture_audio() {
   local output_dir=$1
   ~/bin/ffmpeg \
@@ -198,21 +198,21 @@ So all of the above functions get rolled up into a single script named
 This script kicks off the `ffmpeg` recordings at roughly the same
 time and saves all the output to
 
-```
+``` bash
 output_dir="screencasts/${scene_name}/shot-${shot_number}/take-${timestamp}"
 ```
 
 where the variables in there either are defaults (like the shot number) or are
 specified as arguments to the script.  I typically use it like
 
-```
+``` bash
 cd /opt/screencasts/introducing-spark-streaming
 capture
 ```
 
 which kicks off the recording and streams outputs to files such as
 
-```
+``` bash
 - shot-010
   - take-2018-03-12-165010
     - audio.log
@@ -229,7 +229,7 @@ This folder structure lets us keep things nice and tidy for editing.
 
 So here's the final script:
 
-```
+``` bash
 #!/bin/bash
 
 set -o errexit -o nounset -o pipefail
