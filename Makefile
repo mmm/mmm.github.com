@@ -6,7 +6,7 @@ run_rake := docker run --rm -t \
 	-v /etc/passwd:/etc/passwd:ro \
 	-v /etc/group:/etc/group:ro \
 	--user $(shell id -u):$(shell id -g) \
-	markmims/pubdev:0.0.1 bundle exec rake
+	markmims/pubdev:latest bundle exec rake
 
 list_tasks:
 	@echo "--- $@ ---"
