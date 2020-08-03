@@ -1,16 +1,16 @@
 ---
 layout: post
-title: "Screencasts on Ubuntu using `ffmpeg`"
+title: "Capturing Screencasts on Ubuntu using `ffmpeg`"
 date: 2020-07-29
 comments: true
 categories: [mids, ubuntu]
 ---
 
 
-In this post I describe the capture setup we used to create professional quality
-screencasts using an Ubuntu Linux desktop. This just describes the recording
-process itself. I'll go over the overall screencast development process and
-editing in separate posts.
+In this post I describe the capture setup we used to create screencasts using
+an Ubuntu Linux desktop. This one just describes the recording process itself.
+I'll go over the overall screencast development process and editing in separate
+posts.
 
 <!--more-->
 
@@ -47,7 +47,8 @@ using `ffmpeg` directly from a script.
 
 Note the desktop setup:
 
-- Ubuntu desktop with three monitors set up within a single X session
+- Ubuntu desktop with three monitors set up within a single X session.  You'll
+  want at least two to capture both slides and terminal/web at once
 
 - Each desktop is `1920x1080`, so the total big desktop size is `3x1920` pixels
   wide and 1080 pixels tall
