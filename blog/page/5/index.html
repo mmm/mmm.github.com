@@ -9,7 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="Ok, dia is totally screwed up with units&#8230; here&#8217;s how to make it work well. open dia File -&gt; Preferences User Interface length unit: &hellip;">
+  <meta name="description" content="short story: git branch --set-upstream separate origin/separate ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -110,6 +110,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/01/29/howto-git-track-remote-branch.html">Howto-git-track-remote-branch</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-29T00:00:00+00:00" pubdate data-updated="true">Jan 29<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>short story:</p>
+
+<pre><code>git branch --set-upstream separate origin/separate
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -854,92 +894,6 @@ http://wikitech-static.wikimedia.org/articles/i/p/m/IPMI_8730.html
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/10/27/howto-sshfs-mount-from-python.html">Sshfs-mount-from-python</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-27T00:00:00+00:00" pubdate data-updated="true">Oct 27<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>#!/usr/bin/python
-#
-# from http://ubuntuforums.org/showthread.php?p=1932551
-#
-
-import os
-import sys
-import getopt
-
-host = '10.37.129.2'
-
-mount_points = [('/Users/dave/Music', '/home/dave/Music'),
-        ('/Users/dave/Documents', '/home/dave/Documents'),
-        ('/Users/dave/Pictures', '/home/dave/Pictures')]
-
-def main(argv=None):
-    if argv is None:
-        argv = sys.argv
-    try:
-        opts, args = getopt.getopt(argv[1:], 'u', ['unmount'])
-    except getopt.error, msg:
-        print msg
-        print 'for help use --help'
-        sys.exit(2)
-    mount_op = mount
-    for option, a in opts:
-        if option in ('-u', '--unmount'):
-            mount_op = unmount
-    mount_op()    
-    return 0
-
-def mount():
-    argv = ['/usr/bin/sshfs', None, None]
-    for mount in mount_points:
-        argv[1] = '%s:%s' % (host, mount[0])
-        argv[2] = mount[1]
-        cmd = ' '.join(argv)
-        print cmd
-        os.system(cmd)
-
-def unmount():
-    argv = ['/usr/bin/fusermount', '-u', None]
-    for mount in mount_points:
-        argv[2] = mount[1]
-        cmd = ' '.join(argv)
-        print cmd
-        os.system(cmd)
-
-if __name__ == '__main__':
-    sys.exit(main())
-</code></pre>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -974,6 +928,10 @@ if __name__ == '__main__':
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">Screencasts on Ubuntu using `ffmpeg`</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
@@ -987,10 +945,6 @@ if __name__ == '__main__':
     
       <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>

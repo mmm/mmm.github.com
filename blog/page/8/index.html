@@ -9,16 +9,8 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="added sources.list packages: ruby
-rdoc ri irb
-build-essential
-ruby1.8-dev
-libapache2-mod-fcgid
-libfcgi-dev
-libxml2
-libxml2-dev
-libxslt1-dev
-sqlite3 &hellip;">
+  <meta name="description" content="edit Library/LaunchAgents/hawk.videos.sshfs.plist &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -119,6 +111,69 @@ sqlite3 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/06/17/howto-osx-startup.html">Osx Startup Scripts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-17T00:00:00+00:00" pubdate data-updated="true">Jun 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>edit <code>Library/LaunchAgents/hawk.videos.sshfs.plist</code></p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;hawk.videos.sshfs&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;/usr/local/bin/sshfs-authsock&lt;/string&gt;
+                &lt;string&gt;mmm@hawk:/home/mmm/Videos&lt;/string&gt;
+                &lt;string&gt;/mnt/hawk&lt;/string&gt;
+                &lt;string&gt;-oreconnect&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        &lt;key&gt;AbandonProcessGroup&lt;/key&gt;
+        &lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+
+<p>now, just</p>
+
+<pre><code>launchctl load ~/Library/LaunchAgents/hawk.videos.sshfs.plist
+launchctl start hawk.videos.sshfs
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -775,53 +830,6 @@ COMMIT
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2010/01/27/howto-streamvlc-from-hawk.html">Stream VLC From Hawk</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-01-27T00:00:00+00:00" pubdate data-updated="true">Jan 27<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>this sets up a remote control on 7001 over an ssh tunnel</p>
-
-<pre><code>hawk:~ $ vlc -Ihttp --http-host :7001 -vvv /tmp/howimetyourmother-S1d1-t1.mp4 --udp-caching 1500 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=800,ab=128}:standard{access=http{mime=video/x-ms-asf},mux=asf,dst:8080}'
-</code></pre>
-
-<p>this client hits hawk:8080 which forwards the port to hawk&#8217;s vlc process</p>
-
-<p>insecure data stream (control stream still safe) but seems to work better than tunneling over 8080 too</p>
-
-<p>next up is to try it over some other protocol than http&#8230; 
-need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -856,6 +864,10 @@ need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">Screencasts on Ubuntu using `ffmpeg`</a>
+      </li>
+    
+      <li class="post">
         <a href="/devops/cloud/gcp/iam/2019/06/05/managed-projects-in-gcp.html">Projects in GCP using Central Billing Accounts</a>
       </li>
     
@@ -869,10 +881,6 @@ need to set up port forwarding for udp traffic and see fi that&#8217;s faster</p
     
       <li class="post">
         <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/cloud/2013/08/23/charmschool-local-provider.html">CharmSchool Hangout - Juju Local Provider</a>
       </li>
     
   </ul>
