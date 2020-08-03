@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-08-03T20:09:13+00:00</updated>
+  <updated>2020-08-03T21:17:07+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -14,14 +14,14 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Screencasts on Ubuntu using `ffmpeg`]]></title>
+    <title type="html"><![CDATA[Capturing Screencasts on Ubuntu using `ffmpeg`]]></title>
     <link href="http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html"/>
     <updated>2020-07-29T00:00:00+00:00</updated>
     <id>http://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg</id>
-    <content type="html"><![CDATA[<p>In this post I describe the capture setup we used to create professional quality
-screencasts using an Ubuntu Linux desktop. This just describes the recording
-process itself. I&#8217;ll go over the overall screencast development process and
-editing in separate posts.</p>
+    <content type="html"><![CDATA[<p>In this post I describe the capture setup we used to create screencasts using
+an Ubuntu Linux desktop. This one just describes the recording process itself.
+I&#8217;ll go over the overall screencast development process and editing in separate
+posts.</p>
 
 <!--more-->
 
@@ -60,7 +60,8 @@ using <code>ffmpeg</code> directly from a script.</p>
 
 <ul>
   <li>
-    <p>Ubuntu desktop with three monitors set up within a single X session</p>
+    <p>Ubuntu desktop with three monitors set up within a single X session.  You&#8217;ll
+want at least two to capture both slides and terminal/web at once</p>
   </li>
   <li>
     <p>Each desktop is <code>1920x1080</code>, so the total big desktop size is <code>3x1920</code> pixels
