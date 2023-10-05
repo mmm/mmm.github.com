@@ -9,9 +9,7 @@
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="log into the agent SP -&gt; set /SP/SystemInfo/CtrlInfo PowerCtrl=reset The System will be Reset.
-Do you wish to Continue..?(y/n)y
-Set 'PowerCtrl' to &hellip;">
+  <meta name="description" content="short story: git branch --set-upstream separate origin/separate ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -112,73 +110,6 @@ Set 'PowerCtrl' to &hellip;">
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/howtos/2011/01/30/howto-sunfire-ilom.html">Sunfire Ilom</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-30T00:00:00+00:00" pubdate data-updated="true">Jan 30<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>log into the agent</p>
-
-<pre><code>SP -&gt; set /SP/SystemInfo/CtrlInfo PowerCtrl=reset  
-The System will be Reset.
-Do you wish to Continue..?(y/n)y
-Set 'PowerCtrl' to 'reset'
-/SP -&gt; 
-
-start /SP/AgentInfo/console
-
-
-
-/SP -&gt; set /SP/SystemInfo/CtrlInfo PowerCtrl=forceoff
-The System will be force Powered Off.
-Do you wish to Continue..?(y/n)y
-Set 'PowerCtrl' to 'forceoff'
-/SP -&gt; show /SP/SystemInfo/CtrlInfo                  
-
-  /SP/SystemInfo/CtrlInfo
-    Targets:
-
-    Properties:
-        PowerStatus = off
-        PowerCtrl = (Cannot show property)
-        BootCtrl = regular
-        IdLedCtrl = off
-
-    Target Commands:
-        show
-        set
-</code></pre>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -918,6 +849,51 @@ total 74080
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/howtos/2010/12/02/howto-ipmi.html">Ipmi Stuff</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-02T00:00:00+00:00" pubdate data-updated="true">Dec 2<span>nd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>OMG&#8230;. finally!</p>
+
+<pre><code>http://wiki.adamsweet.org/doku.php?id=ipmi_on_linux
+
+http://www.cyberciti.biz/tips/tag/ipmiclix86-command
+http://www.cyberciti.biz/tips/linux-freebsd-ipmi-login-session.html
+http://www.intel.com/design/servers/ipmi/ipmi.htm
+http://wikitech-static.wikimedia.org/articles/i/p/m/IPMI_8730.html
+</code></pre>
+
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -952,10 +928,6 @@ total 74080
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html">Editing Screencasts on Ubuntu using `blender`</a>
-      </li>
-    
-      <li class="post">
         <a href="/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">Capturing Screencasts on Ubuntu using `ffmpeg`</a>
       </li>
     
@@ -969,6 +941,10 @@ total 74080
     
       <li class="post">
         <a href="/docker/data-engineering/spark/devops/2015/10/13/docker-cdh.html">Develop Spark Apps on Yarn using Docker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2015/06/01/ssh-tips.html">SSH Tips and Tricks</a>
       </li>
     
   </ul>

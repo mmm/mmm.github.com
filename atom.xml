@@ -4,7 +4,7 @@
   <title><![CDATA[Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2023-10-05T15:00:34+00:00</updated>
+  <updated>2023-10-05T15:12:36+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -12,113 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Editing Screencasts on Ubuntu using `blender`]]></title>
-    <link href="http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html"/>
-    <updated>2020-08-03T00:00:00+00:00</updated>
-    <id>http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender</id>
-    <content type="html"><![CDATA[<p>In this post I describe how we used <a href="blender.org">blender</a> on an Ubuntu desktop
-to edit screencasts for use as async materials for our online Data Engineering
-course.
-This one just describes the editing process itself.
-Screencast capture and the overall screencast development process are covered
-in separate posts.</p>
-
-<!--more-->
-
-<h2 id="contents">Contents</h2>
-
-<ul>
-  <li>Overview</li>
-  <li>Blender</li>
-  <li>Setup</li>
-  <li>Imports</li>
-  <li>Audio</li>
-  <li>Story and Context</li>
-  <li>Transitions</li>
-  <li>Render</li>
-  <li>Transcode</li>
-  <li>Cover</li>
-  <li>Uploads</li>
-</ul>
-
-<h2 id="overview">Overview</h2>
-
-<p>In a
-<a href="https://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">previous post</a>
-I described how to capture multiple monitors worth of screencast material.  One
-video stream for slides, one for camera footage of the presenter, and a third
-for interactive demos of the terminal and web interfaces.  We also recorded a
-single audio stream of narrative.</p>
-
-<p>Each of these video streams alone don&#8217;t tell the full story because we might be
-switching context from slides to a demo and back to slides.  Also, there are
-times when it might be useful to see some hands waving from a talking head :-)</p>
-
-<p>Sure, the simplest model is to just record a single stream and swap windows
-back and forth as the context changes.  However, I&#8217;ve learned my lessons trying
-to fix videos and music over the years and wanted the flexibility to adjust
-context during post-production.  What if I wanted to add a new diagram to
-better explain something?  What if I forgot to go to the next slide trasition
-to indicate a new topic?</p>
-
-<p>Turns out it&#8217;s not too hard, or expensive, to keep that flexibility by simply
-capturing the multiple video streams first, and then editing these together as
-a separate stepinto a polished presentation that effectively communicates the
-material.</p>
-
-<h2 id="blender">Blender</h2>
-
-<p>You might have heard of blender.blender</p>
-
-<h2 id="setup">Setup</h2>
-
-<h2 id="inputs">Inputs</h2>
-
-<p>The folder structure we use follows a pattern of
-<code>scene -&gt; shot -&gt; take</code> so here we&#8217;ll have
-<code>screencast_name -&gt; shot -&gt; take</code>:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">- intro-to-data-science
-</span><span class="line">  - shot-010
-</span><span class="line">    - take-2018-03-12-165010
-</span><span class="line">      - audio.log
-</span><span class="line">      - audio.wav
-</span><span class="line">      - slides.log
-</span><span class="line">      - slides.mkv
-</span><span class="line">      - terminal.log
-</span><span class="line">      - terminal.mkv
-</span><span class="line">      - webcam.log
-</span><span class="line">      - webcam.mkv
-</span><span class="line">    - take-2018-03-12-165422
-</span><span class="line">      - ...
-</span><span class="line">  - shot-020
-</span><span class="line">  - ...
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>I usually label the best take of a shot as <code>finalized</code> as they&#8217;re captured.</p>
-
-<p>For editing, import the streams from the finalized take of each shot of the
-screencast.</p>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Capturing Screencasts on Ubuntu using `ffmpeg`]]></title>
@@ -3461,6 +3354,122 @@ Only configure
 relation-specific things in the relation hooks.
 The more minimal the relation hooks,
 the more scalable the service.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Monitoring Hadoop Benchmarks TeraGen/TeraSort with Ganglia]]></title>
+    <link href="http://markmims.com/cloud/2011/09/03/terasort-ganglia.html"/>
+    <updated>2011-09-03T00:00:00+00:00</updated>
+    <id>http://markmims.com/cloud/2011/09/03/terasort-ganglia</id>
+    <content type="html"><![CDATA[<p>Here I&#8217;m using new features of
+<a href="http://www.ubuntu.com/business/server/overview">Ubuntu Server</a> 
+(namely <a href="http://juju.ubuntu.com">juju</a>)
+to easily deploy
+<a href="http://ganglia.sourceforge.net">Ganglia</a>
+alongside
+a small <a href="http://hadoop.apache.org">Hadoop</a> cluster
+to play around with monitoring some
+<a href="http://sortbenchmark.org/">benchmarks</a>
+like
+<a href="http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/">Terasort</a>.</p>
+
+<!--more-->
+
+<hr />
+
+<p><em>Updated on 2011-11-08:</em>
+The ubuntu project &#8220;ensemble&#8221; is now known as &#8220;juju&#8221;.
+This post has been updated to reflect the new names and updates to the api.</p>
+
+<hr />
+
+<h2 id="short-story">Short Story</h2>
+
+<p>Deploy hadoop and ganglia using juju:</p>
+
+<pre><code>$ juju bootstrap
+$ juju deploy --repository "~/charms"  local:hadoop-master namenode
+$ juju deploy --repository "~/charms"  local:ganglia jobmonitor
+$ juju deploy --repository "~/charms"  local:hadoop-slave datacluster
+$ juju add-relation namenode datacluster
+$ juju add-relation jobmonitor datacluster
+$ for i in {1..6}; do
+$   juju add-unit datacluster
+$ done
+$ juju expose jobmonitor
+</code></pre>
+
+<p>When all is said and done (and EC2 has caught up),
+run the jobs</p>
+
+<pre><code>$ juju ssh namenode/0
+ubuntu$ sudo -su hdfs
+hdfs$ hadoop jar hadoop-*-examples.jar teragen -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 100000000 in_dir
+hdfs$ hadoop jar hadoop-*-examples.jar terasort -Dmapred.map.tasks=100 -Dmapred.reduce.tasks=100 in_dir out_dir
+</code></pre>
+
+<p>While these are running, we can run</p>
+
+<pre><code>$ juju status
+</code></pre>
+
+<p>to get the URL for the jobmonitor ganglia web frontend</p>
+
+<pre><code>http://&lt;jobmonitor-instance-ec2-url&gt;/ganglia/
+</code></pre>
+
+<p>and see&#8230;</p>
+
+<p><a href="http://markmims.com/images/terasort-ganglia-1.png">
+<img src="http://markmims.com/images/terasort-ganglia-1.png" width="720px" />
+</a></p>
+
+<p>and a little later as the jobs run&#8230;</p>
+
+<p><a href="http://markmims.com/images/terasort-ganglia-2.png">
+<img src="http://markmims.com/images/terasort-ganglia-2.png" width="720px" />
+</a></p>
+
+<p>Of course, I&#8217;m just playing around with ganglia at the moment&#8230;
+For real performance, I&#8217;d change my juju config file
+to choose larger (and ephemeral) EC2 instances instead of
+the defaults.</p>
+
+<h2 id="a-few-details">A Few Details&#8230;</h2>
+
+<p>Let&#8217;s grab the charms necessary to reproduce this.</p>
+
+<p>First, let&#8217;s install juju and set up a our charms.</p>
+
+<pre><code>$ sudo apt-get install juju charm-tools
+</code></pre>
+
+<p>Note that I&#8217;m describing all this using an Ubuntu laptop to run
+the juju cli because that&#8217;s how I roll, but you can certainly
+use a Mac to drive your Ubuntu services in the cloud.
+The juju CLI is already available in ports, but I&#8217;m not sure
+the version.  Homebrew packages are in the works.
+Windows should work too, but I don&#8217;t have a clue.</p>
+
+<pre><code>$ mkdir -p ~/charms/oneiric
+$ cd ~/charms/oneiric
+$ charm get hadoop-master
+$ charm get hadoop-slave
+$ charm get ganglia
+</code></pre>
+
+<p>That&#8217;s about all that&#8217;s really necessary to get you up and
+benchmarking/monitoring.</p>
+
+<p>I&#8217;ll do another post on how to adapt your own charms to use monitoring
+and the <code>monitor</code> juju interface as part of the &#8220;Core Infrastructure&#8221;
+series I&#8217;m writing for charm developers.  I&#8217;ll go over the process of
+what I had to do to get the <code>hadoop-slave</code> service talking to monitoring
+services like <code>ganglia</code>.</p>
+
+<p>Until then, clone/test/enjoy&#8230; or better yet, fork/adapt/use!</p>
 
 ]]></content>
   </entry>
