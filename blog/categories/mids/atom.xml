@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mids | Software, Physics, Data, Mountains]]></title>
   <link href="http://markmims.com/blog/categories/mids/atom.xml" rel="self"/>
   <link href="http://markmims.com/"/>
-  <updated>2020-08-03T21:17:07+00:00</updated>
+  <updated>2023-10-05T14:41:44+00:00</updated>
   <id>http://markmims.com/</id>
   <author>
     <name><![CDATA[Mark M Mims, Ph.D.]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Editing Screencasts on Ubuntu using `blender`]]></title>
+    <link href="http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html"/>
+    <updated>2020-08-03T00:00:00+00:00</updated>
+    <id>http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender</id>
+    <content type="html"><![CDATA[<p>In this post I describe how we used <a href="blender.org">blender</a> on an Ubuntu desktop
+to edit screencasts for use as async materials for our online Data Engineering
+course.
+This one just describes the editing process itself.
+Screencast capture and the overall screencast development process are covered
+in separate posts.</p>
+
+<!--more-->
+
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>Overview</li>
+  <li>Blender</li>
+  <li>Setup</li>
+  <li>Imports</li>
+  <li>Audio</li>
+  <li>Story and Context</li>
+  <li>Transitions</li>
+  <li>Render</li>
+  <li>Transcode</li>
+  <li>Cover</li>
+  <li>Uploads</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>In a
+<a href="https://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">previous post</a>
+I described how to capture multiple monitors worth of screencast material.  One
+video stream for slides, one for camera footage of the presenter, and a third
+for interactive demos of the terminal and web interfaces.  We also recorded a
+single audio stream of narrative.</p>
+
+<p>Each of these video streams alone don&#8217;t tell the full story because we might be
+switching context from slides to a demo and back to slides.  Also, there are
+times when it might be useful to see some hands waving from a talking head :-)</p>
+
+<p>Sure, the simplest model is to just record a single stream and swap windows
+back and forth as the context changes.  However, I&#8217;ve learned my lessons trying
+to fix videos and music over the years and wanted the flexibility to adjust
+context during post-production.  What if I wanted to add a new diagram to
+better explain something?  What if I forgot to go to the next slide trasition
+to indicate a new topic?</p>
+
+<p>Turns out it&#8217;s not too hard, or expensive, to keep that flexibility by simply
+capturing the multiple video streams first, and then editing these together as
+a separate stepinto a polished presentation that effectively communicates the
+material.</p>
+
+<h2 id="blender">Blender</h2>
+
+<p>You might have heard of blender.blender</p>
+
+<h2 id="setup">Setup</h2>
+
+<h2 id="inputs">Inputs</h2>
+
+<p>The folder structure we use follows a pattern of
+<code>scene -&gt; shot -&gt; take</code> so here we&#8217;ll have
+<code>screencast_name -&gt; shot -&gt; take</code>:</p>
+
+<p><code>bash
+- intro-to-data-science
+  - shot-010
+    - take-2018-03-12-165010
+      - audio.log
+      - audio.wav
+      - slides.log
+      - slides.mkv
+      - terminal.log
+      - terminal.mkv
+      - webcam.log
+      - webcam.mkv
+    - take-2018-03-12-165422
+      - ...
+  - shot-020
+  - ...
+</code></p>
+
+<p>I usually label the best take of a shot as <code>finalized</code> as they&#8217;re captured.</p>
+
+<p>For editing, import the streams from the finalized take of each shot of the
+screencast.</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Capturing Screencasts on Ubuntu using `ffmpeg`]]></title>

@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CharmSchool Hangouts - Software, Physics, Data, Mountains</title>
+  <title>Editing Screencasts on Ubuntu using `blender` - Software, Physics, Data, Mountains</title>
   <meta name="author" content="Mark M Mims, Ph.D.">
 
   
-  <meta name="description" content="We&#8217;re doing a series of regular CharmSchools on G+ hangouts.
-Last week we did an intro to juju and charming&#8230; embedded youtube video &hellip;">
+  <meta name="description" content="In this post I describe how we used blender on an Ubuntu desktop
+to edit screencasts for use as async materials for our online Data Engineering &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ Last week we did an intro to juju and charming&#8230; embedded youtube video &he
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html">
+  <link rel="canonical" href="http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html">
   <link href="/favicon.ico" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Software, Physics, Data, Mountains" type="application/atom+xml">
@@ -114,7 +114,7 @@ Last week we did an intro to juju and charming&#8230; embedded youtube video &he
   
   <header>
     
-      <h1 class="entry-title">CharmSchool Hangouts</h1>
+      <h1 class="entry-title">Editing Screencasts on Ubuntu Using `blender`</h1>
     
     
       <p class="meta">
@@ -130,28 +130,111 @@ Last week we did an intro to juju and charming&#8230; embedded youtube video &he
   
 
 
-<time datetime="2013-05-20T12:49:00+00:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
+<time datetime="2020-08-03T00:00:00+00:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2020</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>We&#8217;re doing a series of regular CharmSchools on G+ hangouts.
-Last week we did an intro to juju and charming&#8230;</p>
+<div class="entry-content"><p>In this post I describe how we used <a href="blender.org">blender</a> on an Ubuntu desktop
+to edit screencasts for use as async materials for our online Data Engineering
+course.
+This one just describes the editing process itself.
+Screencast capture and the overall screencast development process are covered
+in separate posts.</p>
 
-<div class="ratio-4-3 embed-video-container" onclick="var myAnchor = document.getElementById('yRcqSjOGweo');var tmpDiv = document.createElement('div');tmpDiv.innerHTML = '&lt;iframe style=&quot;vertical-align:top;width:100%;height:100%;position:absolute;&quot; src=&quot;http://www.youtube.com/embed/yRcqSjOGweo?autoplay=1&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;';myAnchor.parentNode.replaceChild(tmpDiv.firstChild, myAnchor);return false;" title="click here to play">
-<a class="youtube-lazy-link" style="width:100%;height:100%;background:#000 url(http://i2.ytimg.com/vi/yRcqSjOGweo/0.jpg) center center no-repeat;background-size:contain;position:absolute" href="http://www.youtube.com/watch?v=yRcqSjOGweo" id="yRcqSjOGweo" onclick="return false;">
-<div class="youtube-lazy-link-div"></div>
-<div class="youtube-lazy-link-info">embedded youtube video yRcqSjOGweo</div>
-</a>
-<div class="video-info">embedded youtube video yRcqSjOGweo</div>
-</div>
+<!--more-->
 
-<p>There&#8217;re links to the whole series of charmschool hangouts in the juju
-<a href="https://juju.ubuntu.com/resources/videos/">video archive</a>
-where we also have videos and screencasts of demos, talks,  and any other charm
-schools we&#8217;ve been able to capture on video.</p>
+<h2 id="contents">Contents</h2>
+
+<ul>
+  <li>Overview</li>
+  <li>Blender</li>
+  <li>Setup</li>
+  <li>Imports</li>
+  <li>Audio</li>
+  <li>Story and Context</li>
+  <li>Transitions</li>
+  <li>Render</li>
+  <li>Transcode</li>
+  <li>Cover</li>
+  <li>Uploads</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>In a
+<a href="https://markmims.com/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html">previous post</a>
+I described how to capture multiple monitors worth of screencast material.  One
+video stream for slides, one for camera footage of the presenter, and a third
+for interactive demos of the terminal and web interfaces.  We also recorded a
+single audio stream of narrative.</p>
+
+<p>Each of these video streams alone don&#8217;t tell the full story because we might be
+switching context from slides to a demo and back to slides.  Also, there are
+times when it might be useful to see some hands waving from a talking head :-)</p>
+
+<p>Sure, the simplest model is to just record a single stream and swap windows
+back and forth as the context changes.  However, I&#8217;ve learned my lessons trying
+to fix videos and music over the years and wanted the flexibility to adjust
+context during post-production.  What if I wanted to add a new diagram to
+better explain something?  What if I forgot to go to the next slide trasition
+to indicate a new topic?</p>
+
+<p>Turns out it&#8217;s not too hard, or expensive, to keep that flexibility by simply
+capturing the multiple video streams first, and then editing these together as
+a separate stepinto a polished presentation that effectively communicates the
+material.</p>
+
+<h2 id="blender">Blender</h2>
+
+<p>You might have heard of blender.blender</p>
+
+<h2 id="setup">Setup</h2>
+
+<h2 id="inputs">Inputs</h2>
+
+<p>The folder structure we use follows a pattern of
+<code>scene -&gt; shot -&gt; take</code> so here we&#8217;ll have
+<code>screencast_name -&gt; shot -&gt; take</code>:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">- intro-to-data-science
+</span><span class="line">  - shot-010
+</span><span class="line">    - take-2018-03-12-165010
+</span><span class="line">      - audio.log
+</span><span class="line">      - audio.wav
+</span><span class="line">      - slides.log
+</span><span class="line">      - slides.mkv
+</span><span class="line">      - terminal.log
+</span><span class="line">      - terminal.mkv
+</span><span class="line">      - webcam.log
+</span><span class="line">      - webcam.mkv
+</span><span class="line">    - take-2018-03-12-165422
+</span><span class="line">      - ...
+</span><span class="line">  - shot-020
+</span><span class="line">  - ...
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>I usually label the best take of a shot as <code>finalized</code> as they&#8217;re captured.</p>
+
+<p>For editing, import the streams from the finalized take of each shot of the
+screencast.</p>
 
 </div>
 
@@ -175,12 +258,12 @@ schools we&#8217;ve been able to capture on video.</p>
   
 
 
-<time datetime="2013-05-20T12:49:00+00:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
+<time datetime="2020-08-03T00:00:00+00:00" pubdate data-updated="true">Aug 3<span>rd</span>, 2020</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/cloud/'>cloud</a>
+    <a class='category' href='/blog/categories/mids/'>mids</a>, <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
   
 </span>
 
@@ -189,7 +272,7 @@ schools we&#8217;ve been able to capture on video.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html" data-via="m_3" data-counturl="http://markmims.com/cloud/2013/05/20/charmschool-hangouts.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html" data-via="m_3" data-counturl="http://markmims.com/mids/ubuntu/2020/08/03/edit-screencasts-with-blender.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -200,10 +283,8 @@ schools we&#8217;ve been able to capture on video.</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/cloud/2013/04/25/charmschool-video-from-the-openstack-summit.html" title="Previous Post: CharmSchool Video from the Openstack Summit">&laquo; CharmSchool Video from the Openstack Summit</a>
+        <a class="basic-alignment left" href="/mids/ubuntu/2020/07/29/screencasts-with-ffmpeg.html" title="Previous Post: Capturing Screencasts on Ubuntu using `ffmpeg`">&laquo; Capturing Screencasts on Ubuntu using `ffmpeg`</a>
       
-      
-        <a class="basic-alignment right" href="/cloud/2013/06/05/charmschool-hangout-charming-from-scratch.html" title="Next Post: CharmSchool Hangout - Charming from scratch">CharmSchool Hangout - Charming from scratch &raquo;</a>
       
     </p>
   </footer>
