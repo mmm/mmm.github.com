@@ -30,19 +30,27 @@ behind the Ubuntu operating system, Infochimps, DigitalOcean, and now
 Google. Places where talented teams of people are innovating and leading
 open-source communities and the tech industry as a whole.
 
-
 Current Passions
 
--   training data scientists. I teach an online class that's essentially
+-   Scientific AI/ML. Using various deep or hybrid models to accelerate
+    scientific high-performance computing (HPC) workloads
+
+-   Operationalizing AI. MLOps and test-driven approaches to the data
+    pipelines used to develop, train, and serve AI models in production
+    environments
+
+Past Obsessions
+
+-   Training data scientists. I teach an online class that's essentially
     "Just enough data engineering" for data scientists in Berkeley's
     Data Science Masters (MIDS) Program
 
--   adopting test-driven methodologies into building data pipelines...
-    keeping pipelines strongly connected to the actual problems that
-    need to be solved
+-   Adopting test-driven methodologies into building data pipelines...
+    keeping pipelines strongly connected to the actual business problems
+    that need to be solved
 
 -   and then pretty much anything to do with AI in infrastructure
-    automation :-)
+    automation
 
 
 Experience
@@ -50,9 +58,26 @@ Experience
 2019-Present
 
     STAFF SOLUTIONS ARCHITECT
-    _Google_ (Boulder)
+    _Google_ (Mountain View)
 
     Helping users develop solutions on the Google Cloud Platform.
+
+    Working with Google Cloud users and teams throughout Google:
+
+    -   _SARS-Covid-2 Research Support_ - Representing Google as a
+        rotating reviewer for the Covid-19 High Performance Computing
+        Consortium:
+
+          "Bringing together the Federal government, industry, and
+          academic leaders to provide access to the world’s most
+          powerful high-performance computing resources in support of
+          COVID-19 research"
+
+    -   _Data Engineering / BigData_ - Helping users build data
+        intensive applications on Google Cloud
+
+    -   _Scientific AI/ML_ - Helping users accelerate scientific
+        workloads on Google Cloud
 
 2017-Present
 
@@ -66,11 +91,43 @@ Experience
 
 2017-2019
 
-    STAFF ENGINEER - Data & Analytics
+    STAFF ENGINEER
     _DigitalOcean_ (New York)
 
     AI-guided infrastructure at DO... Helping build better cloud
-    services for DigitalOcean users!
+    services for DigitalOcean users.
+
+    DigitalOcean is a public cloud provider popular with developers
+    around the world.
+
+    As a Staff Engineer, I worked with teams across the company:
+
+    -   _Research & Development_ - Spearheaded work to build
+        OpenAI-compatible _infrastructure gyms_ that could be used to
+        train reinforcement learning agents to intelligently manipulate
+        cloud infrastructure components. TensorFlow models use
+        Prometheus-augmented Terraform graphs (usually flattened to
+        vectors at first for simplicity) to interact with infrastructure
+        using Kubernetes APIs as well as various cloud provider APIs
+
+    -   _Engineering_ - Built and maintained _Machine Learning OneClick_
+        images that include a curated list of AI and ML tools for data
+        scientists
+
+    -   _Data Engineering_ - Helped the Data Engineering team adopt SRE
+        practices to automate, maintain, and scale low-latency,
+        high-throughput data analytics pipelines. These pipelines
+        ingested billions of events per day using Kafka, Spark,
+        Cassandra, Hadoop, Presto, and Looker all running on Mesos and
+        orchestrated by Airflow. Helped to port some of the simpler
+        Spark-based workflows to Golang. Also helped support various
+        query cache and data warehouse / marketplace buildouts
+
+    -   _Data Science_ - Helped the Data Science team build and refine
+        models in efforts to understand user churn and automatically
+        identify and signal fraudulent behavior. We also helped provide
+        quantitative decision support for new product development
+        efforts across the company
 
 2014-2017
 
